@@ -1,0 +1,7 @@
+# Generated PDF build intermediates and duplicate output directory
+tmp/
+output/
+
+# Editor and operating-system files
+.DS_Store
+.vscode/
