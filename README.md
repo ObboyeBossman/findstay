@@ -1,5 +1,7 @@
 # FindStay — Student Accommodation & Property Management Platform
 
+> 🚀 **Live Public Website:** [https://frontend-nu-ten-m96g58w8mk.vercel.app](https://frontend-nu-ten-m96g58w8mk.vercel.app)
+
 FindStay is a production-grade web accommodation marketplace and property management platform designed specifically for university tertiary students and private hostel managers in Ghana (initial pilot: Takoradi / TTU & Takoradi residential hubs including Anaji, Effia, Beach Road, and Westline).
 
 ---
@@ -35,6 +37,7 @@ findstay/
     ├── src/
     │   ├── router/SubdomainRouter.tsx     # Subdomain detection & local portal switcher
     │   └── portals/
+    │       ├── landing/                   # www.findstay.com (Public Marketing & Discovery Website)
     │       ├── guest/                     # app.findstay.com (Student Booking Portal)
     │       ├── landlord/                  # host.findstay.com (Hostel Landlord Management)
     │       └── admin/                     # admin.findstay.com (Platform Governance & Compliance)
@@ -50,6 +53,7 @@ FindStay routes traffic into dedicated portals based on the incoming subdomain:
 
 | Domain / Subdomain | Target Audience | Primary Features |
 | :--- | :--- | :--- |
+| **`findstay.com` / `www.`** | General Public, Students, Parents | Public-facing landing website with value proposition, Takoradi neighborhood guides, 3-step walkthrough, comparison matrix vs traditional agents, FAQ, and gateway to all portals. |
 | **`app.findstay.com`** | Tertiary Students & Guests | Takoradi neighborhood search, verified hostel badges, room type filters, 15-minute reservation hold timer, and MTN/Telecel/AirtelTigo Mobile Money checkout. |
 | **`host.findstay.com`** | Hostel Landlords & Managers | Real-time room occupancy grid, self-contain & shared room inventory management, pending 15-min reservation tracker, and MoMo payout ledger. |
 | **`admin.findstay.com`** | Platform Operations & Security | Landlord Ghana Card verification queue, 36-booking break-even revenue tracker, and Ghana Data Protection Act (Act 843) audit logs. |
