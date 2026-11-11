@@ -30,6 +30,9 @@ public class UnitRoom {
     @Column(nullable = false)
     private Integer capacity;
 
+    @Column(name = "price_per_night", precision = 10, scale = 2)
+    private BigDecimal pricePerNight;
+
     @Column(name = "price_per_month", nullable = false, precision = 10, scale = 2)
     private BigDecimal pricePerMonth;
 

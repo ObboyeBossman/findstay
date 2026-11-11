@@ -68,6 +68,7 @@ CREATE TABLE units_rooms (
     unit_name VARCHAR(100) NOT NULL, -- e.g., 'Room 104 - 2 in 1', 'Block B - Self Contain'
     room_type VARCHAR(50) NOT NULL,  -- 'Self-Contain', '2-in-a-Room', '4-in-a-Room'
     capacity INTEGER NOT NULL DEFAULT 1,
+    price_per_night NUMERIC(10, 2) DEFAULT 0.00,
     price_per_month NUMERIC(10, 2) NOT NULL,
     price_per_semester NUMERIC(10, 2) NOT NULL,
     status unit_status_enum NOT NULL DEFAULT 'AVAILABLE',
