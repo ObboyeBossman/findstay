@@ -1,96 +1,91 @@
-# FindStay — Student Accommodation & Property Management Platform
+# FindStay — Accommodation Marketplace & Property Management Platform
 
-> 🚀 **Live Public Website:** [https://frontend-nu-ten-m96g58w8mk.vercel.app](https://frontend-nu-ten-m96g58w8mk.vercel.app)
+> 🚀 **Live Production Website:** [https://dist-eight-sooty-42.vercel.app](https://dist-eight-sooty-42.vercel.app)
 
-FindStay is a production-grade web accommodation marketplace and property management platform designed specifically for university tertiary students and private hostel managers in Ghana (initial pilot: Takoradi / TTU & Takoradi residential hubs including Anaji, Effia, Beach Road, and Westline).
+FindStay is a production-grade, two-sided accommodation marketplace and Property Management System (PMS) architected as a modular monorepo. It serves travelers, tourists, corporate business executives, and tertiary students across Ghana (initial pilot: Sekondi-Takoradi Metropolitan Area).
 
 ---
 
-## 🏛️ Project Directory Structure
+## 🏛️ Monorepo Directory Architecture
 
 ```text
 findstay/
-├── docs/                                  # All project documentation and defense assets
-│   ├── pdf/
-│   │   ├── findstay-project-documentation.pdf  # 29-page complete 5-chapter academic report
-│   │   └── findstay-team-roles.pdf             # 2-page student role allocation & sign-off sheet
-│   ├── presentation/
-│   │   └── findstay-presentation.pptx          # 13-slide defense PowerPoint with speaker notes
-│   └── research/                               # Detailed research drafts & technical blueprints
-│       ├── FindStay_Chapter_1_Synthesized_Draft.md
-│       ├── FindStay_Chapter_2_Synthesized_Draft.md
-│       ├── FindStay_Chapter_3_Synthesized_Draft.md
-│       ├── FindStay_Chapter_4_Synthesized_Draft.md
-│       ├── FindStay_Chapter_5_Synthesized_Draft.md
-│       ├── FindStay_Security_Architecture_and_Controls.md
-│       ├── FindStay_Revenue_Model_and_Financial_Sustainability.md
-│       └── FindStay_Team_Roles_and_Responsibilities.md
-├── database/                              # Database layer (PostgreSQL 15+)
+├── apps/                                  # Independent frontends & PWAs
+│   ├── site/                              # findstay.com — Public marketing website (Home, About, Policies, FAQ) [Port 3000]
+│   ├── guest/                             # app.findstay.com — Student & Guest Booking PWA (Mobile installable) [Port 3001]
+│   ├── owner/                             # host.findstay.com — Landlord & Hotelier PMS Operations PWA [Port 3002]
+│   └── admin/                             # admin.findstay.com — Governance & Ghana Act 843 Compliance Portal [Port 3003]
+├── packages/                              # Shared monorepo packages
+│   ├── types/                             # @findstay/types — Shared TypeScript interfaces (Unit, Property, Booking)
+│   └── ui/                                # @findstay/ui — Shared Tailwind UI components (Badges, Status, Modals)
+├── services/                              # Backend services
+│   └── api/                               # Java 17 / Spring Boot 3.2.3 REST API (CORS, Pessimistic Lock, JJWT)
+├── database/                              # PostgreSQL 15+ database layer
 │   ├── schema.sql                         # 3NF relational schema (7 tables, ENUMs, composite indexes)
-│   └── seed.sql                           # Real-world Takoradi hostels, rooms, and test accounts
-├── backend/                               # Core REST API (Java 17 / Spring Boot 3.2.3)
-│   ├── pom.xml                            # Maven dependencies (JPA, Security, JJWT, PostgreSQL)
-│   └── src/main/
-│       ├── java/com/findstay/             # Domain models, repositories, controllers, CORS config
-│       └── resources/application.yml      # Subdomain CORS origins, DB config, Paystack settings
-└── frontend/                              # Multi-Portal Web Client (React 18 + Vite + Tailwind CSS)
-    ├── src/
-    │   ├── router/SubdomainRouter.tsx     # Subdomain detection & local portal switcher
-    │   └── portals/
-    │       ├── landing/                   # www.findstay.com (Public Marketing & Discovery Website)
-    │       ├── guest/                     # app.findstay.com (Student Booking Portal)
-    │       ├── landlord/                  # host.findstay.com (Hostel Landlord Management)
-    │       └── admin/                     # admin.findstay.com (Platform Governance & Compliance)
-    ├── package.json
-    └── vite.config.ts
+│   └── seed.sql                           # Takoradi seed data (Hotels, Apartments, Guesthouses, Hostels)
+├── docs/                                  # Academic documentation & presentation deliverables
+│   ├── pdf/                               # Full 5-chapter report and team role allocation PDFs
+│   ├── presentation/                      # 13-slide PowerPoint defense deck with embedded speaker notes
+│   └── research/                          # 13 technical blueprints and chapter drafts
+├── package.json                           # Root monorepo workspace configuration
+└── README.md                              # This file
 ```
 
 ---
 
-## 🌐 Subdomain Architecture
+## 📱 Progressive Web App (PWA) Capabilities
 
-FindStay routes traffic into dedicated portals based on the incoming subdomain:
+The guest and host portals are built as **installable Progressive Web Apps (PWAs)**:
 
-| Domain / Subdomain | Target Audience | Primary Features |
-| :--- | :--- | :--- |
-| **`findstay.com` / `www.`** | General Public, Students, Parents | Public-facing landing website with value proposition, Takoradi neighborhood guides, 3-step walkthrough, comparison matrix vs traditional agents, FAQ, and gateway to all portals. |
-| **`app.findstay.com`** | Tertiary Students & Guests | Takoradi neighborhood search, verified hostel badges, room type filters, 15-minute reservation hold timer, and MTN/Telecel/AirtelTigo Mobile Money checkout. |
-| **`host.findstay.com`** | Hostel Landlords & Managers | Real-time room occupancy grid, self-contain & shared room inventory management, pending 15-min reservation tracker, and MoMo payout ledger. |
-| **`admin.findstay.com`** | Platform Operations & Security | Landlord Ghana Card verification queue, 36-booking break-even revenue tracker, and Ghana Data Protection Act (Act 843) audit logs. |
-| **`api.findstay.com`** | Central Backend API | Java Spring Boot REST API, BCrypt auth, pessimistic row-level locking (`SELECT ... FOR UPDATE`), and Paystack HMAC-SHA512 webhook ingestion. |
+- **Mobile First for Ghana:** Over 85% of tertiary students and hostel caretakers in Takoradi access services via mobile phones.
+- **Add to Home Screen:** Users can install FindStay directly from Chrome/Safari with a native app icon, splash screen, and full-screen mode without app store downloads.
+- **Offline Caching:** Static assets and previously viewed accommodations are cached locally via `public/sw.js`. Live reservations and Mobile Money payments remain strictly online to prevent stale double-bookings.
 
 ---
 
-## 🚀 Running the Project Locally
+## 🌐 Subdomain & Portal Roles
 
-### 1. Frontend Multi-Portal (React + Vite)
+| Domain / Portal | Workspace | Target Audience | Primary Capabilities |
+| :--- | :--- | :--- | :--- |
+| **`findstay.com`** | `apps/site` | General Public, Visitors, Parents | Public marketing website, Takoradi neighborhood guides, 3-step walkthrough, About Us, Terms of Service, Privacy Policy, and Refund FAQs. |
+| **`app.findstay.com`** | `apps/guest` | Students & Short-Stay Guests | PWA booking app. Search hotels, apartments, guesthouses, hostels. 15-minute concurrency hold timer (`SELECT ... FOR UPDATE`), MTN/Telecel MoMo STK push simulation. |
+| **`host.findstay.com`** | `apps/owner` | Hoteliers, Landlords, Caretakers | PWA Property Management System (PMS). Real-time room occupancy grid (Available, Booked, Held, Cleaning), check-in tracker, automated MoMo payout history. |
+| **`admin.findstay.com`** | `apps/admin` | Platform Governance | Landlord Ghana Card KYC verification queue, 36-booking break-even financial sustainability tracker, and immutable Ghana Act 843 audit trail. |
+| **`api.findstay.com`** | `services/api` | Central REST API | Java 17 Spring Boot REST API with BCrypt hashing, JJWT authentication, subdomain-aware CORS filter, and pessimistic concurrency locks. |
+
+---
+
+## 🚀 Running the Monorepo Locally
+
+### 1. Install Workspace Dependencies
+From the repository root:
 ```bash
-cd frontend
 npm install
+```
+
+### 2. Run All Applications Concurrently
+```bash
 npm run dev
 ```
-Open [http://localhost:5173](http://localhost:5173). 
-> **Presentation Tip:** In local development, the interactive **Subdomain Switcher** at the top of the screen allows you to seamlessly toggle between the **Guest Portal**, **Landlord Portal**, and **Admin Portal** with one click.
+This runs all 4 frontends concurrently:
+- **Public Website (`apps/site`):** [http://localhost:3000](http://localhost:3000)
+- **Guest Booking PWA (`apps/guest`):** [http://localhost:3001](http://localhost:3001)
+- **Host PMS PWA (`apps/owner`):** [http://localhost:3002](http://localhost:3002)
+- **Admin Console (`apps/admin`):** [http://localhost:3003](http://localhost:3003)
 
-To verify a production build:
+You can also run any portal individually:
+```bash
+npm run dev:site     # Port 3000
+npm run dev:guest    # Port 3001
+npm run dev:owner    # Port 3002
+npm run dev:admin    # Port 3003
+```
+
+### 3. Verify Production Builds
 ```bash
 npm run build
 ```
-
-### 2. Database (PostgreSQL)
-Execute the SQL scripts against your PostgreSQL 15+ database instance:
-```bash
-psql -U postgres -d findstay -f database/schema.sql
-psql -U postgres -d findstay -f database/seed.sql
-```
-
-### 3. Backend (Java Spring Boot)
-The backend is located in `backend/` and targets Java 17+ and Spring Boot 3.2.3:
-```bash
-cd backend
-mvn spring-boot:run
-```
-The REST API will start on port `8080` with subdomain-aware CORS pre-configured.
+Builds all 4 applications and shared packages into optimized production bundles.
 
 ---
 
@@ -112,11 +107,12 @@ The REST API will start on port `8080` with subdomain-aware CORS pre-configured.
 
 ---
 
-## 🌿 Git Feature Branches
+## 🌿 Git Branches & Remote
 
-Feature branches have been published to `origin` for collaborative development:
-- `feature/backend-auth` — User authentication, JWT tokens, and RBAC (Joseph & Seidu)
-- `feature/booking-engine` — Pessimistic lock `SELECT ... FOR UPDATE` & 15-min hold timer (Anthony)
+The repository is synchronized with GitHub:
+- `main` — Production monorepo release
+- `feature/backend-auth` — Auth, JJWT & RBAC (Joseph & Seidu)
+- `feature/booking-engine` — Pessimistic locking & 15-minute hold engine (Anthony)
 - `feature/paystack-momo` — Mobile Money STK Push & Webhook Verification (Sampson)
-- `feature/property-portal` — Landlord listing & room management portal (Mashkura)
-- `feature/frontend-ui` — Student marketplace & responsive UI components (David)
+- `feature/property-portal` — Landlord listing & PMS management (Mashkura)
+- `feature/frontend-ui` — Responsive UI & PWA components (David)

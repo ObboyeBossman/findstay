@@ -1,0 +1,24 @@
+{
+  "name": "findstay-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"site,guest,owner,admin\" -c \"teal,blue,purple,amber\" \"npm run dev -w @findstay/site\" \"npm run dev -w @findstay/guest\" \"npm run dev -w @findstay/owner\" \"npm run dev -w @findstay/admin\"",
+    "dev:site": "npm run dev -w @findstay/site",
+    "dev:guest": "npm run dev -w @findstay/guest",
+    "dev:owner": "npm run dev -w @findstay/owner",
+    "dev:admin": "npm run dev -w @findstay/admin",
+    "build": "npm run build --workspaces",
+    "build:site": "npm run build -w @findstay/site",
+    "build:guest": "npm run build -w @findstay/guest",
+    "build:owner": "npm run build -w @findstay/owner",
+    "build:admin": "npm run build -w @findstay/admin"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
