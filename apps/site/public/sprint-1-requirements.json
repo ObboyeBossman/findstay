@@ -1,0 +1,542 @@
+{
+  "UR-A01": {
+    "text": "Manage user accounts (create, suspend, restore).",
+    "module": "admin",
+    "story": "S1-16"
+  },
+  "UR-A02": {
+    "text": "Review, approve, reject, suspend, restore or request corrections to property listings.",
+    "module": "verification",
+    "story": "S1-15"
+  },
+  "UR-A07": {
+    "text": "Inspect and maintain audit logs of significant actions.",
+    "module": "audit",
+    "story": "S1-08"
+  },
+  "UR-A08": {
+    "text": "Manage platform settings.",
+    "module": "admin",
+    "story": "S1-16"
+  },
+  "UR-AN01": {
+    "text": "Strong security and administrator-only access.",
+    "module": "platform",
+    "story": "S1-06"
+  },
+  "UR-AN02": {
+    "text": "Tamper-proof, auditable logs of significant actions.",
+    "module": "audit",
+    "story": "S1-08"
+  },
+  "UR-G01": {
+    "text": "Register, log in, log out and manage an account with email/phone, OTP verification and password recovery.",
+    "module": "identity",
+    "story": "S1-04"
+  },
+  "UR-O01": {
+    "text": "Register, complete onboarding and submit identity and property documents for verification; track approval status.",
+    "module": "verification",
+    "story": "S1-12"
+  },
+  "UR-O02": {
+    "text": "Create, edit, deactivate and manage property listings including photos, descriptions, units, prices, amenities, house rules and availability.",
+    "module": "catalog",
+    "story": "S1-14"
+  },
+  "UR-O03": {
+    "text": "Manage property and unit availability calendars.",
+    "module": "availability",
+    "story": "S1-14"
+  },
+  "UR-O15": {
+    "text": "Grant and manage access permissions for property staff.",
+    "module": "organization",
+    "story": "S1-07"
+  },
+  "UR-ON01": {
+    "text": "Simple, uncluttered interface suited to small providers.",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "UR-ON02": {
+    "text": "Access limited to own properties and financial records.",
+    "module": "platform",
+    "story": "S1-07"
+  },
+  "UR-ON05": {
+    "text": "Dependable service with backups so records are never lost.",
+    "module": "platform",
+    "story": "S1-02"
+  },
+  "UR-PM03": {
+    "text": "Assign access permissions to authorised staff.",
+    "module": "organization",
+    "story": "S1-07"
+  },
+  "UR-PS01": {
+    "text": "Access only properties and functions explicitly authorised by an owner/manager or administrator.",
+    "module": "organization",
+    "story": "S1-07"
+  },
+  "UR-PSN01": {
+    "text": "Restricted, role-limited access to protect sensitive data.",
+    "module": "organization",
+    "story": "S1-07"
+  },
+  "FR-01": {
+    "text": "Allow guests, owners/managers, property staff and administrators to create or receive accounts appropriate to their roles.",
+    "module": "identity",
+    "story": "S1-04"
+  },
+  "FR-02": {
+    "text": "Authenticate users before granting access to protected functions.",
+    "module": "identity",
+    "story": "S1-04"
+  },
+  "FR-03": {
+    "text": "Support user login and logout.",
+    "module": "identity",
+    "story": "S1-04"
+  },
+  "FR-04": {
+    "text": "Provide password reset and account recovery through a verified contact channel.",
+    "module": "identity",
+    "story": "S1-05"
+  },
+  "FR-05": {
+    "text": "Support email or phone verification (OTP).",
+    "module": "identity",
+    "story": "S1-04"
+  },
+  "FR-06": {
+    "text": "Allow users to view and update authorised profile information.",
+    "module": "identity",
+    "story": "S1-05"
+  },
+  "FR-07": {
+    "text": "Enforce role-based access control (RBAC) and prevent access to unauthorised data or functions.",
+    "module": "identity",
+    "story": "S1-06"
+  },
+  "FR-08": {
+    "text": "Allow owners/managers to submit identity and property-verification information for review.",
+    "module": "verification",
+    "story": "S1-12"
+  },
+  "FR-09": {
+    "text": "Support property-staff permissions explicitly granted by authorised owners/managers or administrators.",
+    "module": "organization",
+    "story": "S1-07"
+  },
+  "FR-11": {
+    "text": "Allow verified owners/managers to create property listings.",
+    "module": "catalog",
+    "story": "S1-13"
+  },
+  "FR-12": {
+    "text": "Allow owners/managers to update existing property listings.",
+    "module": "catalog",
+    "story": "S1-13"
+  },
+  "FR-13": {
+    "text": "Allow owners/managers to deactivate or pause property listings.",
+    "module": "catalog",
+    "story": "S1-13"
+  },
+  "FR-14": {
+    "text": "Allow owners/managers to upload property photographs and listing images.",
+    "module": "catalog",
+    "story": "S1-13"
+  },
+  "FR-15": {
+    "text": "Allow owners/managers to manage property descriptions, accommodation types, unit categories, capacity and quantities.",
+    "module": "catalog",
+    "story": "S1-13"
+  },
+  "FR-16": {
+    "text": "Allow owners/managers to manage property amenities, facilities and house rules.",
+    "module": "catalog",
+    "story": "S1-13"
+  },
+  "FR-17": {
+    "text": "Allow owners/managers to manage accommodation prices and rates.",
+    "module": "catalog",
+    "story": "S1-13"
+  },
+  "FR-18": {
+    "text": "Allow owners/managers to manage property and unit availability.",
+    "module": "availability",
+    "story": "S1-14"
+  },
+  "FR-21": {
+    "text": "Publish a listing only after it meets verification and approval requirements set by administrators.",
+    "module": "verification",
+    "story": "S1-15"
+  },
+  "FR-22": {
+    "text": "Validate required information before a listing is saved or published.",
+    "module": "catalog",
+    "story": "S1-13"
+  },
+  "FR-39": {
+    "text": "Provide a real-time availability calendar.",
+    "module": "availability",
+    "story": "S1-14"
+  },
+  "FR-68": {
+    "text": "Notify relevant users about verification-status changes.",
+    "module": "notification",
+    "story": "S1-10"
+  },
+  "FR-69": {
+    "text": "Provide email notifications.",
+    "module": "notification",
+    "story": "S1-10"
+  },
+  "FR-70": {
+    "text": "Support SMS notifications.",
+    "module": "notification",
+    "story": "S1-10"
+  },
+  "FR-71": {
+    "text": "Notify users about relevant account activities.",
+    "module": "notification",
+    "story": "S1-10"
+  },
+  "FR-86": {
+    "text": "Provide a dedicated administrative dashboard.",
+    "module": "admin",
+    "story": "S1-16"
+  },
+  "FR-87": {
+    "text": "Allow administrators to manage users and accounts.",
+    "module": "admin",
+    "story": "S1-16"
+  },
+  "FR-88": {
+    "text": "Allow administrators to manage property submissions: approve, reject, suspend, restore or request corrections.",
+    "module": "admin",
+    "story": "S1-15"
+  },
+  "FR-92": {
+    "text": "Allow administrators to manage platform settings.",
+    "module": "admin",
+    "story": "S1-16"
+  },
+  "NFR-01": {
+    "text": "Simple, intuitive, user-friendly interface requiring minimal training.",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "NFR-02": {
+    "text": "Clear labels, consistent navigation and understandable instructions.",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "NFR-03": {
+    "text": "Visible status messages and feedback for user actions.",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "NFR-04": {
+    "text": "Accessible form controls.",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "NFR-05": {
+    "text": "Icon-based navigation.",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "NFR-07": {
+    "text": "Interface accommodates users with low literacy or colour-vision difficulties.",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "NFR-09": {
+    "text": "Responsive interface for mobile phones, tablets and desktop devices.",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "NFR-10": {
+    "text": "Supports modern web browsers (Chrome, Edge, Firefox, Safari).",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "NFR-12": {
+    "text": "No unnecessary horizontal scrolling on mobile devices.",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "NFR-17": {
+    "text": "Property photographs optimised to reduce loading time and mobile data consumption (WebP format).",
+    "module": "platform",
+    "story": "S1-09"
+  },
+  "NFR-19": {
+    "text": "Authenticate users before granting access to protected resources.",
+    "module": "platform",
+    "story": "S1-04"
+  },
+  "NFR-20": {
+    "text": "Enforce role-based authorisation (RBAC).",
+    "module": "platform",
+    "story": "S1-06"
+  },
+  "NFR-21": {
+    "text": "Protect sensitive information during transmission (HTTPS/TLS) and storage (encryption at rest).",
+    "module": "platform",
+    "story": "S1-06"
+  },
+  "NFR-22": {
+    "text": "Secure password hashing managed by Supabase Auth; FindStay never stores or hashes passwords.",
+    "module": "platform",
+    "story": "S1-04"
+  },
+  "NFR-23": {
+    "text": "Validate user input; protect against SQL injection and cross-site scripting (XSS).",
+    "module": "platform",
+    "story": "S1-06"
+  },
+  "NFR-24": {
+    "text": "Prevent unauthorised direct access to protected records.",
+    "module": "platform",
+    "story": "S1-06"
+  },
+  "NFR-27": {
+    "text": "Protect confidential application credentials and secret keys (environment variables, not source code).",
+    "module": "platform",
+    "story": "S1-02"
+  },
+  "NFR-28": {
+    "text": "Protect sensitive identity information including Ghana Card details.",
+    "module": "platform",
+    "story": "S1-12"
+  },
+  "NFR-31": {
+    "text": "Protect users' personal and financial information.",
+    "module": "platform",
+    "story": "S1-11"
+  },
+  "NFR-32": {
+    "text": "Comply with Ghana's Data Protection Act, 2012 (Act 843).",
+    "module": "platform",
+    "story": "S1-11"
+  },
+  "NFR-34": {
+    "text": "Follow relevant tourism business verification and regulatory requirements.",
+    "module": "platform",
+    "story": "S1-12"
+  },
+  "NFR-35": {
+    "text": "Restrict personal and financial information to authorised users only.",
+    "module": "platform",
+    "story": "S1-11"
+  },
+  "NFR-36": {
+    "text": "Collect only necessary personal information; obtain user consent for data collection.",
+    "module": "platform",
+    "story": "S1-11"
+  },
+  "NFR-42": {
+    "text": "Provide automatic database backups (daily) and a documented restoration procedure.",
+    "module": "platform",
+    "story": "S1-02"
+  },
+  "NFR-43": {
+    "text": "Provide error logging and monitoring.",
+    "module": "platform",
+    "story": "S1-02"
+  },
+  "NFR-45": {
+    "text": "Support growth in properties, accommodation units, users and participating owners.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-46": {
+    "text": "Support addition of new accommodation types without core system redesign.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-47": {
+    "text": "Cloud-based architecture that scales as users, cities and listings grow.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-48": {
+    "text": "Modular structure accommodating future integrations.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-52": {
+    "text": "Maintain accurate booking dates and times in Ghana local time (GMT).",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-54": {
+    "text": "Modular, documented architecture enabling easy updates and integration.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-55": {
+    "text": "Provide technical and operational documentation.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-56": {
+    "text": "Support automated testing.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-57": {
+    "text": "Maintain version-controlled source code.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-58": {
+    "text": "Support future maintenance and enhancements without major architectural redesign.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-60": {
+    "text": "Communication-service integrations: email and SMS providers.",
+    "module": "platform",
+    "story": "S1-10"
+  },
+  "NFR-63": {
+    "text": "Provide REST API-based integration capabilities.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "NFR-66": {
+    "text": "Audit records shall identify the action, user and date/time.",
+    "module": "audit",
+    "story": "S1-08"
+  },
+  "BR-02": {
+    "text": "The platform shall initially focus on Takoradi as its proposed local pilot context.",
+    "module": "platform",
+    "story": "S1-13"
+  },
+  "BR-03": {
+    "text": "The platform shall support hotels, budget hotels, guesthouses, student hostels and serviced/short-stay apartments.",
+    "module": "catalog",
+    "story": "S1-13"
+  },
+  "BR-10": {
+    "text": "The platform shall provide an accessible solution suitable for small and medium-sized accommodation providers.",
+    "module": "platform",
+    "story": "S1-03"
+  },
+  "BR-11": {
+    "text": "The platform shall support accountability through verification, audit records and administrative controls.",
+    "module": "audit",
+    "story": "S1-08"
+  },
+  "BRL-01": {
+    "text": "Users must authenticate before accessing protected account, booking, financial, messaging, review or administrative functions.",
+    "module": "identity",
+    "story": "S1-04"
+  },
+  "BRL-02": {
+    "text": "Each account shall have one primary role.",
+    "module": "identity",
+    "story": "S1-06"
+  },
+  "BRL-04": {
+    "text": "Additional property-staff access must be explicitly granted by an authorised owner/manager or administrator.",
+    "module": "organization",
+    "story": "S1-07"
+  },
+  "BRL-05": {
+    "text": "Owners/managers and staff may access only properties and financial records they are authorised for.",
+    "module": "organization",
+    "story": "S1-07"
+  },
+  "BRL-06": {
+    "text": "Listings must contain the minimum required information before submission for approval.",
+    "module": "catalog",
+    "story": "S1-13"
+  },
+  "BRL-19": {
+    "text": "Suspension and restoration decisions must be recorded in audit logs.",
+    "module": "audit",
+    "story": "S1-08"
+  },
+  "TA-01": {
+    "text": "Web-based application with three-layer architecture: Presentation · Application/Business Logic · Data and Services.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "TA-02": {
+    "text": "Frontend communicates with backend through REST API requests.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "TA-07": {
+    "text": "Password hashing is managed by Supabase Auth; application code never stores or hashes passwords.",
+    "module": "identity",
+    "story": "S1-04"
+  },
+  "TA-08": {
+    "text": "Supabase JWT-based authentication with one-hour access tokens and managed refresh-token rotation; Spring validates JWTs through JWKS.",
+    "module": "identity",
+    "story": "S1-04"
+  },
+  "TA-09": {
+    "text": "Encryption of sensitive identification information at rest.",
+    "module": "platform",
+    "story": "S1-12"
+  },
+  "TA-11": {
+    "text": "Secure storage of database passwords and payment-provider secret keys (environment variables).",
+    "module": "platform",
+    "story": "S1-02"
+  },
+  "TA-12": {
+    "text": "Property photographs stored using Supabase Storage.",
+    "module": "media",
+    "story": "S1-09"
+  },
+  "TA-13": {
+    "text": "Images compressed, optimised and served in modern lightweight formats (WebP).",
+    "module": "media",
+    "story": "S1-09"
+  },
+  "PD-01": {
+    "text": "Documented requirements analysis and system design.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "PD-02": {
+    "text": "Database design and implementation.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "PD-06": {
+    "text": "Deployment to cloud infrastructure (frontend via Cloudflare Workers Static Assets/CDN; Spring Boot on Render; database and storage on Supabase).",
+    "module": "platform",
+    "story": "S1-02"
+  },
+  "PD-07": {
+    "text": "Module-level, workflow/integration and user-acceptance testing.",
+    "module": "platform",
+    "story": "S1-01"
+  },
+  "PD-10": {
+    "text": "Backend application-health monitoring.",
+    "module": "platform",
+    "story": "S1-02"
+  },
+  "PD-11": {
+    "text": "Daily automated database backups.",
+    "module": "platform",
+    "story": "S1-02"
+  },
+  "PD-12": {
+    "text": "Confidential credentials stored in secure environment settings, not source code.",
+    "module": "platform",
+    "story": "S1-02"
+  }
+}

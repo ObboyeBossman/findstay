@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FindStay Sprint 1 — Foundation &amp; Verified Owner Listings</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap">
+<style>
+:root{
+  --bg:#ffffff; --bg2:#f7f7f5; --ink:#2a2420; --mut:#6d6258; --mut2:#9a8e7e;
+  --card:#fafaf8; --card2:#f5f5f3; --line:#e8e5e0; --line2:#d4d0c8;
+  --acc:#b8643f; --acc2:#d4835c; --accDeep:#8e4a2c;
+  --sage:#7d8f6b; --sageDeep:#5e7050; --sagePale:#c5ccb9;
+  --sand:#e6d8be; --dusk:#d4a296; --gold:#c89a4f;
+  --nav:#ffffff; --shadow:0 30px 60px -30px rgba(42,36,32,.12);
+  box-sizing:border-box;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  color-scheme:dark;
+  --bg:#1d1916; --bg2:#241f1a; --ink:#efe6d8; --mut:#a99a8a; --mut2:#8a7c6c;
+  --card:#27211d; --card2:#2c2620; --line:#3b322b; --line2:#4a4036;
+  --acc:#d4835c; --acc2:#e89a73; --accDeep:#b8643f;
+  --sage:#9bb086; --sageDeep:#7d8f6b; --sagePale:#5e7050;
+  --sand:#3d3528; --dusk:#7a5a52; --gold:#a8814a;
+  --nav:#241f1a; --shadow:0 30px 60px -30px rgba(0,0,0,.5);
+}}
+:root[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#1d1916; --bg2:#241f1a; --ink:#efe6d8; --mut:#a99a8a; --mut2:#8a7c6c;
+  --card:#27211d; --card2:#2c2620; --line:#3b322b; --line2:#4a4036;
+  --acc:#d4835c; --acc2:#e89a73; --accDeep:#b8643f;
+  --sage:#9bb086; --sageDeep:#7d8f6b; --sagePale:#5e7050;
+  --sand:#3d3528; --dusk:#7a5a52; --gold:#a8814a;
+  --nav:#241f1a; --shadow:0 30px 60px -30px rgba(0,0,0,.5);
+}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:400 16px/1.65 var(--sans);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.14 0 0 0 0 0.12 0 0 0 0.03 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.25;
+}
+main,header,footer{position:relative;z-index:1}
+.s{font-family:var(--serif);font-weight:500}
+em{font-style:italic}
+
+header{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb,var(--nav) 90%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px max(20px,4vw);
+  border-bottom:1px solid var(--line);
+  transition:padding .3s;
+}
+header.scrolled{padding:10px max(20px,4vw)}
+.logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:.02em;
+  color:inherit;text-decoration:none;
+}
+.logo-icon{width:28px;height:28px;flex:none}
+.logo-icon path{transition:stroke .3s}
+nav{display:flex;gap:clamp(14px,2.4vw,28px)}
+nav a{
+  color:var(--ink);text-decoration:none;opacity:.7;
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  transition:opacity .25s,color .25s;position:relative;
+}
+nav a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--acc);transition:width .3s}
+nav a:hover{opacity:1;color:var(--acc)}
+nav a:hover::after{width:100%}
+.pill{
+  border:1px solid var(--line2);background:none;color:inherit;
+  border-radius:99px;padding:9px 16px;cursor:pointer;
+  font-family:inherit;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  transition:.25s;display:inline-flex;align-items:center;gap:6px;
+}
+.pill:hover,.pill.on{background:var(--acc);border-color:var(--acc);color:#fff}
+@media(max-width:820px){nav{display:none}}
+
+.hero{
+  position:relative;overflow:hidden;
+  min-height:92vh;display:grid;place-items:center;
+  text-align:center;color:#f6efe3;
+  padding:70px 20px 150px;
+  background:radial-gradient(ellipse 60% 45% at 50% 40%,#9a7a5c,transparent 70%),linear-gradient(#1b2530,#4b4a4a 50%,#2b211b);
+}
+.hero-svg{position:absolute;inset:auto 0 0;width:100%;height:42%}
+.hc{position:relative;max-width:820px}
+.eb{
+  display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;
+  letter-spacing:.3em;font-size:11.5px;text-transform:uppercase;opacity:.85;margin-bottom:10px;
+}
+.eb u{width:42px;border-top:1px solid #f6efe388;text-decoration:none}
+.hero h1{
+  font-family:var(--serif);font-size:clamp(70px,15vw,170px);
+  line-height:1;margin:.12em 0 .1em;font-weight:400;letter-spacing:-.01em;
+}
+.tg{
+  font-style:italic;font-size:clamp(20px,2.7vw,29px);
+  line-height:1.4;max-width:620px;margin:0 auto 30px;opacity:.92;
+  font-family:var(--serif);font-weight:400;
+}
+.cta{
+  display:inline-block;padding:18px 36px;
+  border:1px solid #f6efe3aa;border-radius:99px;
+  color:#fff;text-decoration:none;transition:.25s;
+  font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+}
+.cta:hover{background:#f6efe3;color:#2b211b}
+.stats{
+  display:flex;justify-content:center;gap:clamp(18px,5vw,56px);
+  margin-top:40px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.85;
+}
+.stats b{
+  display:block;font-size:44px;letter-spacing:0;line-height:1;color:#e9b48f;
+  font-family:var(--serif);font-weight:500;
+}
+.br{
+  position:absolute;left:22px;bottom:20px;
+  display:flex;gap:10px;align-items:center;
+  font-size:12px;text-align:left;font-style:italic;opacity:.8;
+}
+.br i{
+  width:30px;height:30px;border-radius:50%;background:var(--acc);
+  animation:breathe-dot 5s ease-in-out infinite;
+}
+@keyframes breathe-dot{50%{transform:scale(1.5);opacity:.5}}
+
+section{
+  max-width:1180px;margin:0 auto;
+  padding:clamp(70px,10vw,120px) 20px;
+  position:relative;
+}
+.js section{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.js section.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.js section{opacity:1;transform:none}}
+
+.k{
+  color:var(--acc);margin:0 0 14px;
+  font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.k::before{content:"";width:24px;height:1px;background:var(--acc)}
+h2{
+  font-family:var(--serif);font-size:clamp(34px,5vw,60px);
+  line-height:1.04;margin:0 0 18px;font-weight:500;letter-spacing:-.01em;
+}
+h2 em{color:var(--acc);font-weight:400}
+h3{margin:6px 0;font-size:18px;font-family:var(--serif);font-weight:500}
+.lead{color:var(--mut);max-width:640px;margin:0 0 8px;font-size:17px;line-height:1.7}
+.mut{color:var(--mut);font-size:13px}
+
+.plain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:30px}
+.plain-card{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;
+  border-top:3px solid var(--acc);
+}
+.plain-card:nth-child(2){border-top-color:var(--sage)}
+.plain-card:nth-child(3){border-top-color:var(--gold)}
+.plain-card h3{margin:0 0 8px;font-size:21px}
+.plain-card p{margin:0;color:var(--mut);font-size:14px;line-height:1.7}
+.plain-card strong{color:var(--ink)}
+.rhythm{margin-top:30px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.rhythm-step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 12px;min-width:0}
+.rhythm-step b{display:block;color:var(--acc);font-family:var(--serif);font-size:21px;font-weight:500;line-height:1.1}
+.rhythm-step span{display:block;margin-top:7px;color:var(--mut);font-size:12px;line-height:1.5}
+@media(max-width:760px){.rhythm{grid-template-columns:repeat(2,1fr)}}
+.release-note{
+  margin-top:34px;padding:26px 28px;border-radius:20px;background:var(--bg2);
+  border:1px solid var(--line);border-left:4px solid var(--sage);
+}
+.release-note h3{font-size:26px;margin:0 0 8px}
+.release-note p{margin:0;color:var(--mut);max-width:760px;font-size:14px}
+.proof-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:18px}
+.proof-list span{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.55;color:var(--ink)}
+.proof-list i{display:grid;place-items:center;width:21px;height:21px;flex:none;border-radius:50%;background:var(--sage);color:#fff;font-style:normal;font-size:12px}
+
+.atmos{
+  position:relative;height:280px;overflow:hidden;
+  max-width:none;margin:0;padding:0;
+}
+.atmos-img{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  filter:saturate(.65) sepia(.15);
+}
+.atmos-tint{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,var(--bg) 0%,transparent 25%,transparent 75%,var(--bg) 100%);
+}
+.atmos-quote{
+  position:relative;z-index:2;max-width:760px;margin:0 auto;
+  height:100%;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:0 24px;
+}
+.atmos-quote p{
+  font-family:var(--serif);font-style:italic;font-size:clamp(22px,3vw,34px);
+  line-height:1.45;color:var(--ink);font-weight:400;
+}
+.atmos-quote p::before,.atmos-quote p::after{
+  content:"";display:inline-block;width:30px;height:1px;
+  background:var(--acc);vertical-align:middle;margin:0 16px;
+}
+
+
+.journey{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:24px;padding:36px 24px;
+  margin-top:36px;position:relative;overflow:hidden;
+}
+.journey::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--acc),var(--gold),var(--sage));
+}
+.jr{display:flex;overflow-x:auto;margin:0;padding:0;scroll-snap-type:x mandatory;gap:8px}
+.jr::-webkit-scrollbar{height:6px}
+.jr::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
+.nd{
+  flex:1;min-width:130px;background:none;border:0;color:inherit;cursor:pointer;
+  position:relative;font:500 13px/1.3 var(--sans);padding:8px 4px 0;
+  scroll-snap-align:start;
+}
+.nd .ic{
+  width:56px;height:56px;border-radius:50%;
+  border:1.5px solid var(--line2);
+  display:grid;place-items:center;margin:0 auto 12px;
+  background:var(--bg);position:relative;z-index:2;
+  transition:.35s cubic-bezier(.22,1,.36,1);
+}
+.nd .ic svg{width:26px;height:26px;stroke:var(--mut);fill:none;stroke-width:1.5;transition:.35s}
+.nd:not(:last-child)::after{
+  content:"";position:absolute;top:36px;left:calc(50% + 30px);right:calc(-50% + 30px);
+  height:1.5px;background:var(--line2);transition:.35s;
+}
+.nd.p::after{background:var(--acc)}
+.nd.p .ic{border-color:var(--acc)}
+.nd.p .ic svg{stroke:var(--acc)}
+.nd.on .ic{
+  background:var(--acc);border-color:var(--acc);transform:scale(1.1);
+  box-shadow:0 12px 24px -8px var(--acc);
+}
+.nd.on .ic svg{stroke:#fff}
+.nd span.lbl{display:block;color:var(--ink);font-size:12px}
+.nd.on span.lbl{color:var(--acc);font-weight:600}
+.jd{
+  margin-top:28px;padding:24px;
+  background:var(--bg);border-radius:16px;
+  border:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;
+}
+.jd b{font-family:var(--serif);font-size:24px;font-weight:500}
+.jd p{margin:6px 0 0;max-width:600px;color:var(--mut);line-height:1.65;font-size:14px}
+
+.arch{
+  margin-top:36px;background:var(--card);
+  border:1px solid var(--line);border-radius:24px;
+  padding:24px;position:relative;overflow:hidden;
+}
+.arch svg{width:100%;height:auto;display:block}
+.arch-legend{
+  display:flex;gap:20px;flex-wrap:wrap;
+  margin-top:20px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:11px;color:var(--mut);letter-spacing:.05em;
+}
+.arch-legend span{display:inline-flex;align-items:center;gap:8px}
+.arch-legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+
+.f{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 12px}
+.gantt-wrap{
+  margin-top:36px;background:var(--card);
+  border:1px solid var(--line);border-radius:24px;padding:24px;
+}
+.gantt-head{
+  display:grid;grid-template-columns:160px repeat(10,1fr);
+  gap:4px;margin-bottom:10px;align-items:center;
+}
+.gantt-head .gl{
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);
+  font-weight:600;
+}
+.gantt-head .gd{
+  text-align:center;padding:8px 0;border-radius:8px;
+  font-family:var(--serif);font-weight:600;font-size:18px;color:var(--ink);
+  background:var(--bg);border:1px solid var(--line);
+}
+.gantt-head .gd.milestone{background:var(--acc);color:#fff;border-color:var(--acc)}
+.gantt-head .gd.freeze{background:var(--sage);color:#fff;border-color:var(--sage)}
+.gantt-head .gd .gdl{display:block;font-family:var(--sans);font-weight:400;font-size:8px;letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-top:2px}
+.gantt-body{position:relative}
+.gantt-row{
+  display:grid;grid-template-columns:160px 1fr;
+  gap:4px;align-items:center;padding:6px 0;
+  border-bottom:1px dashed var(--line);
+}
+.gantt-row:last-child{border-bottom:none}
+.gantt-label{
+  font-size:12px;color:var(--ink);font-weight:500;
+  display:flex;align-items:center;gap:8px;
+  background:none;border:0;cursor:pointer;text-align:left;
+  padding:8px 10px;border-radius:8px;font-family:inherit;
+  transition:.2s;
+}
+.gantt-label:hover{background:var(--bg);color:var(--acc)}
+.gantt-label .glic{
+  width:24px;height:24px;border-radius:6px;flex:none;
+  display:grid;place-items:center;background:var(--bg);
+  border:1px solid var(--line);
+}
+.gantt-label .glic svg{width:14px;height:14px;stroke:var(--acc);fill:none;stroke-width:1.5}
+.gantt-track{
+  position:relative;height:34px;border-radius:8px;
+  background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),var(--line) 0 10%);
+}
+.gantt-bar{
+  position:absolute;top:4px;bottom:4px;
+  background:var(--acc);border-radius:6px;
+  display:flex;align-items:center;padding:0 10px;
+  color:#fff;font-size:10px;font-weight:600;letter-spacing:.04em;
+  cursor:pointer;transition:.25s;box-shadow:0 4px 8px -2px rgba(184,100,63,.4);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.gantt-bar.B{background:var(--sage);box-shadow:0 4px 8px -2px rgba(125,143,107,.4)}
+.gantt-bar.sh{opacity:.55;border:1px dashed rgba(255,255,255,.6)}
+.gantt-bar:hover{transform:translateY(-2px);box-shadow:0 8px 16px -4px rgba(184,100,63,.5)}
+.gantt-bar.B:hover{box-shadow:0 8px 16px -4px rgba(125,143,107,.5)}
+.gantt-legend{
+  display:flex;gap:18px;flex-wrap:wrap;
+  margin-top:18px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:11px;color:var(--mut);
+}
+.gantt-legend span{display:inline-flex;align-items:center;gap:8px}
+.gantt-legend i{display:inline-block;width:18px;height:8px;border-radius:4px}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:30px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:24px;transition:.3s;position:relative;overflow:hidden;
+}
+.card::before{
+  content:"";position:absolute;top:0;left:0;width:100%;height:3px;
+  background:var(--acc);transform:scaleX(0);transform-origin:left;transition:.4s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--line2)}
+.card:hover::before{transform:scaleX(1)}
+.card .s{font-size:24px;display:block;margin-bottom:8px}
+.card p{margin:0;color:var(--mut);font-size:14px;line-height:1.65}
+.card .ic-box{
+  width:48px;height:48px;border-radius:12px;background:var(--bg);
+  border:1px solid var(--line);
+  display:grid;place-items:center;margin-bottom:14px;
+}
+.card .ic-box svg{width:24px;height:24px;stroke:var(--acc);fill:none;stroke-width:1.5}
+details{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:0 20px;margin-top:14px;
+}
+summary{
+  cursor:pointer;padding:18px 0;font-weight:500;
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;
+  font-size:15px;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{
+  content:"";width:22px;height:22px;border-radius:50%;
+  border:1px solid var(--line2);position:relative;flex:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M6 1v10M1 6h10' stroke='%23b8643f' stroke-width='1.5'/%3E%3C/svg%3E") center/12px no-repeat;
+  transition:.25s;
+}
+details[open]>summary::after{transform:rotate(45deg);background-color:var(--acc)}
+details>div,details>ul{padding:0 0 18px;color:var(--mut);font-size:14px;margin:0;line-height:1.7}
+details ul{padding-left:18px}
+details li{margin-bottom:6px}
+
+.cw{
+  display:grid;grid-template-columns:1fr 180px;gap:30px;
+  align-items:start;margin-top:24px;
+  background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;
+}
+@media(max-width:640px){.cw{grid-template-columns:1fr}}
+.ck{
+  display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;
+  background:none;border:none;border-bottom:1px solid var(--line);
+  padding:14px 4px;color:inherit;font:inherit;font-size:14px;cursor:pointer;
+  transition:.2s;
+}
+.ck:hover{color:var(--acc)}
+.ck span{
+  flex:none;width:22px;height:22px;border-radius:7px;
+  border:2px solid var(--line2);margin-top:1px;
+  display:grid;place-items:center;transition:.25s;color:#fff;font-size:13px;
+}
+.ck.on span{background:var(--acc);border-color:var(--acc)}
+.ck.on span::after{content:"✓"}
+.ck.on{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--acc)}
+.rg{
+  --p:0;width:140px;height:140px;border-radius:50%;
+  background:conic-gradient(var(--acc) calc(var(--p)*360deg),var(--line) 0);
+  display:grid;place-items:center;margin:0 auto 10px;position:relative;
+  transition:background .5s;
+}
+.rg::before{content:"";position:absolute;inset:11px;border-radius:50%;background:var(--card)}
+.rg b{position:relative;font-family:var(--serif);font-size:32px;font-weight:500}
+#msg{text-align:center;font-size:12px;color:var(--mut);font-style:italic}
+
+.dc{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:22px;display:flex;flex-direction:column;gap:8px;
+  transition:.3s;position:relative;overflow:hidden;
+}
+.dc::after{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);
+  transform:scaleY(0);transform-origin:top;transition:.4s;
+}
+.dc:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.dc:hover::after{transform:scaleY(1)}
+.dc .ch{display:inline-block;font-size:11px;padding:2px 9px;border:1px solid var(--line2);border-radius:99px;color:var(--acc);font-weight:500}
+.dc p{margin:0;color:var(--mut);font-size:14px;flex:1;line-height:1.65}
+.dc .pill{align-self:flex-start;margin-top:10px}
+#dn{margin:18px 0 0;color:var(--acc);font-weight:600;font-size:14px;letter-spacing:.05em}
+
+.wheel-wrap{
+  margin-top:36px;display:grid;grid-template-columns:1fr 320px;gap:30px;
+  align-items:center;
+}
+@media(max-width:840px){.wheel-wrap{grid-template-columns:1fr}}
+.wheel{position:relative;width:100%;max-width:540px;margin:0 auto;aspect-ratio:1}
+.wheel svg{width:100%;height:100%;display:block}
+.wheel-node{cursor:pointer;transition:.3s}
+.wheel-node:hover .wn-bg{fill:var(--acc)}
+.wheel-node:hover .wn-text{fill:#fff}
+.wheel-node:hover .wn-num{fill:#fff}
+.wheel-node.on .wn-bg{fill:var(--acc)}
+.wheel-node.on .wn-text{fill:#fff}
+.wheel-node.on .wn-num{fill:#fff}
+.wheel-center{fill:var(--card);stroke:var(--acc);stroke-width:2}
+.wheel-center-text{font-family:var(--serif);font-style:italic;font-size:13px;fill:var(--ink);text-anchor:middle}
+.wheel-detail{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:22px;min-height:200px;
+}
+.wheel-detail .wd-id{color:var(--acc);font-family:var(--serif);font-style:italic;font-size:14px;letter-spacing:.08em}
+.wheel-detail .wd-name{font-family:var(--serif);font-size:22px;font-weight:500;margin:6px 0 12px;line-height:1.3}
+.wheel-detail .wd-rule{font-size:14px;color:var(--ink);line-height:1.65;margin-bottom:14px}
+.wheel-detail .wd-check{font-size:12px;color:var(--mut);font-style:italic;padding-top:12px;border-top:1px solid var(--line)}
+.wheel-detail .wd-check::before{content:"how we check — ";color:var(--sageDeep);font-style:normal;letter-spacing:.15em;text-transform:uppercase;font-size:10px;display:block;margin-bottom:4px}
+
+.stairs{
+  margin-top:30px;background:var(--card);border:1px solid var(--line);
+  border-radius:20px;padding:30px;
+}
+.stairs svg{width:100%;height:auto;max-height:280px}
+.stairs-note{font-size:12px;color:var(--mut);margin-top:14px;line-height:1.6}
+
+.demo-path{
+  margin-top:36px;position:relative;
+  background:var(--card);border:1px solid var(--line);border-radius:24px;
+  padding:30px 20px;overflow:hidden;
+}
+.demo-svg{width:100%;height:auto;display:block}
+.demo-list{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:12px;margin-top:24px;
+}
+.st{
+  display:flex;gap:12px;align-items:center;width:100%;text-align:left;
+  background:var(--bg);border:1px solid var(--line);border-radius:14px;
+  padding:14px 16px;color:inherit;font:inherit;font-size:13px;cursor:pointer;
+  transition:.25s;
+}
+.st:hover{border-color:var(--acc)}
+.st span{
+  flex:none;width:34px;height:34px;border-radius:50%;
+  border:1.5px solid var(--acc);display:grid;place-items:center;
+  font:500 16px var(--serif);color:var(--acc);background:var(--card);
+}
+.st.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,var(--bg))}
+.st.on span{background:var(--acc);color:#fff}
+.bar{height:6px;border-radius:6px;background:var(--line);margin-top:20px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--gold));transition:width .5s}
+
+.handoff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:24px}
+.warn{border-left:3px solid var(--acc);border-radius:6px 18px 18px 6px}
+.warn .ic-box svg{stroke:var(--acc)}
+
+.req-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px}
+.req-overlay[hidden]{display:none}
+.req-backdrop{position:absolute;inset:0;background:rgba(25,20,16,.58);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.req-modal{
+  position:relative;width:min(710px,100%);max-height:min(760px,calc(100vh - 40px));overflow:auto;
+  background:var(--bg);border:1px solid var(--line);border-radius:24px;box-shadow:0 36px 80px -24px rgba(0,0,0,.42);
+}
+.req-modal-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:28px 30px 20px;border-bottom:1px solid var(--line)}
+.req-kicker{margin:0 0 7px;color:var(--acc);font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
+.req-modal h2{font-size:clamp(30px,5vw,44px);margin:0}
+.req-close{width:38px;height:38px;display:grid;place-items:center;flex:none;border:1px solid var(--line2);border-radius:50%;background:var(--card);color:var(--ink);cursor:pointer;font:300 31px/1 var(--sans);transition:.2s}
+.req-close:hover{background:var(--acc);border-color:var(--acc);color:#fff}
+.req-modal-body{padding:26px 30px 30px}
+.req-meaning{font-family:var(--serif);font-size:clamp(23px,3vw,30px);line-height:1.3;margin:0;color:var(--ink)}
+.req-meta{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
+.req-meta span{padding:4px 10px;border-radius:99px;background:var(--card);border:1px solid var(--line);color:var(--mut);font-size:11px;letter-spacing:.04em}
+.req-why{padding:18px 20px;border-radius:14px;background:var(--bg2);border-left:3px solid var(--sage)}
+.req-why b{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--sageDeep)}
+.req-why p{margin:6px 0 0;color:var(--mut);font-size:14px;line-height:1.65}
+.req-source{margin-top:18px;border:1px solid var(--line);border-radius:14px;padding:0 17px}
+.req-source summary{font-size:13px;padding:14px 0}
+.req-source p{margin:0;padding:0 0 16px;color:var(--mut);font-size:13px;line-height:1.65}
+.story-summary{font-family:var(--serif);font-size:clamp(22px,3vw,29px);line-height:1.34;margin:0;color:var(--ink)}
+.story-section-label{margin:28px 0 10px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mut)}
+.story-requirements{display:flex;gap:8px;overflow-x:auto;padding:3px 1px 9px}
+.story-requirements button{flex:none;padding:8px 12px;border:1px solid var(--line2);border-radius:10px;background:var(--card);color:var(--ink);font:600 12px/1 var(--sans);cursor:pointer;transition:.2s}
+.story-requirements button:hover,.story-requirements button:focus-visible,.story-requirements button.on{background:var(--acc);border-color:var(--acc);color:#fff;outline:none}
+.story-requirement-panel{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.story-requirement-panel[hidden]{display:none}
+.story-requirement-panel h3{font-family:var(--serif);font-size:25px;line-height:1.22;margin:0 0 8px}
+.acceptance-list{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:9px}
+.acceptance-list li{position:relative;padding-left:24px;color:var(--mut);font-size:14px;line-height:1.55}
+.acceptance-list li::before{content:"✓";position:absolute;left:0;top:0;color:var(--sageDeep);font-weight:700}
+body.overlay-open{overflow:hidden}
+@media(max-width:600px){.req-overlay{padding:12px}.req-modal{max-height:calc(100vh - 24px);border-radius:20px}.req-modal-head{padding:22px 20px 17px}.req-modal-body{padding:21px 20px 24px}.req-close{width:34px;height:34px;font-size:27px}}
+
+footer{
+  text-align:center;padding:90px 20px 60px;
+  background:linear-gradient(180deg,transparent,var(--bg2));
+  border-top:1px solid var(--line);position:relative;
+}
+footer::before{
+  content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:60px;height:3px;background:var(--acc);border-radius:0 0 3px 3px;
+}
+footer h2{max-width:680px;margin:0 auto 24px}
+footer .meta{
+  margin-top:30px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--mut);display:flex;justify-content:center;gap:30px;flex-wrap:wrap;
+}
+</style>
+</head>
+<body>
+<header id="hdr">
+  <a class="logo" href="#top">
+    <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 21 L24 7 L42 21" stroke="var(--acc)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M11 30 L11 39 Q11 42 14 42 L34 42 Q37 42 37 39 L37 30" stroke="var(--acc)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    FindStay
+  </a>
+  <nav>
+    <a href="#goal">Goal</a>
+    <a href="#arch">Architecture</a>
+    <a href="#days">Stories</a>
+    <a href="#checks">Checklists</a>
+    <a href="#decide">Decisions</a>
+    <a href="#rules">Rules</a>
+    <a href="#demo">Demo</a>
+  </nav>
+  <button class="pill" id="th">Theme · Auto</button>
+</header>
+
+<main>
+
+<div class="hero" id="top">
+  <svg class="hero-svg" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice">
+    <path d="M0 300V190l120-50 90 40 130-90 110 70 150-60 140 80 120-40 160 60 180-50v250z" fill="#2f251e"/>
+    <circle cx="214" cy="140" r="7" fill="#eadfca"/>
+    <path d="M203 149h22l9 34h-40z" fill="#eadfca"/>
+    <path d="M0 300V245l160-40 140 30 200-50 180 40 190-30 140 30 190-20v140z" fill="#1c1612"/>
+  </svg>
+  <div class="hc">
+    <p class="eb">Sprint 1 <u></u> Weeks 1–2 <u></u> Release R1</p>
+    <h1 class="s">FindStay</h1>
+    <p class="tg">Ten days to take an owner from sign-up to a published listing, with backups and monitoring switched on from the start.</p>
+    <a class="cta" href="#goal">See the plan →</a>
+    <div class="stats">
+      <div><b class="s">108</b>requirements</div>
+      <div><b class="s">17</b>stories</div>
+      <div><b class="s">10</b>days</div>
+      <div><b class="s">1</b>live release</div>
+    </div>
+  </div>
+  <div class="br"><i></i><span>Release whole,<br>or not at all</span></div>
+</div>
+
+<section id="goal">
+  <p class="k">The goal</p>
+  <h2 class="s">One owner. One listing. <em>Live.</em></h2>
+  <p class="lead">By the end of Sprint 1, a verified owner can sign up, build an organisation, submit documents, create a listing with photos and a calendar — and an administrator can approve it on the live system. Tap each step to see what happens.</p>
+  <div class="plain-grid">
+    <article class="plain-card"><h3 class="s">Who this is for</h3><p><strong>R1 is for invited property owners and the FindStay admin team.</strong> It gives them a safe first way to add and approve places to stay. Guests will not use this release to book yet.</p></article>
+    <article class="plain-card"><h3 class="s">What we are proving</h3><p>We are proving the full owner journey works: join, show who you are, add a place, add rooms and photos, choose available dates, and get approved.</p></article>
+    <article class="plain-card"><h3 class="s">What can wait</h3><p>Taking bookings and payments, monthly or school-term stays, calendar links, AI help, and text-to-speech are all later work. Keeping them out helps us finish this first release well.</p></article>
+  </div>
+  <div class="journey">
+    <div class="jr" id="jr"></div>
+    <div class="jd" id="jd"></div>
+  </div>
+</section>
+
+<section id="arch">
+  <p class="k">The Architecture</p>
+  <h2 class="s">Every tool <em>earns</em> its place</h2>
+  <p class="lead">Nothing decorative. Each layer has one job and gets out of the way when the work needs to breathe. The screens never touch business tables directly; Supabase Auth owns sign-in; Spring Modulith keeps every part in its own boundary.</p>
+  <div class="arch">
+    <svg viewBox="0 0 1000 580" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="gFront" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--sage)" stop-opacity=".15"/><stop offset="1" stop-color="var(--sage)" stop-opacity=".05"/></linearGradient>
+        <linearGradient id="gShield" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--acc)" stop-opacity=".18"/><stop offset="1" stop-color="var(--acc)" stop-opacity=".08"/></linearGradient>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--acc)"/></marker>
+      </defs>
+      <g opacity=".08" stroke="var(--ink)" stroke-width=".5"><line x1="0" y1="100" x2="1000" y2="100"/><line x1="0" y1="220" x2="1000" y2="220"/><line x1="0" y1="340" x2="1000" y2="340"/><line x1="0" y1="460" x2="1000" y2="460"/></g>
+      <g font-family="Inter" font-size="10" fill="var(--mut)" letter-spacing="2"><text x="14" y="60">SCREENS</text><text x="14" y="180">EDGE</text><text x="14" y="300">DATA · AUTH · FILES</text><text x="14" y="420">CORE SYSTEM</text><text x="14" y="540">EXTERNAL</text></g>
+      <g><rect x="240" y="30" width="520" height="70" rx="12" fill="url(#gFront)" stroke="var(--sage)" stroke-width="1.5"/><text x="500" y="58" text-anchor="middle" font-family="Cormorant Garamond" font-size="20" font-weight="500" fill="var(--ink)">React · TypeScript · Vite</text><text x="500" y="80" text-anchor="middle" font-family="Inter" font-size="11" fill="var(--mut)">Tailwind · shadcn/ui · React Hook Form · Zod · TanStack Query</text><g transform="translate(280,55)" stroke="var(--sage)" stroke-width="1.5" fill="none"><rect x="-12" y="-9" width="24" height="18" rx="2"/><line x1="-12" y1="-3" x2="12" y2="-3"/><circle cx="-8" cy="6" r="1.5" fill="var(--sage)"/></g></g>
+      <line x1="500" y1="100" x2="500" y2="150" stroke="var(--acc)" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4 4"/>
+      <g><rect x="200" y="150" width="600" height="60" rx="12" fill="url(#gShield)" stroke="var(--acc)" stroke-width="1.5"/><text x="500" y="175" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" font-weight="500" fill="var(--ink)">Cloudflare</text><text x="500" y="195" text-anchor="middle" font-family="Inter" font-size="10" fill="var(--mut)">Workers Static Assets · DNS · CDN · WAF · Turnstile</text><g transform="translate(230,180)" stroke="var(--acc)" stroke-width="1.5" fill="none"><path d="M0,-12 L10,-8 L10,2 Q10,12 0,16 Q-10,12 -10,2 L-10,-8 Z"/></g></g>
+      <line x1="350" y1="210" x2="350" y2="260" stroke="var(--acc)" stroke-width="1.5" marker-end="url(#arrow)"/><line x1="500" y1="210" x2="500" y2="260" stroke="var(--acc)" stroke-width="1.5" marker-end="url(#arrow)"/><line x1="650" y1="210" x2="650" y2="260" stroke="var(--acc)" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <g><rect x="280" y="260" width="140" height="70" rx="10" fill="var(--card)" stroke="var(--gold)" stroke-width="1.5"/><text x="350" y="288" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-weight="500" fill="var(--ink)">Supabase Auth</text><text x="350" y="308" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">JWT · JWKS · email · OTP</text><rect x="430" y="260" width="140" height="70" rx="10" fill="var(--card)" stroke="var(--gold)" stroke-width="1.5"/><text x="500" y="288" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-weight="500" fill="var(--ink)">PostgreSQL</text><text x="500" y="308" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">Flyway · btree_gist</text><rect x="580" y="260" width="140" height="70" rx="10" fill="var(--card)" stroke="var(--gold)" stroke-width="1.5"/><text x="650" y="288" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-weight="500" fill="var(--ink)">Storage</text><text x="650" y="308" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">WebP · signed URLs</text></g>
+      <line x1="500" y1="330" x2="500" y2="380" stroke="var(--acc)" stroke-width="2" marker-end="url(#arrow)"/>
+      <g><rect x="220" y="380" width="560" height="70" rx="12" fill="var(--acc)" fill-opacity=".12" stroke="var(--acc)" stroke-width="2"/><text x="500" y="408" text-anchor="middle" font-family="Cormorant Garamond" font-size="20" font-weight="500" fill="var(--ink)">Spring Boot 3 · Java 21 · Render</text><text x="500" y="430" text-anchor="middle" font-family="Inter" font-size="11" fill="var(--mut)">Spring Modulith · Spring Security OAuth2 · Flyway · JPA · HikariCP</text><g transform="translate(255,415)" stroke="var(--acc)" stroke-width="1.5" fill="none"><circle cx="0" cy="0" r="8"/><circle cx="0" cy="0" r="3" fill="var(--acc)"/><line x1="0" y1="-10" x2="0" y2="-12"/><line x1="0" y1="10" x2="0" y2="12"/><line x1="-10" y1="0" x2="-12" y2="0"/><line x1="10" y1="0" x2="12" y2="0"/></g></g>
+      <line x1="350" y1="450" x2="200" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/><line x1="500" y1="450" x2="500" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/><line x1="650" y1="450" x2="800" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/>
+      <g><rect x="120" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="200" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">Paystack</text><text x="200" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">payments</text><rect x="420" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="500" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">Sentry</text><text x="500" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">errors · health</text><rect x="720" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="800" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">GitHub Actions</text><text x="800" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">build · test</text></g>
+      <g font-family="Inter" font-size="9" fill="var(--sageDeep)" font-style="italic"><text x="830" y="65">no direct access to business tables</text><text x="830" y="195">blocks attacks · stops bots</text><text x="830" y="410">verify() fails the build</text><text x="830" y="540">hosted checkout · PCI-safe</text></g>
+    </svg>
+    <div class="arch-legend"><span><i style="background:var(--sage)"></i>Screens</span><span><i style="background:var(--acc)"></i>Edge / Core</span><span><i style="background:var(--gold)"></i>Data layer</span><span><i style="background:var(--line2)"></i>External services</span></div>
+  </div>
+</section>
+
+<section id="days">
+  <p class="k">Stories</p>
+  <h2 class="s">Who builds what, <em>and when</em></h2>
+  <p class="lead">Read the sprint from left to right: each column is a day. A story bar stretches across the days it needs. Select a story to see its requirements and what proves it is finished.</p>
+  <div class="rhythm" aria-label="Simple ten-day sprint rhythm">
+    <div class="rhythm-step"><b>D1</b><span>Agree the goal, decide open questions, and choose the work.</span></div>
+    <div class="rhythm-step"><b>D1–D8</b><span>Build in small pieces, test as we go, and raise blockers early.</span></div>
+    <div class="rhythm-step"><b>D5</b><span>Pause and check: are the important things still on track?</span></div>
+    <div class="rhythm-step"><b>D8</b><span>Stop adding new features. From here, fix and polish only.</span></div>
+    <div class="rhythm-step"><b>D9</b><span>Do the final check, practise recovery, and release if it is safe.</span></div>
+    <div class="rhythm-step"><b>D10</b><span>Show the result, learn what to improve, then prepare the next sprint.</span></div>
+  </div>
+  <div class="f" id="dayFilters"></div>
+  <div class="gantt-wrap">
+    <div class="gantt-head" id="ganttHead"></div>
+    <div class="gantt-body" id="ganttBody"></div>
+    <div class="gantt-legend"><span><i style="background:var(--acc)"></i>Track A · Must</span><span><i style="background:var(--sage)"></i>Track B · Must</span><span><i style="background:var(--acc);opacity:.55"></i>Should (faded)</span></div>
+  </div>
+  <h3 style="margin-top:50px">Roles · Priorities · Capacity</h3>
+  <div class="cols">
+    <div class="card"><div class="ic-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg></div><span class="s">Product Owner</span><p>Sets the order of work, makes open decisions, accepts or rejects each story at Sprint Review.</p></div>
+    <div class="card"><div class="ic-box"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div><span class="s">Scrum Master</span><p>A team member, part-time is fine. Protects the schedule, removes blockers, leads the retrospective.</p></div>
+    <div class="card"><div class="ic-box"><svg viewBox="0 0 24 24"><path d="M8 6l-4 6 4 6M16 6l4 6-4 6"/></svg></div><span class="s">Developers</span><p>Plan and build the sprint, own quality, release, and demonstrate. Two tracks: A (platform) and B (screens).</p></div>
+  </div>
+  <details><summary>Priorities and the unfinished-work rule</summary><ul><li>Every story is Must, Should or Could. Work follows that order each day.</li><li>A story ships whole or not at all. Unfinished work stays hidden behind its on/off switch.</li><li>A requirement counts as delivered only when its story is Done at Sprint Review.</li><li>An unfinished Must story in Sprints 1 to 3 blocks dependent stories; the Product Owner decides at the Day 5 check.</li><li>Should and Could stories may slide to a later sprint. Moving anything past week 10 needs a formal change request.</li><li>Reserve 10% of every sprint for fixing the previous release, and 15% in Sprint 4.</li></ul></details>
+  <details><summary>Capacity check</summary><div>Before Sprint Planning, list available person-days after classes, exams, public holidays and standing work. Reserve 20% for connecting, testing, review and documentation, plus the fix reserve. Commit new stories only from what is left. At the Sprint 1 Review, re-estimate later sprints from real speed. If under 85% of committed work is Done, drop Could stories first, then move whole Should stories by change request. Never weaken the Done checklist.</div></details>
+</section>
+
+<div class="atmos">
+  <div class="atmos-img" style="background-image:url('https://picsum.photos/seed/sageLeavesStone/1800/600.jpg')"></div>
+  <div class="atmos-tint"></div>
+  <div class="atmos-quote"><p>A story ships whole, or not at all.</p></div>
+</div>
+
+<section id="checks">
+  <p class="k">Check it yourself</p>
+  <h2 class="s">Is a story <em>ready</em>? Is it <em>done</em>?</h2>
+  <p class="lead">Every story passes through two gates. Tick the items to see how it feels — the ring fills as you go.</p>
+  <div class="f" id="tabs"></div>
+  <div class="cw"><div id="ls"></div><div><div class="rg" id="rg"><b class="s" id="rn">0/0</b></div><p id="msg"></p></div></div>
+</section>
+
+<section id="decide">
+  <p class="k">Decisions</p>
+  <h2 class="s">Six answers we <em>need early</em></h2>
+  <p class="lead">If no decision arrives by the day shown, the team builds the default. A default is a suggestion for you to confirm — not itself a decision.</p>
+  <div class="cols" id="dg"></div>
+  <p id="dn">0 of 6 confirmed</p>
+  <details><summary>Decisions for later sprints and closed ones</summary><ul id="dl"></ul></details>
+</section>
+
+<section id="rules">
+  <p class="k">The no-conflict rule</p>
+  <h2 class="s">Each sprint <em>adds</em>. None rewrites.</h2>
+  <p class="lead">Eight rules, enforced from Sprint 1, keep Phase 2 from disturbing Phase 1. Tap any node on the wheel to read the rule and how it is checked.</p>
+  <div class="wheel-wrap">
+    <div class="wheel"><svg viewBox="0 0 500 500" id="wheelSvg"><circle cx="250" cy="250" r="230" fill="none" stroke="var(--line2)" stroke-width="1" stroke-dasharray="2 6"/><circle cx="250" cy="250" r="200" fill="none" stroke="var(--line)" stroke-width="1"/><g stroke="var(--line2)" stroke-width="1"><line x1="250" y1="250" x2="250" y2="60"/><line x1="250" y1="250" x2="412" y2="148"/><line x1="250" y1="250" x2="440" y2="352"/><line x1="250" y1="250" x2="312" y2="440"/><line x1="250" y1="250" x2="188" y2="440"/><line x1="250" y1="250" x2="60" y2="352"/><line x1="250" y1="250" x2="88" y2="148"/><line x1="250" y1="250" x2="250" y2="60"/></g><circle cx="250" cy="250" r="62" class="wheel-center"/><text x="250" y="240" class="wheel-center-text">each sprint</text><text x="250" y="258" class="wheel-center-text" style="font-size:16px;font-weight:600">adds.</text><text x="250" y="276" class="wheel-center-text">never rewrites</text><g id="wheelNodes"></g></svg></div>
+    <div class="wheel-detail" id="wheelDetail"><div class="wd-id">C1</div><div class="wd-name">Only add</div><div class="wd-rule">No dropped or renamed columns. No new required column without a default.</div><div class="wd-check">Tested by upgrading a copy of the previous release.</div></div>
+  </div>
+  <h3 style="margin-top:50px">Earlier tests always run again</h3>
+  <div class="stairs">
+    <svg viewBox="0 0 1000 240" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="stairGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--acc)" stop-opacity=".3"/><stop offset="1" stop-color="var(--acc)" stop-opacity=".9"/></linearGradient></defs><g><rect x="60" y="180" width="160" height="40" fill="var(--card)" stroke="var(--acc)" stroke-width="1.5"/><rect x="60" y="180" width="160" height="40" fill="url(#stairGrad)" opacity=".5"/><text x="140" y="170" text-anchor="middle" font-family="Cormorant Garamond" font-size="24" font-weight="600" fill="var(--acc)">R1</text><text x="140" y="205" text-anchor="middle" font-family="Inter" font-size="10" fill="var(--ink)" letter-spacing=".1em">SPRINT 1</text><rect x="240" y="145" width="160" height="75" fill="var(--card)" stroke="var(--acc)" stroke-width="1.5"/><rect x="240" y="145" width="160" height="75" fill="url(#stairGrad)" opacity=".55"/><text x="320" y="135" text-anchor="middle" font-family="Cormorant Garamond" font-size="24" font-weight="600" fill="var(--acc)">R2</text><text x="320" y="180" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--ink)">+ SPRINT 2</text><rect x="420" y="110" width="160" height="110" fill="var(--card)" stroke="var(--acc)" stroke-width="1.5"/><rect x="420" y="110" width="160" height="110" fill="url(#stairGrad)" opacity=".6"/><text x="500" y="100" text-anchor="middle" font-family="Cormorant Garamond" font-size="24" font-weight="600" fill="var(--acc)">R3</text><text x="500" y="155" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--ink)">+ SPRINT 3</text><text x="500" y="172" text-anchor="middle" font-family="Inter" font-size="8" fill="var(--mut)">+ seam tests</text><rect x="600" y="75" width="160" height="145" fill="var(--card)" stroke="var(--acc)" stroke-width="1.5"/><rect x="600" y="75" width="160" height="145" fill="url(#stairGrad)" opacity=".7"/><text x="680" y="65" text-anchor="middle" font-family="Cormorant Garamond" font-size="24" font-weight="600" fill="var(--acc)">R4</text><text x="680" y="130" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--ink)">+ SPRINT 4</text><text x="680" y="147" text-anchor="middle" font-family="Inter" font-size="8" fill="var(--mut)">boundary clean</text><rect x="780" y="40" width="160" height="180" fill="var(--acc)" stroke="var(--acc)" stroke-width="1.5"/><text x="860" y="30" text-anchor="middle" font-family="Cormorant Garamond" font-size="24" font-weight="600" fill="#fff">R5</text><text x="860" y="100" text-anchor="middle" font-family="Inter" font-size="9" fill="#fff">+ SPRINT 5</text><text x="860" y="117" text-anchor="middle" font-family="Inter" font-size="8" fill="rgba(255,255,255,.8)">full security</text><text x="860" y="134" text-anchor="middle" font-family="Inter" font-size="8" fill="rgba(255,255,255,.8)">re-test</text></g><path d="M40 220 L960 20" stroke="var(--acc)" stroke-width="1.5" stroke-dasharray="4 4" fill="none" opacity=".5"/></svg>
+    <p class="stairs-note">R3 adds the Phase 1 seam tests. R4 keeps Phase 1 untouched with a clean boundary check. R5 adds a full security re-test. A failing earlier test blocks the release.</p>
+  </div>
+  <details><summary>Who may use what</summary><ul><li><strong>Sprint 1:</strong> shared basics only.</li><li><strong>Sprint 2:</strong> Sprint 1 public APIs and events; never Sprint 1 inner workings.</li><li><strong>Sprint 3:</strong> Sprint 1 and 2 public APIs and the frozen event list; no new booking states.</li><li><strong>Sprint 4:</strong> Phase 1 public APIs, events and seams.</li><li><strong>Sprint 5:</strong> Phase 1 and Sprint 4 public APIs.</li></ul></details>
+</section>
+
+<section id="demo">
+  <p class="k">Demo day</p>
+  <h2 class="s">Seven steps to <em>"accepted"</em></h2>
+  <p class="lead">The Sprint Review script. Tap each card to mark it as it lands.</p>
+  <div class="demo-path">
+    <svg class="demo-svg" viewBox="0 0 1000 240" xmlns="http://www.w3.org/2000/svg"><path d="M60 120 Q 200 30, 340 120 T 620 120 T 900 120" stroke="var(--line2)" stroke-width="2" stroke-dasharray="6 6" fill="none"/><g id="demoStops"><g class="stop" data-i="0" transform="translate(60,120)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">1</text></g><g class="stop" data-i="1" transform="translate(220,55)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">2</text></g><g class="stop" data-i="2" transform="translate(380,120)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">3</text></g><g class="stop" data-i="3" transform="translate(540,55)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">4</text></g><g class="stop" data-i="4" transform="translate(700,120)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">5</text></g><g class="stop" data-i="5" transform="translate(820,55)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">6</text></g><g class="stop" data-i="6" transform="translate(940,120)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">7</text></g></g></svg>
+    <div class="demo-list" id="demoList"></div>
+    <div class="bar"><i id="pb"></i></div>
+  </div>
+  <div class="release-note">
+    <h3 class="s">Before we call it live</h3>
+    <p>Looking complete is not enough. We need simple proof that real people can use it safely, that owners stay separate, and that we can recover if something goes wrong.</p>
+    <div class="proof-list">
+      <span><i>✓</i>Two pilot owners have tried the main journey.</span>
+      <span><i>✓</i>An owner cannot see or change another owner’s information.</span>
+      <span><i>✓</i>The team has practised restoring yesterday’s saved copy.</span>
+      <span><i>✓</i>The team has checked the live version after release.</span>
+      <span><i>✓</i>The Product Owner has seen the demo and accepted the finished stories.</span>
+    </div>
+  </div>
+</section>
+
+<div class="atmos">
+  <div class="atmos-img" style="background-image:url('https://picsum.photos/seed/stonePathGarden/1800/500.jpg')"></div>
+  <div class="atmos-tint"></div>
+  <div class="atmos-quote"><p>Built in. Not bolted on. Not rewritten.</p></div>
+</div>
+
+<section id="end">
+  <p class="k">Built in for Sprint 2</p>
+  <h2 class="s">Handed over, <em>not rewritten</em></h2>
+  <p class="lead">Eight things Sprint 1 builds in, so the next sprint adds without editing what already works.</p>
+  <div class="handoff-grid" id="ho"></div>
+  <h3 style="margin-top:50px">Risks we are watching</h3>
+  <div class="cols" id="rk"></div>
+</section>
+
+<footer>
+  <p class="k">FindStay · Sprint 1</p>
+  <h2 class="s">Foundations laid <em>well</em> are foundations laid <em>once</em>.</h2>
+  <a class="cta" href="#top">Back to the top ↑</a>
+  <div class="meta"><span>Phase 1 · Release R1</span><span>108 requirements · 17 stories</span><span>10 working days</span></div>
+</footer>
+
+</main>
+
+<div class="req-overlay" id="storyOverlay" hidden aria-hidden="true">
+  <div class="req-backdrop" data-close-story></div>
+  <section class="req-modal" role="dialog" aria-modal="true" aria-labelledby="storyTitle">
+    <div class="req-modal-head">
+      <div><p class="req-kicker" id="storyKicker">Story</p><h2 class="s" id="storyTitle">Loading story</h2></div>
+      <button class="req-close" type="button" aria-label="Close story" data-close-story>&times;</button>
+    </div>
+    <div class="req-modal-body">
+      <p class="story-summary" id="storySummary"></p>
+      <div class="req-meta" id="storyMeta"></div>
+      <p class="story-section-label">Requirements</p>
+      <div class="story-requirements" id="storyRequirements" role="tablist" aria-label="Requirements in this story"></div>
+      <div class="story-requirement-panel" id="storyRequirementPanel" hidden></div>
+    </div>
+  </section>
+</div>
+
+<script>
+document.documentElement.classList.add('js');
+const $=(q,e=document)=>e.querySelector(q),$$=(q,e=document)=>[...e.querySelectorAll(q)],E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+let requirementData={};
+const requirementReady=fetch('sprint-1-requirements.json').then(r=>{if(!r.ok)throw Error('Could not load requirements');return r.json()}).then(data=>requirementData=data).catch(()=>requirementData={});
+const requirementKinds={UR:'What a person using or running FindStay needs',FR:'Something the system must do',NFR:'A quality we must protect',BR:'A promise FindStay makes',BRL:'A rule the team must follow',TA:'A behind-the-scenes promise',PD:'Work needed to deliver the release'};
+const plainRequirements={
+  'TA-01':'The website, the work behind it and the saved information all have clear, separate jobs.','TA-02':'The screens talk to the main system in one safe, consistent way.','TA-07':'The sign-in service protects passwords. FindStay never keeps them.','TA-08':'A sign-in pass expires and is safely renewed. The main system checks that each pass is real.','TA-09':'Sensitive ID details, such as Ghana Card information, are locked away safely.','TA-11':'Private passwords and keys are kept out of the project files.','TA-12':'Property photos are kept in the approved photo store.','TA-13':'Photos stay clear but use less mobile data.','PD-06':'The website, main system and saved information are put online in their planned homes.','NFR-21':'Private information stays safe while moving and while stored.','NFR-22':'FindStay never stores or handles a person’s password itself.','NFR-23':'The system checks what people enter and blocks harmful input.','NFR-27':'Private passwords and service keys never go into the project files.','NFR-42':'A fresh saved copy is made every day, and the team knows how to restore it.','NFR-45':'The system can grow as more owners, places and people join.','NFR-48':'The system is arranged so new parts can be added without breaking the old parts.','NFR-52':'Dates and times stay correct for Ghana.','NFR-54':'The system is clearly organised and explained so it is easy to improve later.','NFR-56':'The team can check work automatically instead of relying only on memory.','NFR-63':'The system has a clear, controlled way for other parts to communicate.'
+};
+function requirementPrefix(id){return id.startsWith('BRL-')?'BRL':id.split('-')[0]}
+function friendlyRequirement(id,item){
+  if(plainRequirements[id])return plainRequirements[id];
+  const t=item.text.replace(/^Allow /,'People can ').replace(/^Provide /,'The system gives people ').replace(/^Support /,'The system can ').replace(/^Enforce /,'The system makes sure it ').replace(/^Maintain /,'The team keeps ').replace(/^Protect /,'The system keeps ').replace(/^Prevent /,'The system stops ').replace(/^Follow /,'The team follows ').replace(/^Collect /,'The team collects ').replace(/^Publish /,'The system publishes ').replace(/^Validate /,'The system checks ');
+  return t.charAt(0).toUpperCase()+t.slice(1);
+}
+function requirementWhy(id){
+  const kind=requirementPrefix(id);
+  return kind==='UR'?'It keeps the plan connected to a real need from a person who will use or run FindStay.':kind==='FR'?'It gives the team a clear feature to build and check.':kind==='NFR'?'It makes sure the finished work is safe, clear, reliable or easy to use.':kind==='BRL'?'It keeps everyone working by the same rule, so the system stays fair and safe.':kind==='BR'?'It keeps the release focused on the problem FindStay is here to solve.':kind==='TA'?'It makes an important behind-the-scenes promise without asking the team to remember it later.':'It makes sure the team has the support and proof needed for a safe release.';
+}
+function closeStory(){const overlay=$('#storyOverlay');overlay.hidden=true;overlay.setAttribute('aria-hidden','true');document.body.classList.remove('overlay-open')}
+function addAcceptanceChecks(panel,s,item,id){
+  const heading=E('p','story-section-label','What proves this story is finished');
+  const list=E('ul','acceptance-list');
+  (storyAcceptance['S1-'+s[0]]||[s[6]]).forEach(check=>{const li=E('li','');li.textContent=check;list.append(li)});
+  panel.append(heading,list);
+  if(item){
+    const why=E('div','req-why');why.innerHTML='<b>Why this requirement matters</b><p></p>';$('p',why).textContent=requirementWhy(id);panel.append(why);
+    const source=E('details','req-source');const summary=E('summary','');summary.textContent='See the exact requirement wording';const text=E('p','');text.textContent=item.text;source.append(summary,text);panel.append(source);
+  }
+}
+async function selectStoryRequirement(s,id,button){
+  const panel=$('#storyRequirementPanel');panel.hidden=false;panel.innerHTML='';
+  $$('#storyRequirements button').forEach(b=>{const selected=b===button;b.classList.toggle('on',selected);b.setAttribute('aria-selected',String(selected))});
+  await requirementReady;
+  const item=requirementData[id];
+  if(item){const label=E('p','req-kicker','Requirement · '+id);const title=E('h3','');title.textContent=friendlyRequirement(id,item);panel.append(label,title)}
+  else {const label=E('p','req-kicker','Requirement · '+id);const title=E('h3','');title.textContent='Requirement details are not available right now.';panel.append(label,title)}
+  addAcceptanceChecks(panel,s,item,id);
+}
+function showStory(s){
+  const overlay=$('#storyOverlay');overlay.hidden=false;overlay.setAttribute('aria-hidden','false');document.body.classList.add('overlay-open');
+  $('#storyKicker').textContent='Story S1-'+s[0]+' · Days '+s[4]+'–'+s[5];$('#storyTitle').textContent=s[1];$('#storySummary').textContent=s[6];
+  $('#storyMeta').innerHTML='<span>'+s[7]+'</span><span>'+(s[2]=='M'?'Must have':'Should have')+'</span><span>Track '+s[3]+'</span>';
+  const requirements=$('#storyRequirements');requirements.innerHTML='';const ids=s[8].split(' ').filter(Boolean);
+  if(!ids.length){requirements.innerHTML='<span class="mut">This release story has no separate requirement IDs.</span>';const panel=$('#storyRequirementPanel');panel.hidden=false;panel.innerHTML='';addAcceptanceChecks(panel,s,null,'');}
+  ids.forEach((id,index)=>{const button=E('button',index?'':'on',id);button.type='button';button.setAttribute('role','tab');button.setAttribute('aria-selected',String(!index));button.onclick=()=>selectStoryRequirement(s,id,button);requirements.append(button);if(!index)selectStoryRequirement(s,id,button)});
+  $('.req-close').focus();
+}
+document.addEventListener('click',e=>{if(e.target.closest('[data-close-story]'))closeStory()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#storyOverlay').hidden)closeStory()});
+const tb=$('#th');tb.onclick=()=>{const r=document.documentElement,dk=r.dataset.theme?r.dataset.theme=='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dk?'light':'dark';tb.textContent='Theme · '+(dk?'Light':'Dark')};
+addEventListener('scroll',()=>{$('#hdr').classList.toggle('scrolled',scrollY>40)},{passive:true});
+const J=[['Sign up','Registers with email (or a phone code), confirms, and logs in securely.','<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg>'],['Create organisation','An organisation is created automatically. The owner invites staff and grants permission for one property only.','<svg viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13M9 21v-6h6v6"/></svg>'],['Submit documents','Identity and property documents go in; a status tracker shows progress. Identity numbers are encrypted.','<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>'],['Build a listing','Units, photos, rates, amenities, house rules and an availability calendar. Incomplete listings cannot be submitted.','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>'],['Admin approves','Administrators approve, reject, suspend, restore or ask for corrections, always with a reason.','<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>'],['Published','The listing goes live and the owner gets an email.','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/></svg>']];
+J.forEach((j,i)=>{const b=E('button','nd','<span class="ic">'+j[2]+'</span><span class="lbl">'+j[0]+'</span>');b.onclick=()=>pick(i);$('#jr').append(b)});
+function pick(i){$$('.nd').forEach((b,k)=>{b.classList.toggle('on',k==i);b.classList.toggle('p',k<i)});const n=(i+1)%J.length;$('#jd').innerHTML='<div><b class="s">'+J[i][0]+'</b><p>'+J[i][1]+'</p></div><button class="pill">'+(i==J.length-1?'Start over':'Next step →')+'</button>';$('#jd button').onclick=()=>pick(n)}
+pick(0);
+const S=[['01','Basic working system','M','A',1,3,'An empty app builds, tests and goes live by itself; the build fails if one part reaches into another’s inner workings.','Platform Foundation','TA-01 TA-02 NFR-45 NFR-46 NFR-47 NFR-48 NFR-52 NFR-54 NFR-55 NFR-56 NFR-57 NFR-58 NFR-63 PD-01 PD-02 PD-07','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>'],['02','Live hosting and backups','M','A',2,4,'Live on cloud hosting; a backup is restored into a scratch database and timed.','Platform Foundation','PD-06 PD-10 PD-11 PD-12 TA-11 NFR-27 NFR-42 NFR-43 UR-ON05','<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg>'],['03','Design kit and layouts','M','B',2,5,'Owner and admin layouts work on phone, tablet and desktop with consistent navigation and messages.','UI Foundation','NFR-01 NFR-02 NFR-03 NFR-04 NFR-05 NFR-07 NFR-09 NFR-10 NFR-12 UR-ON01 BR-10','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>'],['04','Sign-up and login','M','A',2,5,'A user signs up, confirms by email (or phone code), logs in and out; protected endpoints reject anonymous users.','Identity','UR-G01 FR-01 FR-02 FR-03 FR-05 BRL-01 NFR-19 NFR-22 TA-07 TA-08','<svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>'],['05','Password recovery, profile','M','A',5,6,'A user recovers a password through a verified channel and edits only their own profile.','Identity','FR-04 FR-06','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v3M12 20v3"/></svg>'],['06','Permissions and security','M','A',4,6,'Every endpoint is guarded by permissions stored in tables; admin-only routes are out of reach for others.','Identity & Security','FR-07 BRL-02 NFR-20 NFR-21 NFR-23 NFR-24 UR-AN01','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'],['07','Organisations and staff','M','A',4,7,'An owner gets an organisation, invites staff, grants per-property permissions and sees only their own data.','Organisation','UR-O15 UR-PS01 UR-PSN01 UR-PM03 FR-09 BRL-04 BRL-05 UR-ON02','<svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>'],['08','Tamper-proof activity log','S','A',5,7,'Admin and verification actions are recorded and can never be edited or deleted.','Audit','UR-A07 UR-AN02 NFR-66 BR-11 BRL-19','<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>'],['09','Photo and document uploads','M','B',4,6,'Photos upload and serve as optimised WebP; verification and tenancy documents stay private.','Media','TA-12 TA-13 NFR-17','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>'],['10','Email, SMS, in-app messages','M','A',5,7,'Account and verification events reach users by email, SMS and in-app.','Notification','FR-68 FR-69 FR-70 FR-71 NFR-60','<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>'],['11','Consent and privacy','S','A',6,7,'Consent is captured at sign-up, only needed data is collected.','Privacy','NFR-31 NFR-32 NFR-35 NFR-36','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>'],['12','Owner verification','M','B',6,8,'An owner submits identity and property documents; identity data is encrypted at rest.','Verification','UR-O01 FR-08 NFR-28 NFR-34 TA-09','<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M2 10h20"/></svg>'],['13','Properties, units, rates','M','B',4,8,'A verified owner creates, edits and pauses a listing with units, photos, rates, amenities and house rules.','Catalog','FR-11 FR-12 FR-13 FR-14 FR-15 FR-16 FR-17 FR-22 BRL-06 BR-03 BR-02','<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>'],['14','Availability calendar','M','B',7,8,'An owner manages each unit’s calendar; the database rejects overlapping blocks.','Availability','UR-O02 UR-O03 FR-18 FR-39','<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'],['15','Approval and publishing','M','B',7,8,'An admin approves, rejects, suspends, restores or requests corrections; only approved listings publish.','Admin','UR-A02 FR-21 FR-88','<svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>'],['16','Admin users and settings','S','B',6,8,'An admin creates, suspends and restores users, edits settings and sees a basic dashboard.','Admin','UR-A01 FR-87 UR-A08 FR-92 FR-86','<svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>'],['17','Stabilise and release R1','M','A',9,10,'R1 is tagged and live; Sprint Review accepted; retrospective actions recorded.','Release','','<svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>']];
+const storyAcceptance={
+  'S1-01':['The basic app builds, is checked and goes live automatically.','The team is warned if one part of the system reaches into another part’s private work.','The database shape, screen plan and test plan are written down.'],
+  'S1-02':['The basic app is live in its planned online homes.','The team restores a saved copy into a safe practice space and records how long it took.','Private keys are kept out of the project, and the team is warned when the service is unhealthy.'],
+  'S1-03':['Owner and admin screens work on a small phone, tablet and desktop.','Navigation and messages look and behave consistently.','The team checks common browsers, accessibility and a slow connection.'],
+  'S1-04':['A new person can sign up, confirm their contact details, sign in and sign out.','Private pages turn away anyone who is not signed in or has an invalid sign-in pass.','Passwords and other private sign-in secrets never appear in the app’s public files.'],
+  'S1-05':['A person can safely reset a password through a confirmed contact method.','A person can edit only the profile details they are allowed to edit.','The reset link expires and cannot be used twice.'],
+  'S1-06':['Every protected action checks what the person is allowed to do.','Administrator-only pages stay out of reach for everyone else.','The team checks for common unsafe input and attempts to access someone else’s information.'],
+  'S1-07':['An owner receives an organisation during onboarding and can invite staff.','Staff permissions can be given or removed for a specific property.','One owner cannot see or change another owner’s information.'],
+  'S1-08':['Important admin and verification actions record who did what and when.','Those records cannot be edited or deleted.','The team proves that attempted changes to the records are blocked.'],
+  'S1-09':['Owners can upload photos, while sensitive documents remain private.','Public listing photos are clear and use less data.','The team checks file size, file type, access limits and expiring private links.'],
+  'S1-10':['Important account and verification updates reach people through the planned messages.','A failed message is recorded and tried again.','The team can change a message provider without rebuilding the rest of the system.'],
+  'S1-11':['Consent is collected during registration.','The app asks only for information it needs.','Only authorised people can see personal and financial information.'],
+  'S1-12':['An owner can submit identity and property documents and see the approval status.','Sensitive identity details are safely locked away.','People who are not reviewers cannot read the documents.'],
+  'S1-13':['A verified owner can create, edit and pause a complete listing.','A listing missing required details cannot be sent for approval.','The team checks that only verified owners can create listings.'],
+  'S1-14':['An owner can manage available dates for each unit.','The system stops two active blocks from covering the same dates.','When two people try at once, only one block is saved.'],
+  'S1-15':['An administrator can approve, reject, suspend, restore or ask for corrections.','Only approved listings can become published.','Every decision includes a reason and is recorded.'],
+  'S1-16':['An administrator can create, suspend and restore users, and change settings.','A basic dashboard is available.','A suspended person cannot sign in and settings changes are recorded.'],
+  'S1-17':['Release R1 is marked and live.','The Product Owner accepts the Sprint Review.','The team records what to improve next and completes final checks with pilot owners.']
+};
+const milestones={1:'Plan',5:'Mid-check',9:'Release',10:'Review'},freeze={8:'Freeze'};
+const gh=$('#ganttHead');gh.appendChild(E('div','gl','Track'));
+for(let d=1;d<=10;d++){const cls=milestones[d]?'gd milestone':(freeze[d]?'gd freeze':'gd');const lbl=milestones[d]||freeze[d]||'Build';gh.appendChild(E('div',cls,'D'+d+'<span class="gdl">'+lbl+'</span>'))}
+const gb=$('#ganttBody');const rows=S.map(s=>{const row=E('div','gantt-row');const btn=E('button','gantt-label','<span class="glic">'+s[9]+'</span><span>S1-'+s[0]+' '+s[1]+'</span>');const track=E('div','gantt-track');const bar=E('div','gantt-bar '+(s[3]=='B'?'B':'')+(s[2]=='S'?' sh':''),'S1-'+s[0]);bar.style.left=((s[4]-1)*10)+'%';bar.style.width='calc('+((s[5]-s[4]+1)*10)+'% - 4px)';bar.style.marginLeft='2px';track.appendChild(bar);row.append(btn,track);btn.onclick=()=>showDetail(s);bar.onclick=()=>showDetail(s);gb.append(row);return{row,s}});
+function showDetail(s){$('#ganttDetail').innerHTML='<div class="gd-title">S1-'+s[0]+' · '+s[1]+'</div><div class="gd-meta">'+s[7]+' · '+(s[2]=='M'?'Must':'Should')+' · Track '+s[3]+' · Days '+s[4]+'–'+s[5]+'</div><div>'+s[6]+'</div>'+(s[8]?('<div class="gd-reqs">'+s[8].split(' ').filter(Boolean).map(x=>'<button type="button" class="ch" data-requirement="'+x+'" aria-label="Read '+x+' in plain English">'+x+'</button>').join('')+'</div><p class="req-hint">Tap any requirement ID to read what it means in plain English.</p>'):'')}
+showDetail(S[0]);
+[['All',()=>1],['Track A',s=>s[3]=='A'],['Track B',s=>s[3]=='B'],['Must only',s=>s[2]=='M'],['Should only',s=>s[2]=='S']].forEach((f,k)=>{const b=E('button','pill'+(k?'':' on'),f[0]);b.onclick=()=>{$$('#dayFilters .pill').forEach(x=>x.classList.remove('on'));b.classList.add('on');rows.forEach(r=>r.row.hidden=!f[1](r.s))};$('#dayFilters').append(b)});
+const L={Ready:['Requirement IDs and success criteria are listed','Decisions it depends on are made, or a default is recorded','What it needs from earlier sprints is already released','Each new screen has a sketch','Test data and provider accounts are available'],Done:['Code reviewed and merged; automatic checks pass','Every requirement ID has an automated test labelled with it','Database changes only add, stay in range, and work on empty and previous-release databases','The API has no breaking change','Security checks pass: no secrets in code, inputs checked, role and organisation checks tested','Every state change is logged; user-facing changes send a notification','Works at 360 px on a slow connection, in four browsers','On the test system with earlier tests passing, then live','Data diagram, API description and runbook are updated','Demonstrated at Sprint Review and accepted']};
+let cur='Ready';const ST={Ready:[],Done:[]};
+Object.keys(L).forEach((k,i)=>{const b=E('button','pill'+(i?'':' on'),k+(k=='Ready'?' to start':' to ship'));b.onclick=()=>{cur=k;$$('#tabs .pill').forEach(x=>x.classList.remove('on'));b.classList.add('on');dl()};$('#tabs').append(b)});
+function dl(){const ls=$('#ls');ls.innerHTML='';L[cur].forEach((t,i)=>{const b=E('button','ck'+(ST[cur][i]?' on':''),'<span></span>'+t);b.onclick=()=>{ST[cur][i]=!ST[cur][i];dl()};ls.append(b)});const n=ST[cur].filter(Boolean).length,m=L[cur].length;$('#rg').style.setProperty('--p',n/m);$('#rn').textContent=n+'/'+m;$('#msg').textContent=n==m?(cur=='Ready'?'Ready. Pull it into the sprint.':'Done. Show it at Sprint Review.'):'Tick each item as it becomes true.'}
+dl();
+const D=[['J-06','Several companies, data kept apart','Day 1','Yes. Each owner’s data sits under an organisation from day one, in one shared database.'],['P-02','How units (rooms) are modelled','Day 1','Track each unit individually, optionally grouped by type for display.'],['P-04','Role model versus BRL-02','Day 1','An account has memberships; BRL-02 is reworded.'],['P-08','Phone verification and SMS provider','Day 2','Pick a provider on Day 2. Fallback: email-only codes in R1, and FR-70 moves to Sprint 2 by change request.'],['P-09','How sign-in sessions last','Day 3','Supabase issues one-hour passes and renews them. Supabase handles logout, with a session check kept for sensitive actions.'],['P-12','Regulator name for Act 843, licence documents','Day 6','Use “Data Protection Commission or Authority” until confirmed; licence list from the Ghana Tourism Authority.']];
+let dn=0;D.forEach(d=>{const c=E('div','dc','<div><span class="ch">'+d[0]+'</span> <span class="mut">needed by '+d[2]+'</span></div><h3>'+d[1]+'</h3><p>'+d[3]+'</p>');const b=E('button','pill','Use default');b.onclick=()=>{const o=b.classList.toggle('on');b.textContent=o?'✓ Confirmed':'Use default';dn+=o?1:-1;$('#dn').textContent=dn+' of 6 confirmed'};c.append(b);$('#dg').append(c)});
+ $('#dl').innerHTML=['P-03 Booking states (S2 D1): add Expired; pending does not hold the unit.','P-10 Background jobs (S2 D1): non-sleeping hosting.','P-07 Monetisation (S2 D1): commission and guest convenience fee in Phase 1.','J-03 Fees (S2 D1): percentages in settings.','J-03 Payouts (S3 D1): pay after the stay is completed.','P-06 Cancellation policy (S3 D1): platform templates per listing.','P-05 Targets (S3 D1): NFR-13 (3 s) pass or fail; 99.5% uptime; load test to 1,000 users.','Hostel scope (S4 D8): needed to plan Sprint 5.','J-04 AI support (S4 D8): Phase 2, Sprint 5, Could.','J-05 Text-to-speech (S4 D8): icons in Sprint 1; speech in Sprint 5.','P-11 Calendar integration (S4 D8): stays in Sprint 5.','Closed: J-01, J-02, P-01 decided in the phased plan.'].map(t=>'<li>'+t+'</li>').join('');
+const R=[['C1','Only add','No dropped or renamed columns; no new required column without a default.','Tested by upgrading a copy of the previous release.'],['C2','Own number range','S1 V1_01–V1_19, S2 V1_20–V1_39, S3 V1_40–V1_59, S4 V2_01–V2_29, S5 V2_30–V2_59.','Checked in every database change.'],['C3','No breaking APIs','Only new connection points and optional fields.','Checked automatically against the previous release tag.'],['C4','Events only grow','New event types and optional fields only; receivers ignore unknown fields.','Event tests. Sprint 2 event list is frozen.'],['C5','One-way dependencies','A sprint uses only parts from its own or earlier sprints.','Spring Modulith verify() fails the build if broken.'],['C6','Front doors only','Later sprints use the public api package, events and the eight seams.','Review checklist, boundary check at Sprint Review.'],['C7','Hidden until ready','Future features are built but switched off via platform_setting.','Switches in platform_setting, off by default on live.'],['C8','Always reversible','Changes only add, so the previous version still runs.','Tagged releases, backup first, roll-back practised.']];
+const wn=$('#wheelNodes'),cx=250,cy=250,r=200;R.forEach((rule,i)=>{const angle=(-90+i*45)*Math.PI/180;const x=cx+r*Math.cos(angle),y=cy+r*Math.sin(angle);const g=E('g','wheel-node');g.setAttribute('transform','translate('+x+','+y+')');g.dataset.i=i;g.innerHTML='<circle r="38" class="wn-bg" fill="var(--card)" stroke="var(--acc)" stroke-width="1.5"/><text class="wn-num" text-anchor="middle" dy="-4" font-family="Cormorant Garamond" font-size="16" font-weight="600" fill="var(--acc)">'+rule[0]+'</text><text class="wn-text" text-anchor="middle" dy="14" font-family="Inter" font-size="8" fill="var(--ink)" letter-spacing=".05em">'+rule[1].toUpperCase()+'</text>';g.onclick=()=>pickRule(i);wn.append(g)});
+function pickRule(i){$$('.wheel-node').forEach((n,k)=>n.classList.toggle('on',k==i));const r=R[i];$('#wheelDetail').innerHTML='<div class="wd-id">'+r[0]+'</div><div class="wd-name">'+r[1]+'</div><div class="wd-rule">'+r[2]+'</div><div class="wd-check">'+r[3]+'</div>'}
+pickRule(0);
+const DM=['An owner signs up with email, confirms it, and logs in.','The owner’s organisation is created automatically; they invite a staff member with permission for one property only.','The owner uploads identity and property documents; an administrator sees the case in the approval queue.','The owner creates a property with two units, photos (served as WebP), rates, amenities and house rules, and blocks some dates.','The administrator approves the listing; it becomes Published and the owner receives an email.','The administrator suspends and restores a user; both actions appear in the activity log.','A second owner cannot see the first owner’s data. The live system passes a restore drill from last night’s backup.'];
+let dk=0;DM.forEach((t,i)=>{const b=E('button','st','<span>'+(i+1)+'</span>'+t);b.onclick=()=>{dk=dk==i+1?i:i+1;$$('.st').forEach((x,j)=>x.classList.toggle('on',j<dk));$$('#demoStops .stop').forEach((s,j)=>{s.querySelector('circle').setAttribute('fill',j<dk?'var(--acc)':'var(--card)');s.querySelector('text').setAttribute('fill',j<dk?'#fff':'var(--acc)')});$('#pb').style.width=dk/DM.length*100+'%'};$('#demoList').append(b);$$('#demoStops .stop')[i].onclick=()=>b.click()});
+const HO=[['Blocked dates','A reason list and a database rule against overlaps. Sprint 2 adds HOLD and BOOKING by data update.','<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'],['Listing lookup','A public CatalogQuery returns everything search needs. Sprint 2 never touches listing internals.','<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>'],['Billing period','Only NIGHTLY is active; Sprints 4 and 5 add MONTHLY, TERM and ACADEMIC_YEAR.','<svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>'],['Message templates','Keyed by event type and added by migration.','<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'],['Activity log','Stores a generic entity type and ID; later parts use the same AuditRecorder.','<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>'],['Roles & permissions','Stored as rows, with prefixes like listing.*, booking.*, payment.*.','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'],['Settings & switches','platform_setting plus a feature-flag table.','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg>'],['Ready to reuse','OrgScope filter, Money (pesewas), time handling, scheduler, event bus.','<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-6 0v4M5 9h14l1 12H4z"/></svg>']];
+HO.forEach(h=>$('#ho').append(E('div','card','<div class="ic-box">'+h[2]+'</div><span class="s">'+h[0]+'</span><p>'+h[1]+'</p>')));
+const RK=[['Biggest setup sprint','If the basic system is not live by Day 3, stop adding features until it is.','<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>'],['SMS provider (P-08)','May delay one-time codes. Fallback: email-only codes in R1.','<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>'],['Check on Day 2','Supabase storage limits and Render’s non-sleeping hosting plan.','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>']];
+RK.forEach(h=>$('#rk').append(E('div','card warn','<div class="ic-box">'+h[2]+'</div><span class="s">'+h[0]+'</span><p>'+h[1]+'</p>')));
+const io=new IntersectionObserver(es=>es.forEach(x=>x.isIntersecting&&x.target.classList.add('in')),{threshold:.06});
+$$('section').forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
