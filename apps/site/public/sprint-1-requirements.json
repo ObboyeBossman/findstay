@@ -702,7 +702,7 @@
     "verification": "Automated test (@Req(\"NFR-43\")) + Sprint Review check (S1-02)"
   },
   "NFR-45": {
-    "text": "Support growth in properties, accommodation units, users and participating owners.",
+    "text": "Support large growth in properties, rooms, users, and owners while keeping the system fast and responsive.",
     "module": "platform",
     "story": "S1-01",
     "acceptance": [
@@ -712,7 +712,7 @@
     "verification": "Automated test (@Req(\"NFR-45\")) + Sprint Review check (S1-01)"
   },
   "NFR-46": {
-    "text": "Support addition of new accommodation types without core system redesign.",
+    "text": "Easily add new accommodation types (such as student hostels) without rewriting or redesigning core system code.",
     "module": "platform",
     "story": "S1-01",
     "acceptance": [
@@ -932,7 +932,7 @@
     "verification": "Automated test (@Req(\"BRL-19\")) + Sprint Review check (S1-08)"
   },
   "TA-01": {
-    "text": "Web-based application with three-layer architecture: Presentation · Application/Business Logic · Data and Services.",
+    "text": "Web-based application built in three separate layers: User Screens (React), Backend Business Logic (Spring Boot), and Database/Services (Supabase).",
     "module": "platform",
     "story": "S1-01",
     "acceptance": [
@@ -942,7 +942,7 @@
     "verification": "Automated test (@Req(\"TA-01\")) + Sprint Review check (S1-01)"
   },
   "TA-02": {
-    "text": "Frontend communicates with backend through REST API requests.",
+    "text": "The frontend communicates with the backend server through secure REST API web requests (/api/v1/...).",
     "module": "platform",
     "story": "S1-01",
     "acceptance": [

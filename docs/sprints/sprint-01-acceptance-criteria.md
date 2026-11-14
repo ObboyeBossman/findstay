@@ -26,19 +26,19 @@
 
 ### Requirement Acceptance Criteria (S1-01)
 
-#### `TA-01` — Web-based application with three-layer architecture: Presentation · Application/Business Logic · Data and Services.
+#### `TA-01` — Web-based application built in three separate layers: User Screens (React), Backend Business Logic (Spring Boot), and Database/Services (Supabase).
 - The system is divided into three clear parts: the Website screens (React), the Backend Server (Spring Boot), and the Database/Auth/Storage services (Supabase).
 - The website never edits business database tables directly—all business rules go through the Backend Server.
 
-#### `TA-02` — Frontend communicates with backend through REST API requests.
+#### `TA-02` — The frontend communicates with the backend server through secure REST API web requests (/api/v1/...).
 - The website talks to the backend server through standard, secure web requests (/api/v1/...) carrying the user's sign-in token.
 - Errors from the server are returned in a consistent format that the website can display clearly to the user.
 
-#### `NFR-45` — Support growth in properties, accommodation units, users and participating owners.
+#### `NFR-45` — Support large growth in properties, rooms, users, and owners while keeping the system fast and responsive.
 - Database tables and lists use indexing and page-by-page loading so the system stays fast as more owners, properties, and rooms are added.
 - There is no hard limit on how many properties an owner can add or how many rooms a property can have.
 
-#### `NFR-46` — Support addition of new accommodation types without core system redesign.
+#### `NFR-46` — Easily add new accommodation types (such as student hostels) without rewriting or redesigning core system code.
 - Accommodation types (Hotel, Budget Hotel, Guesthouse, Serviced Apartment, Student Hostel) and billing periods (Nightly, Monthly, Term, Academic Year) are stored as table rows so new types can be switched on later without rebuilding the app.
 - Sprint 1 enables short-stay types and nightly pricing while keeping future types ready in the database.
 

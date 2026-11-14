@@ -1543,8 +1543,8 @@ Wording is copied from the phased plan, which copies the source register. Sprint
 | NFR-42 | Provide automatic database backups (daily) and a documented restoration procedure. | `platform` | P1+P2 | S1 | S1-02 |
 | NFR-43 | Provide error logging and monitoring. | `platform` | P1+P2 | S1 | S1-02 |
 | NFR-44 | Support recovery from application and infrastructure failures. | `platform` | P1+P2 | S3 | S3-13 |
-| NFR-45 | Support growth in properties, accommodation units, users and participating owners. | `platform` | P1+P2 | S1 | S1-01 |
-| NFR-46 | Support addition of new accommodation types without core system redesign. | `platform` | P1+P2 | S1 | S1-01 |
+| NFR-45 | Support large growth in properties, rooms, users, and owners while keeping the system fast and responsive. | `platform` | P1+P2 | S1 | S1-01 |
+| NFR-46 | Easily add new accommodation types (such as student hostels) without rewriting or redesigning core system code. | `platform` | P1+P2 | S1 | S1-01 |
 | NFR-47 | Cloud-based architecture that scales as users, cities and listings grow. | `platform` | P1+P2 | S1 | S1-01 |
 | NFR-48 | Modular structure accommodating future integrations. | `platform` | P1+P2 | S1 | S1-01 |
 | NFR-49 | Maintain accurate property, booking and financial information. | `platform` | P1+P2 | S2 | S2-14 |
@@ -1612,8 +1612,8 @@ Wording is copied from the phased plan, which copies the source register. Sprint
 
 | ID | Requirement | Module | Phase | Sprint | Story |
 |----|-------------|--------|:-----:|:------:|-------|
-| TA-01 | Web-based application with three-layer architecture: Presentation · Application/Business Logic · Data and Services. | `platform` | P1+P2 | S1 | S1-01 |
-| TA-02 | Frontend communicates with backend through REST API requests. | `platform` | P1+P2 | S1 | S1-01 |
+| TA-01 | Web-based application built in three separate layers: User Screens (React), Backend Business Logic (Spring Boot), and Database/Services (Supabase). | `platform` | P1+P2 | S1 | S1-01 |
+| TA-02 | The frontend communicates with the backend server through secure REST API web requests (/api/v1/...). | `platform` | P1+P2 | S1 | S1-01 |
 | TA-03 | Dedicated interfaces for guests, property owners and administrators. | `platform` | P1+P2 | S2 | S2-04 |
 | TA-04 | Integrate with Paystack Ghana; support MTN Mobile Money, Telecel Cash, AT Money and bank cards. | `payments` | P1 | S2 | S2-09 |
 | TA-05 | Validate payment webhook signatures (HMAC-SHA512). | `payments` | P1+P2 | S2 | S2-11 |
