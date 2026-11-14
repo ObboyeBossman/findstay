@@ -1,0 +1,14 @@
+# 01 — The No-Conflict Contract (C1–C8)
+
+Every sprint **adds** to the platform; no sprint rewrites an earlier sprint's schema, public API, or domain internals. All eight contract rules (`C1`–`C8`) are enforced from Sprint 1 Day 1.
+
+| ID | Rule | Requirement | Enforcement |
+| :--- | :--- | :--- | :--- |
+| **C1** | **Additive-only schema migrations** | Never `DROP COLUMN`, `RENAME COLUMN`, change a column type incompatibly, or add a `NOT NULL` column without a `DEFAULT` on an existing table. New sprints add new tables, nullable columns, or new lookup rows. | CI migration lint + Flyway upgrade test against a snapshot of the previous release database. |
+| **C2** | **Reserved Flyway version ranges** | Each sprint owns a strict migration prefix range so numbering never collides:<br>• **Sprint 1:** `V1_01` – `V1_19`<br>• **Sprint 2:** `V1_20` – `V1_39`<br>• **Sprint 3:** `V1_40` – `V1_59`<br>• **Sprint 4:** `V2_01` – `V2_29`<br>• **Sprint 5:** `V2_30` – `V2_59` | PR check rejects any migration file outside the active sprint's assigned range. |
+| **C3** | **Backward-compatible APIs** | Existing REST endpoints (`/api/v1/...`) never remove or rename request/response fields or tighten validation on live fields. Only new endpoints and optional fields may be added. | `openapi-diff` in CI comparing current OpenAPI spec against the previous release tag (`--fail-on-incompatible`). |
+| **C4** | **Append-only domain events** | Domain event payloads only gain optional fields; consumers must ignore unknown fields (`@JsonIgnoreProperties(ignoreUnknown = true)`). The Sprint 2 event catalog is frozen at the end of Sprint 2. | Contract unit tests on every domain event serializer/deserializer. |
+| **C5** | **Downward-only module dependencies** | A sprint module may depend only on `shared` and public `api` packages of earlier sprints—never on a later sprint or another module's `internal` package. | Spring Modulith `ApplicationModules.of(FindStayApp.class).verify()` runs in `mvn test` and fails the build on any cycle or illegal access. |
+| **C6** | **Public `api` packages & seams only** | Cross-module calls must go through a module's public `api` package, published domain events, or the 8 pre-built extension seams—never direct repository or entity imports across modules. | Code review checklist + Spring Modulith boundary verification at Sprint Review. |
+| **C7** | **Dark-launched feature flags** | Incomplete or future-phase capabilities are gated behind flags in `platform_setting` (default `false` in production) so main remains deployable at all times. | Feature-flag integration test verifying default-off behavior on production profiles. |
+| **C8** | **Always-reversible releases** | Because database and API changes are strictly additive (`C1`, `C3`), the previous application container tag must remain runnable against the migrated schema. | Pre-release database backup + rollback drill practised before each Sprint Review. |

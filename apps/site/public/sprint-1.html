@@ -171,6 +171,13 @@ h3{margin:6px 0;font-size:18px;font-family:var(--serif);font-weight:500}
 .plain-card h3{margin:0 0 8px;font-size:21px}
 .plain-card p{margin:0;color:var(--mut);font-size:14px;line-height:1.7}
 .plain-card strong{color:var(--ink)}
+.vision-card{
+  margin-top:18px;padding:28px 30px;border-radius:20px;
+  background:var(--bg2);border:1px solid var(--line);border-left:4px solid var(--acc);
+}
+.vision-card h3{margin:0 0 10px;font-size:27px}
+.vision-card p{margin:0;max-width:940px;color:var(--mut);font-size:15px;line-height:1.8}
+.vision-card strong{color:var(--ink);font-weight:600}
 .rhythm{margin-top:30px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
 .rhythm-step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 12px;min-width:0}
 .rhythm-step b{display:block;color:var(--acc);font-family:var(--serif);font-size:21px;font-weight:500;line-height:1.1}
@@ -185,34 +192,6 @@ h3{margin:6px 0;font-size:18px;font-family:var(--serif);font-weight:500}
 .proof-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:18px}
 .proof-list span{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.55;color:var(--ink)}
 .proof-list i{display:grid;place-items:center;width:21px;height:21px;flex:none;border-radius:50%;background:var(--sage);color:#fff;font-style:normal;font-size:12px}
-
-.atmos{
-  position:relative;height:280px;overflow:hidden;
-  max-width:none;margin:0;padding:0;
-}
-.atmos-img{
-  position:absolute;inset:0;
-  background-size:cover;background-position:center;
-  filter:saturate(.65) sepia(.15);
-}
-.atmos-tint{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,var(--bg) 0%,transparent 25%,transparent 75%,var(--bg) 100%);
-}
-.atmos-quote{
-  position:relative;z-index:2;max-width:760px;margin:0 auto;
-  height:100%;display:flex;align-items:center;justify-content:center;
-  text-align:center;padding:0 24px;
-}
-.atmos-quote p{
-  font-family:var(--serif);font-style:italic;font-size:clamp(22px,3vw,34px);
-  line-height:1.45;color:var(--ink);font-weight:400;
-}
-.atmos-quote p::before,.atmos-quote p::after{
-  content:"";display:inline-block;width:30px;height:1px;
-  background:var(--acc);vertical-align:middle;margin:0 16px;
-}
-
 
 .journey{
   background:var(--card);
@@ -278,117 +257,128 @@ h3{margin:6px 0;font-size:18px;font-family:var(--serif);font-weight:500}
 .arch-legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
 
 .f{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 12px}
-.gantt-wrap{
+.tl-wrap{
   margin-top:36px;background:var(--card);
-  border:1px solid var(--line);border-radius:24px;padding:24px;
+  border:1px solid var(--line);border-radius:24px;padding:44px 36px 36px;
 }
-.gantt-head{
-  display:grid;grid-template-columns:160px repeat(10,1fr);
-  gap:4px;margin-bottom:10px;align-items:center;
+.vtl{
+  position:relative;max-width:960px;margin:0 auto;padding:18px 0;
 }
-.gantt-head .gl{
-  font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);
-  font-weight:600;
+.vtl::before{
+  content:"";position:absolute;top:0;bottom:0;left:50%;
+  width:2px;transform:translateX(-50%);
+  background:var(--line2);
 }
-.gantt-head .gd{
-  text-align:center;padding:8px 0;border-radius:8px;
-  font-family:var(--serif);font-weight:600;font-size:18px;color:var(--ink);
-  background:var(--bg);border:1px solid var(--line);
+.vtl-item{
+  --c:var(--acc);
+  position:relative;display:grid;grid-template-columns:1fr 1fr;
+  margin-bottom:12px;
 }
-.gantt-head .gd.milestone{background:var(--acc);color:#fff;border-color:var(--acc)}
-.gantt-head .gd.freeze{background:var(--sage);color:#fff;border-color:var(--sage)}
-.gantt-head .gd .gdl{display:block;font-family:var(--sans);font-weight:400;font-size:8px;letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-top:2px}
-.gantt-body{position:relative}
-.gantt-row{
-  display:grid;grid-template-columns:160px 1fr;
-  gap:4px;align-items:center;padding:6px 0;
-  border-bottom:1px dashed var(--line);
+.vtl-item+.vtl-item{margin-top:-28px}
+.vtl-item:last-child{margin-bottom:0}
+.vtl-item.track-b{--c:var(--sage)}
+.vtl-item.should{--c:var(--gold)}
+.vtl-axis{
+  position:absolute;left:50%;top:30px;transform:translate(-50%,-50%);
+  width:52px;height:52px;border-radius:50%;
+  background:transparent;border:2.5px solid var(--c);
+  display:grid;place-items:center;z-index:2;
+  transition:transform .25s;
 }
-.gantt-row:last-child{border-bottom:none}
-.gantt-label{
-  font-size:12px;color:var(--ink);font-weight:500;
-  display:flex;align-items:center;gap:8px;
-  background:none;border:0;cursor:pointer;text-align:left;
-  padding:8px 10px;border-radius:8px;font-family:inherit;
-  transition:.2s;
+.vtl-axis::after{
+  content:"";width:20px;height:20px;border-radius:50%;background:var(--c);
 }
-.gantt-label:hover{background:var(--bg);color:var(--acc)}
-.gantt-label .glic{
-  width:24px;height:24px;border-radius:6px;flex:none;
-  display:grid;place-items:center;background:var(--bg);
-  border:1px solid var(--line);
+.vtl-card{
+  position:relative;display:flex;flex-direction:column;
+  background:none;border:0;padding:0;color:inherit;font:inherit;
+  cursor:pointer;text-align:left;transition:transform .25s;
 }
-.gantt-label .glic svg{width:14px;height:14px;stroke:var(--acc);fill:none;stroke-width:1.5}
-.gantt-track{
-  position:relative;height:34px;border-radius:8px;
-  background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),var(--line) 0 10%);
+.vtl-card:focus-visible{outline:2px solid var(--c);outline-offset:8px;border-radius:12px}
+.vtl-item.right .vtl-card{
+  grid-column:2;padding-left:25px;align-items:flex-end;text-align:right;
 }
-.gantt-bar{
-  position:absolute;top:4px;bottom:4px;
-  background:var(--acc);border-radius:6px;
-  display:flex;align-items:center;padding:0 10px;
-  color:#fff;font-size:10px;font-weight:600;letter-spacing:.04em;
-  cursor:pointer;transition:.25s;box-shadow:0 4px 8px -2px rgba(184,100,63,.4);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+.vtl-item.left .vtl-card{
+  grid-column:1;padding-right:25px;align-items:flex-start;text-align:left;
 }
-.gantt-bar.B{background:var(--sage);box-shadow:0 4px 8px -2px rgba(125,143,107,.4)}
-.gantt-bar.sh{opacity:.55;border:1px dashed rgba(255,255,255,.6)}
-.gantt-bar:hover{transform:translateY(-2px);box-shadow:0 8px 16px -4px rgba(184,100,63,.5)}
-.gantt-bar.B:hover{box-shadow:0 8px 16px -4px rgba(125,143,107,.5)}
-.gantt-legend{
-  display:flex;gap:18px;flex-wrap:wrap;
-  margin-top:18px;padding-top:18px;border-top:1px solid var(--line);
-  font-size:11px;color:var(--mut);
+.vtl-arm-row{
+  width:100%;min-height:60px;display:flex;align-items:center;gap:0;
 }
-.gantt-legend span{display:inline-flex;align-items:center;gap:8px}
-.gantt-legend i{display:inline-block;width:18px;height:8px;border-radius:4px}
+.vtl-item.left .vtl-arm-row{flex-direction:row-reverse}
+.vtl-line{
+  flex:1;height:2.5px;background:var(--c);min-width:36px;
+}
+.vtl-dot{
+  flex:none;width:18px;height:18px;border-radius:50%;background:var(--c);
+  margin-left:-1px;margin-right:16px;
+}
+.vtl-item.left .vtl-dot{
+  margin-left:16px;margin-right:-1px;
+}
+.vtl-num-wrap{
+  flex:none;display:flex;flex-direction:column;line-height:1;
+}
+.vtl-item.right .vtl-num-wrap{align-items:flex-end}
+.vtl-item.left .vtl-num-wrap{align-items:flex-start}
+.vtl-num{
+  font:500 clamp(40px,4.5vw,52px)/.9 var(--sans);color:var(--c);letter-spacing:-.03em;
+}
+.vtl-days{
+  margin-top:4px;font-size:10px;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--mut);
+}
+.vtl-banner{
+  margin-top:10px;padding:8px 18px;border-radius:3px;
+  background:var(--c);color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:8px;max-width:100%;
+  box-shadow:0 6px 16px -6px color-mix(in srgb,var(--c) 55%,transparent);
+  transition:transform .2s,box-shadow .2s;
+}
+.vtl-banner svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.8;flex:none}
+.vtl-body{
+  margin-top:14px;max-width:380px;display:flex;flex-direction:column;gap:8px;
+}
+.vtl-summary{
+  margin:0;font-size:14px;font-weight:500;color:var(--ink);line-height:1.55;
+}
+.vtl-points{
+  margin:2px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;
+  font-size:13px;color:var(--mut);line-height:1.55;
+}
+.vtl-points li::before{content:"- "}
+.vtl-meta{
+  margin-top:6px;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--c);
+}
+.vtl-item.right .vtl-meta{justify-content:flex-end}
+.vtl-item.left .vtl-meta{justify-content:flex-start}
+.vtl-item:hover .vtl-axis{transform:translate(-50%,-50%) scale(1.08)}
+.vtl-card:hover .vtl-banner{transform:translateY(-2px);box-shadow:0 10px 22px -6px color-mix(in srgb,var(--c) 70%,transparent)}
+.tl-legend{
+  display:flex;justify-content:center;gap:24px;flex-wrap:wrap;
+  margin-top:34px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--mut);
+}
+.tl-legend span{display:inline-flex;align-items:center;gap:8px}
+.tl-legend i{display:inline-block;width:12px;height:12px;border-radius:50%}
+@media(max-width:760px){
+  .tl-wrap{padding:28px 18px 24px}
+  .vtl::before{left:22px;transform:none}
+  .vtl-item,.vtl-item+.vtl-item{grid-template-columns:1fr;margin-top:0;margin-bottom:32px}
+  .vtl-axis{left:22px;top:26px;width:40px;height:40px}
+  .vtl-axis::after{width:15px;height:15px}
+  .vtl-item.right .vtl-card,.vtl-item.left .vtl-card{
+    grid-column:1;padding-left:41px;padding-right:0;align-items:flex-start;text-align:left;
+  }
+  .vtl-item.right .vtl-arm-row,.vtl-item.left .vtl-arm-row{flex-direction:row;min-height:52px}
+  .vtl-line{flex:none;width:28px;min-width:28px}
+  .vtl-dot,.vtl-item.left .vtl-dot{width:15px;height:15px;margin-left:-1px;margin-right:12px}
+  .vtl-item.right .vtl-num-wrap,.vtl-item.left .vtl-num-wrap{align-items:flex-start}
+  .vtl-item.right .vtl-meta,.vtl-item.left .vtl-meta{justify-content:flex-start}
+  .vtl-body{max-width:100%}
+  .vtl-item:hover .vtl-axis{transform:translate(-50%,-50%) scale(1.05)}
+}
 
-.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:30px}
-.card{
-  background:var(--card);border:1px solid var(--line);border-radius:18px;
-  padding:24px;transition:.3s;position:relative;overflow:hidden;
-}
-.card::before{
-  content:"";position:absolute;top:0;left:0;width:100%;height:3px;
-  background:var(--acc);transform:scaleX(0);transform-origin:left;transition:.4s;
-}
-.card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--line2)}
-.card:hover::before{transform:scaleX(1)}
-.card .s{font-size:24px;display:block;margin-bottom:8px}
-.card p{margin:0;color:var(--mut);font-size:14px;line-height:1.65}
-.card .ic-box{
-  width:48px;height:48px;border-radius:12px;background:var(--bg);
-  border:1px solid var(--line);
-  display:grid;place-items:center;margin-bottom:14px;
-}
-.card .ic-box svg{width:24px;height:24px;stroke:var(--acc);fill:none;stroke-width:1.5}
-details{
-  background:var(--card);border:1px solid var(--line);border-radius:16px;
-  padding:0 20px;margin-top:14px;
-}
-summary{
-  cursor:pointer;padding:18px 0;font-weight:500;
-  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;
-  font-size:15px;
-}
-summary::-webkit-details-marker{display:none}
-summary::after{
-  content:"";width:22px;height:22px;border-radius:50%;
-  border:1px solid var(--line2);position:relative;flex:none;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M6 1v10M1 6h10' stroke='%23b8643f' stroke-width='1.5'/%3E%3C/svg%3E") center/12px no-repeat;
-  transition:.25s;
-}
-details[open]>summary::after{transform:rotate(45deg);background-color:var(--acc)}
-details>div,details>ul{padding:0 0 18px;color:var(--mut);font-size:14px;margin:0;line-height:1.7}
-details ul{padding-left:18px}
-details li{margin-bottom:6px}
-
-.cw{
-  display:grid;grid-template-columns:1fr 180px;gap:30px;
-  align-items:start;margin-top:24px;
-  background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;
-}
-@media(max-width:640px){.cw{grid-template-columns:1fr}}
 .ck{
   display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;
   background:none;border:none;border-bottom:1px solid var(--line);
@@ -403,7 +393,8 @@ details li{margin-bottom:6px}
 }
 .ck.on span{background:var(--acc);border-color:var(--acc)}
 .ck.on span::after{content:"✓"}
-.ck.on{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--acc)}
+.ck.on{color:var(--mut)}
+.ck.on>div{text-decoration:line-through;text-decoration-color:var(--acc)}
 .rg{
   --p:0;width:140px;height:140px;border-radius:50%;
   background:conic-gradient(var(--acc) calc(var(--p)*360deg),var(--line) 0);
@@ -412,56 +403,6 @@ details li{margin-bottom:6px}
 }
 .rg::before{content:"";position:absolute;inset:11px;border-radius:50%;background:var(--card)}
 .rg b{position:relative;font-family:var(--serif);font-size:32px;font-weight:500}
-#msg{text-align:center;font-size:12px;color:var(--mut);font-style:italic}
-
-.dc{
-  background:var(--card);border:1px solid var(--line);border-radius:18px;
-  padding:22px;display:flex;flex-direction:column;gap:8px;
-  transition:.3s;position:relative;overflow:hidden;
-}
-.dc::after{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);
-  transform:scaleY(0);transform-origin:top;transition:.4s;
-}
-.dc:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-.dc:hover::after{transform:scaleY(1)}
-.dc .ch{display:inline-block;font-size:11px;padding:2px 9px;border:1px solid var(--line2);border-radius:99px;color:var(--acc);font-weight:500}
-.dc p{margin:0;color:var(--mut);font-size:14px;flex:1;line-height:1.65}
-.dc .pill{align-self:flex-start;margin-top:10px}
-#dn{margin:18px 0 0;color:var(--acc);font-weight:600;font-size:14px;letter-spacing:.05em}
-
-.wheel-wrap{
-  margin-top:36px;display:grid;grid-template-columns:1fr 320px;gap:30px;
-  align-items:center;
-}
-@media(max-width:840px){.wheel-wrap{grid-template-columns:1fr}}
-.wheel{position:relative;width:100%;max-width:540px;margin:0 auto;aspect-ratio:1}
-.wheel svg{width:100%;height:100%;display:block}
-.wheel-node{cursor:pointer;transition:.3s}
-.wheel-node:hover .wn-bg{fill:var(--acc)}
-.wheel-node:hover .wn-text{fill:#fff}
-.wheel-node:hover .wn-num{fill:#fff}
-.wheel-node.on .wn-bg{fill:var(--acc)}
-.wheel-node.on .wn-text{fill:#fff}
-.wheel-node.on .wn-num{fill:#fff}
-.wheel-center{fill:var(--card);stroke:var(--acc);stroke-width:2}
-.wheel-center-text{font-family:var(--serif);font-style:italic;font-size:13px;fill:var(--ink);text-anchor:middle}
-.wheel-detail{
-  background:var(--card);border:1px solid var(--line);border-radius:16px;
-  padding:22px;min-height:200px;
-}
-.wheel-detail .wd-id{color:var(--acc);font-family:var(--serif);font-style:italic;font-size:14px;letter-spacing:.08em}
-.wheel-detail .wd-name{font-family:var(--serif);font-size:22px;font-weight:500;margin:6px 0 12px;line-height:1.3}
-.wheel-detail .wd-rule{font-size:14px;color:var(--ink);line-height:1.65;margin-bottom:14px}
-.wheel-detail .wd-check{font-size:12px;color:var(--mut);font-style:italic;padding-top:12px;border-top:1px solid var(--line)}
-.wheel-detail .wd-check::before{content:"how we check — ";color:var(--sageDeep);font-style:normal;letter-spacing:.15em;text-transform:uppercase;font-size:10px;display:block;margin-bottom:4px}
-
-.stairs{
-  margin-top:30px;background:var(--card);border:1px solid var(--line);
-  border-radius:20px;padding:30px;
-}
-.stairs svg{width:100%;height:auto;max-height:280px}
-.stairs-note{font-size:12px;color:var(--mut);margin-top:14px;line-height:1.6}
 
 .demo-path{
   margin-top:36px;position:relative;
@@ -490,45 +431,219 @@ details li{margin-bottom:6px}
 .bar{height:6px;border-radius:6px;background:var(--line);margin-top:20px;overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--gold));transition:width .5s}
 
-.handoff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:24px}
-.warn{border-left:3px solid var(--acc);border-radius:6px 18px 18px 6px}
-.warn .ic-box svg{stroke:var(--acc)}
-
-.req-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px}
+.req-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px}
 .req-overlay[hidden]{display:none}
-.req-backdrop{position:absolute;inset:0;background:rgba(25,20,16,.58);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.req-backdrop{position:absolute;inset:0;background:rgba(25,20,16,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .req-modal{
-  position:relative;width:min(710px,100%);max-height:min(760px,calc(100vh - 40px));overflow:auto;
-  background:var(--bg);border:1px solid var(--line);border-radius:24px;box-shadow:0 36px 80px -24px rgba(0,0,0,.42);
+  position:relative;width:min(1020px,calc(100vw - 48px));height:min(800px,calc(100vh - 48px));
+  display:flex;flex-direction:column;overflow:hidden;
+  background:var(--bg);border:1px solid var(--line);border-radius:22px;box-shadow:0 40px 90px -24px rgba(0,0,0,.45);
 }
-.req-modal-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:28px 30px 20px;border-bottom:1px solid var(--line)}
-.req-kicker{margin:0 0 7px;color:var(--acc);font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
-.req-modal h2{font-size:clamp(30px,5vw,44px);margin:0}
-.req-close{width:38px;height:38px;display:grid;place-items:center;flex:none;border:1px solid var(--line2);border-radius:50%;background:var(--card);color:var(--ink);cursor:pointer;font:300 31px/1 var(--sans);transition:.2s}
+.req-modal-head{flex:none;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;padding:22px 36px 18px;border-bottom:1px solid var(--line)}
+.req-head-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.gate-btn{
+  --gp:0;--gc:var(--acc);
+  display:inline-flex;align-items:center;gap:9px;
+  padding:7px 14px 7px 9px;border-radius:999px;
+  border:1px solid var(--line2);background:var(--card);color:var(--ink);
+  font:600 12px/1 var(--sans);cursor:pointer;transition:.2s;
+}
+.gate-btn.done-gate{--gc:var(--sageDeep)}
+.gate-btn:hover{border-color:var(--gc);background:var(--bg);transform:translateY(-1px)}
+.gate-btn.active{border-color:var(--gc);background:color-mix(in srgb,var(--gc) 11%,var(--card));box-shadow:0 3px 10px -3px color-mix(in srgb,var(--gc) 35%,transparent)}
+.gate-btn.complete{border-color:var(--sageDeep);background:color-mix(in srgb,var(--sage) 14%,var(--card))}
+.gate-ring{
+  width:18px;height:18px;border-radius:50%;flex:none;position:relative;
+  background:conic-gradient(var(--gc) calc(var(--gp)*360deg),var(--line2) 0);
+  display:grid;place-items:center;
+}
+.gate-ring::before{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--card)}
+.gate-pct{font-variant-numeric:tabular-nums;color:var(--gc);font-weight:700}
+.chk-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.chk-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.chk-summary{
+  display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+  padding:22px 26px;border-radius:18px;background:var(--card);border:1px solid var(--line);margin-bottom:22px;
+}
+.chk-summary .rg{width:104px;height:104px;margin:0}
+.chk-summary .rg b{font-size:24px}
+.chk-filter-note{margin:0 0 12px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.chk-list{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:6px 20px}
+.chk-list .ck:last-child{border-bottom:none}
+.chk-badge{
+  margin-left:auto;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;flex:none;
+}
+.chk-badge.todo{background:var(--bg2);color:var(--mut);border:1px solid var(--line)}
+.chk-badge.ok{background:color-mix(in srgb,var(--sage) 18%,var(--card));color:var(--sageDeep);border:1px solid color-mix(in srgb,var(--sage) 40%,transparent)}
+.gate-link-btn{
+  display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:99px;
+  border:1px solid var(--line2);background:var(--card);color:var(--ink);
+  font:600 12px/1.2 var(--sans);cursor:pointer;transition:.18s;
+}
+.gate-link-btn:hover{border-color:var(--acc);color:var(--acc)}
+@media(max-width:640px){.chk-summary{grid-template-columns:1fr;justify-items:start}}
+.req-kicker{margin:0 0 8px;color:var(--acc);font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
+.req-modal h2{font-size:clamp(26px,2.8vw,36px);line-height:1.1;margin:0}
+.req-close{width:40px;height:40px;display:grid;place-items:center;flex:none;border:1px solid var(--line2);border-radius:50%;background:var(--card);color:var(--ink);cursor:pointer;font:300 30px/1 var(--sans);transition:.2s}
 .req-close:hover{background:var(--acc);border-color:var(--acc);color:#fff}
-.req-modal-body{padding:26px 30px 30px}
-.req-meaning{font-family:var(--serif);font-size:clamp(23px,3vw,30px);line-height:1.3;margin:0;color:var(--ink)}
-.req-meta{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
-.req-meta span{padding:4px 10px;border-radius:99px;background:var(--card);border:1px solid var(--line);color:var(--mut);font-size:11px;letter-spacing:.04em}
+.story-shell{flex:1;min-height:0;display:flex;flex-direction:column}
+.story-nav{
+  flex:none;display:flex;flex-direction:row;align-items:center;gap:10px;
+  padding:14px 36px;overflow-x:auto;overflow-y:hidden;
+  border-bottom:1px solid var(--line);background:var(--bg2);
+}
+.story-nav button{
+  flex:none;width:auto;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:6px 16px 6px 6px;border:1px solid var(--line2);border-radius:999px;
+  background:var(--card);color:var(--ink);
+  font:500 13px/1 var(--sans);cursor:pointer;transition:.18s;
+}
+.story-nav button:hover{border-color:var(--acc);background:var(--bg)}
+.story-nav button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.story-nav button.on{
+  border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--card));
+  font-weight:600;box-shadow:0 3px 10px -3px rgba(184,100,63,.28);
+}
+.story-nav .tag{
+  flex:none;min-width:36px;height:26px;padding:0 9px;border-radius:999px;
+  display:inline-grid;place-items:center;
+  border:1px solid var(--line2);background:var(--bg);color:var(--mut);
+  font-size:10px;font-weight:700;letter-spacing:.05em;
+}
+.story-nav .tag svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
+.story-nav button.on .tag{background:var(--acc);border-color:var(--acc);color:#fff}
+.story-nav .nav-text{display:inline-flex;align-items:center}
+.story-nav .nav-text small{display:none}
+.story-content{
+  flex:1;min-height:0;overflow-y:auto;
+  padding:34px 40px 48px 36px;margin-right:6px;
+}
+.story-content:focus-visible{outline:none}
+.story-content h3{font-family:var(--serif);font-size:clamp(26px,2.8vw,34px);line-height:1.24;margin:0;color:var(--ink)}
+.set-rows{margin-top:26px;border-top:1px solid var(--line)}
+.set-row{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding:15px 0;border-bottom:1px solid var(--line);font-size:14px}
+.set-row span:first-child{color:var(--mut);flex:none}
+.set-row span:last-child{text-align:right;font-weight:500;color:var(--ink)}
+.req-wording{margin-top:28px;padding:20px 24px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.req-wording b{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.req-wording p{margin:8px 0 0;color:var(--mut);font-size:14px;line-height:1.7}
+.story-content .req-why{margin-top:28px;padding:20px 24px}
+.story-content .story-section-label{margin:32px 0 14px}
+.story-content .acceptance-list{gap:12px}
+.req-hint{margin:28px 0 0;font-size:13px;color:var(--mut)}
+/* Clean, inset pill scrollbars without arrow buttons */
+.story-nav::-webkit-scrollbar{height:6px}
+.story-nav::-webkit-scrollbar-track{background:transparent;margin:0 36px}
+.story-nav::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 16%,transparent);border-radius:999px}
+.story-nav::-webkit-scrollbar-thumb:hover{background:color-mix(in srgb,var(--ink) 30%,transparent)}
+.story-nav::-webkit-scrollbar-button{display:none;width:0;height:0}
+.story-content::-webkit-scrollbar{width:8px}
+.story-content::-webkit-scrollbar-track{background:transparent;margin:14px 0}
+.story-content::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 20%,transparent);border-radius:999px;border:2px solid transparent;background-clip:padding-box}
+.story-content::-webkit-scrollbar-thumb:hover{background-color:color-mix(in srgb,var(--ink) 36%,transparent)}
+.story-content::-webkit-scrollbar-button{display:none;width:0;height:0}
+@supports not selector(::-webkit-scrollbar){.story-nav,.story-content{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--ink) 20%,transparent) transparent}}
 .req-why{padding:18px 20px;border-radius:14px;background:var(--bg2);border-left:3px solid var(--sage)}
 .req-why b{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--sageDeep)}
 .req-why p{margin:6px 0 0;color:var(--mut);font-size:14px;line-height:1.65}
-.req-source{margin-top:18px;border:1px solid var(--line);border-radius:14px;padding:0 17px}
-.req-source summary{font-size:13px;padding:14px 0}
-.req-source p{margin:0;padding:0 0 16px;color:var(--mut);font-size:13px;line-height:1.65}
-.story-summary{font-family:var(--serif);font-size:clamp(22px,3vw,29px);line-height:1.34;margin:0;color:var(--ink)}
+.story-summary{font-family:var(--serif);font-size:clamp(24px,2.8vw,32px);line-height:1.3;margin:0;color:var(--ink)}
 .story-section-label{margin:28px 0 10px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mut)}
-.story-requirements{display:flex;gap:8px;overflow-x:auto;padding:3px 1px 9px}
-.story-requirements button{flex:none;padding:8px 12px;border:1px solid var(--line2);border-radius:10px;background:var(--card);color:var(--ink);font:600 12px/1 var(--sans);cursor:pointer;transition:.2s}
-.story-requirements button:hover,.story-requirements button:focus-visible,.story-requirements button.on{background:var(--acc);border-color:var(--acc);color:#fff;outline:none}
-.story-requirement-panel{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
-.story-requirement-panel[hidden]{display:none}
-.story-requirement-panel h3{font-family:var(--serif);font-size:25px;line-height:1.22;margin:0 0 8px}
 .acceptance-list{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:9px}
-.acceptance-list li{position:relative;padding-left:24px;color:var(--mut);font-size:14px;line-height:1.55}
+.acceptance-list li{position:relative;padding-left:26px;color:var(--mut);font-size:14px;line-height:1.6}
 .acceptance-list li::before{content:"✓";position:absolute;left:0;top:0;color:var(--sageDeep);font-weight:700}
+.sec-head{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:18px;
+}
+.sec-head h2{margin-bottom:0}
+.roles-trigger{
+  flex:none;width:48px;height:48px;border-radius:14px;
+  border:1px solid var(--line2);background:var(--card);color:var(--acc);
+  display:grid;place-items:center;cursor:pointer;
+  box-shadow:0 10px 24px -10px rgba(42,36,32,.18);
+  transition:transform .2s,background .2s,border-color .2s,color .2s,box-shadow .2s;
+}
+.roles-trigger svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.roles-trigger:hover{
+  background:var(--acc);border-color:var(--acc);color:#fff;
+  transform:translateY(-2px);box-shadow:0 14px 28px -10px rgba(184,100,63,.5);
+}
+.roles-trigger:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.roles-overlay{
+  position:fixed;inset:0;z-index:110;pointer-events:none;
+  visibility:hidden;transition:visibility .3s;
+}
+.roles-overlay.open{pointer-events:auto;visibility:visible}
+.roles-backdrop{
+  position:absolute;inset:0;background:rgba(25,20,16,.55);
+  backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+  opacity:0;transition:opacity .3s ease;
+}
+.roles-overlay.open .roles-backdrop{opacity:1}
+.roles-panel{
+  position:absolute;top:0;right:0;bottom:0;width:min(460px,100vw);
+  background:var(--bg);border-left:1px solid var(--line);
+  box-shadow:-28px 0 70px -20px rgba(0,0,0,.4);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateX(100%);transition:transform .32s cubic-bezier(.22,1,.36,1);
+}
+.roles-overlay.open .roles-panel{transform:translateX(0)}
+.sheet-grabber{display:none;width:42px;height:4px;border-radius:99px;background:var(--line2);margin:10px auto 0;flex:none}
+.roles-head{
+  flex:none;display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:24px 28px 18px;border-bottom:1px solid var(--line);
+}
+.roles-head h2{font-size:clamp(24px,2.5vw,30px);line-height:1.1;margin:0}
+.roles-body{
+  flex:1;min-height:0;overflow-y:auto;padding:24px 24px 36px 28px;margin-right:4px;
+  display:flex;flex-direction:column;gap:16px;
+}
+.roles-body::-webkit-scrollbar{width:8px}
+.roles-body::-webkit-scrollbar-track{background:transparent;margin:12px 0}
+.roles-body::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 20%,transparent);border-radius:999px;border:2px solid transparent;background-clip:padding-box}
+.roles-body::-webkit-scrollbar-button{display:none;width:0;height:0}
+.role-item{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:18px;border-radius:16px;background:var(--card);border:1px solid var(--line);
+}
+.role-item .ic-box{
+  flex:none;width:44px;height:44px;border-radius:12px;background:var(--bg);
+  border:1px solid var(--line);display:grid;place-items:center;
+}
+.role-item .ic-box svg{width:21px;height:21px;stroke:var(--acc);fill:none;stroke-width:1.6}
+.role-item .s{font-size:21px;display:block;line-height:1.15;margin-bottom:5px;color:var(--ink)}
+.role-item p{margin:0;color:var(--mut);font-size:13.5px;line-height:1.6}
+.roles-rules{
+  margin-top:6px;padding:18px 20px;border-radius:16px;background:var(--bg2);border:1px solid var(--line);
+}
+.roles-rules h3{
+  margin:0 0 12px;font-family:var(--sans);font-size:11px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--acc);
+}
+.roles-rules ul{margin:0;padding-left:18px;color:var(--mut);font-size:13px;line-height:1.65;display:grid;gap:7px}
+@media(max-width:760px){
+  .roles-panel{
+    top:auto;left:0;right:0;bottom:0;width:100%;max-height:86dvh;
+    border-left:0;border-top:1px solid var(--line);border-radius:24px 24px 0 0;
+    box-shadow:0 -24px 60px -16px rgba(0,0,0,.45);
+    transform:translateY(100%);
+  }
+  .roles-overlay.open .roles-panel{transform:translateY(0)}
+  .sheet-grabber{display:block}
+  .roles-head{padding:14px 20px 16px}
+  .roles-body{padding:18px 16px 32px 20px}
+}
 body.overlay-open{overflow:hidden}
-@media(max-width:600px){.req-overlay{padding:12px}.req-modal{max-height:calc(100vh - 24px);border-radius:20px}.req-modal-head{padding:22px 20px 17px}.req-modal-body{padding:21px 20px 24px}.req-close{width:34px;height:34px;font-size:27px}}
+@media(max-width:720px){
+  .req-overlay{padding:12px}
+  .req-modal{width:100%;height:calc(100dvh - 24px);border-radius:18px}
+  .req-modal-head{padding:18px 20px 16px}
+  .req-close{width:34px;height:34px;font-size:26px}
+  .story-nav{gap:8px;padding:12px 20px}
+  .story-nav::-webkit-scrollbar-track{margin:0 20px}
+  .story-content{padding:24px 18px 36px 20px;margin-right:4px}
+}
 
 footer{
   text-align:center;padding:90px 20px 60px;
@@ -540,6 +655,8 @@ footer::before{
   width:60px;height:3px;background:var(--acc);border-radius:0 0 3px 3px;
 }
 footer h2{max-width:680px;margin:0 auto 24px}
+footer .cta{border-color:var(--line2);color:var(--ink);background:var(--card)}
+footer .cta:hover{background:var(--acc);border-color:var(--acc);color:#fff}
 footer .meta{
   margin-top:30px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--mut);display:flex;justify-content:center;gap:30px;flex-wrap:wrap;
@@ -559,9 +676,6 @@ footer .meta{
     <a href="#goal">Goal</a>
     <a href="#arch">Architecture</a>
     <a href="#days">Stories</a>
-    <a href="#checks">Checklists</a>
-    <a href="#decide">Decisions</a>
-    <a href="#rules">Rules</a>
     <a href="#demo">Demo</a>
   </nav>
   <button class="pill" id="th">Theme · Auto</button>
@@ -600,6 +714,11 @@ footer .meta{
     <article class="plain-card"><h3 class="s">What we are proving</h3><p>We are proving the full owner journey works: join, show who you are, add a place, add rooms and photos, choose available dates, and get approved.</p></article>
     <article class="plain-card"><h3 class="s">What can wait</h3><p>Taking bookings and payments, monthly or school-term stays, calendar links, AI help, and text-to-speech are all later work. Keeping them out helps us finish this first release well.</p></article>
   </div>
+  <aside class="vision-card" aria-labelledby="product-vision-title">
+    <p class="k">Product vision</p>
+    <h3 class="s" id="product-vision-title">A marketplace that keeps property operations <em>together.</em></h3>
+    <p>For <strong>small and medium accommodation owners and managers</strong>, <strong>FindStay</strong> is a Ghana-focused accommodation marketplace and property-management system that helps them attract verified guests, prevent double-bookings, accept Mobile Money and card payments, and manage occupancy and records in one mobile-friendly platform. Unlike agents, global booking platforms, and standalone PMS software, FindStay brings local verification, Mobile Money workflows, protected bookings, and owner tools together in one service.</p>
+  </aside>
   <div class="journey">
     <div class="jr" id="jr"></div>
     <div class="jd" id="jd"></div>
@@ -626,8 +745,8 @@ footer .meta{
       <g><rect x="280" y="260" width="140" height="70" rx="10" fill="var(--card)" stroke="var(--gold)" stroke-width="1.5"/><text x="350" y="288" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-weight="500" fill="var(--ink)">Supabase Auth</text><text x="350" y="308" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">JWT · JWKS · email · OTP</text><rect x="430" y="260" width="140" height="70" rx="10" fill="var(--card)" stroke="var(--gold)" stroke-width="1.5"/><text x="500" y="288" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-weight="500" fill="var(--ink)">PostgreSQL</text><text x="500" y="308" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">Flyway · btree_gist</text><rect x="580" y="260" width="140" height="70" rx="10" fill="var(--card)" stroke="var(--gold)" stroke-width="1.5"/><text x="650" y="288" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-weight="500" fill="var(--ink)">Storage</text><text x="650" y="308" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">WebP · signed URLs</text></g>
       <line x1="500" y1="330" x2="500" y2="380" stroke="var(--acc)" stroke-width="2" marker-end="url(#arrow)"/>
       <g><rect x="220" y="380" width="560" height="70" rx="12" fill="var(--acc)" fill-opacity=".12" stroke="var(--acc)" stroke-width="2"/><text x="500" y="408" text-anchor="middle" font-family="Cormorant Garamond" font-size="20" font-weight="500" fill="var(--ink)">Spring Boot 3 · Java 21 · Render</text><text x="500" y="430" text-anchor="middle" font-family="Inter" font-size="11" fill="var(--mut)">Spring Modulith · Spring Security OAuth2 · Flyway · JPA · HikariCP</text><g transform="translate(255,415)" stroke="var(--acc)" stroke-width="1.5" fill="none"><circle cx="0" cy="0" r="8"/><circle cx="0" cy="0" r="3" fill="var(--acc)"/><line x1="0" y1="-10" x2="0" y2="-12"/><line x1="0" y1="10" x2="0" y2="12"/><line x1="-10" y1="0" x2="-12" y2="0"/><line x1="10" y1="0" x2="12" y2="0"/></g></g>
-      <line x1="350" y1="450" x2="200" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/><line x1="500" y1="450" x2="500" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/><line x1="650" y1="450" x2="800" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/>
-      <g><rect x="120" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="200" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">Paystack</text><text x="200" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">payments</text><rect x="420" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="500" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">Sentry</text><text x="500" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">errors · health</text><rect x="720" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="800" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">GitHub Actions</text><text x="800" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">build · test</text></g>
+      <line x1="350" y1="450" x2="280" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/><line x1="500" y1="450" x2="500" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/><line x1="650" y1="450" x2="720" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/>
+      <g><rect x="200" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="280" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">Paystack</text><text x="280" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">payments</text><rect x="420" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="500" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">Sentry</text><text x="500" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">errors · health</text><rect x="640" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="720" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">GitHub Actions</text><text x="720" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">build · test</text></g>
       <g font-family="Inter" font-size="9" fill="var(--sageDeep)" font-style="italic"><text x="830" y="65">no direct access to business tables</text><text x="830" y="195">blocks attacks · stops bots</text><text x="830" y="410">verify() fails the build</text><text x="830" y="540">hosted checkout · PCI-safe</text></g>
     </svg>
     <div class="arch-legend"><span><i style="background:var(--sage)"></i>Screens</span><span><i style="background:var(--acc)"></i>Edge / Core</span><span><i style="background:var(--gold)"></i>Data layer</span><span><i style="background:var(--line2)"></i>External services</span></div>
@@ -635,9 +754,16 @@ footer .meta{
 </section>
 
 <section id="days">
-  <p class="k">Stories</p>
-  <h2 class="s">Who builds what, <em>and when</em></h2>
-  <p class="lead">Read the sprint from left to right: each column is a day. A story bar stretches across the days it needs. Select a story to see its requirements and what proves it is finished.</p>
+  <div class="sec-head">
+    <div>
+      <p class="k">Stories</p>
+      <h2 class="s">Who builds what, <em>and when</em></h2>
+    </div>
+    <button class="roles-trigger" id="rolesBtn" type="button" aria-label="View Scrum roles and priority rules" title="Roles &amp; priorities" aria-haspopup="dialog" aria-expanded="false">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6"/><circle cx="17.5" cy="8.5" r="2.5"/><path d="M15.5 14.2c2.8.4 5 2.4 5 5.3"/></svg>
+    </button>
+  </div>
+  <p class="lead">Follow the ten-day sprint down the central spine. Each story node shows the days it spans, its title banner and the checks that prove it is finished. Select any story to inspect its requirements in detail.</p>
   <div class="rhythm" aria-label="Simple ten-day sprint rhythm">
     <div class="rhythm-step"><b>D1</b><span>Agree the goal, decide open questions, and choose the work.</span></div>
     <div class="rhythm-step"><b>D1–D8</b><span>Build in small pieces, test as we go, and raise blockers early.</span></div>
@@ -647,58 +773,10 @@ footer .meta{
     <div class="rhythm-step"><b>D10</b><span>Show the result, learn what to improve, then prepare the next sprint.</span></div>
   </div>
   <div class="f" id="dayFilters"></div>
-  <div class="gantt-wrap">
-    <div class="gantt-head" id="ganttHead"></div>
-    <div class="gantt-body" id="ganttBody"></div>
-    <div class="gantt-legend"><span><i style="background:var(--acc)"></i>Track A · Must</span><span><i style="background:var(--sage)"></i>Track B · Must</span><span><i style="background:var(--acc);opacity:.55"></i>Should (faded)</span></div>
+  <div class="tl-wrap">
+    <div class="vtl" id="timeline" role="list" aria-label="Sprint 1 stories timeline"></div>
+    <div class="tl-legend"><span><i style="background:var(--acc)"></i>Track A · Must have</span><span><i style="background:var(--sage)"></i>Track B · Must have</span><span><i style="background:var(--gold)"></i>Should have</span></div>
   </div>
-  <h3 style="margin-top:50px">Roles · Priorities · Capacity</h3>
-  <div class="cols">
-    <div class="card"><div class="ic-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg></div><span class="s">Product Owner</span><p>Sets the order of work, makes open decisions, accepts or rejects each story at Sprint Review.</p></div>
-    <div class="card"><div class="ic-box"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div><span class="s">Scrum Master</span><p>A team member, part-time is fine. Protects the schedule, removes blockers, leads the retrospective.</p></div>
-    <div class="card"><div class="ic-box"><svg viewBox="0 0 24 24"><path d="M8 6l-4 6 4 6M16 6l4 6-4 6"/></svg></div><span class="s">Developers</span><p>Plan and build the sprint, own quality, release, and demonstrate. Two tracks: A (platform) and B (screens).</p></div>
-  </div>
-  <details><summary>Priorities and the unfinished-work rule</summary><ul><li>Every story is Must, Should or Could. Work follows that order each day.</li><li>A story ships whole or not at all. Unfinished work stays hidden behind its on/off switch.</li><li>A requirement counts as delivered only when its story is Done at Sprint Review.</li><li>An unfinished Must story in Sprints 1 to 3 blocks dependent stories; the Product Owner decides at the Day 5 check.</li><li>Should and Could stories may slide to a later sprint. Moving anything past week 10 needs a formal change request.</li><li>Reserve 10% of every sprint for fixing the previous release, and 15% in Sprint 4.</li></ul></details>
-  <details><summary>Capacity check</summary><div>Before Sprint Planning, list available person-days after classes, exams, public holidays and standing work. Reserve 20% for connecting, testing, review and documentation, plus the fix reserve. Commit new stories only from what is left. At the Sprint 1 Review, re-estimate later sprints from real speed. If under 85% of committed work is Done, drop Could stories first, then move whole Should stories by change request. Never weaken the Done checklist.</div></details>
-</section>
-
-<div class="atmos">
-  <div class="atmos-img" style="background-image:url('https://picsum.photos/seed/sageLeavesStone/1800/600.jpg')"></div>
-  <div class="atmos-tint"></div>
-  <div class="atmos-quote"><p>A story ships whole, or not at all.</p></div>
-</div>
-
-<section id="checks">
-  <p class="k">Check it yourself</p>
-  <h2 class="s">Is a story <em>ready</em>? Is it <em>done</em>?</h2>
-  <p class="lead">Every story passes through two gates. Tick the items to see how it feels — the ring fills as you go.</p>
-  <div class="f" id="tabs"></div>
-  <div class="cw"><div id="ls"></div><div><div class="rg" id="rg"><b class="s" id="rn">0/0</b></div><p id="msg"></p></div></div>
-</section>
-
-<section id="decide">
-  <p class="k">Decisions</p>
-  <h2 class="s">Six answers we <em>need early</em></h2>
-  <p class="lead">If no decision arrives by the day shown, the team builds the default. A default is a suggestion for you to confirm — not itself a decision.</p>
-  <div class="cols" id="dg"></div>
-  <p id="dn">0 of 6 confirmed</p>
-  <details><summary>Decisions for later sprints and closed ones</summary><ul id="dl"></ul></details>
-</section>
-
-<section id="rules">
-  <p class="k">The no-conflict rule</p>
-  <h2 class="s">Each sprint <em>adds</em>. None rewrites.</h2>
-  <p class="lead">Eight rules, enforced from Sprint 1, keep Phase 2 from disturbing Phase 1. Tap any node on the wheel to read the rule and how it is checked.</p>
-  <div class="wheel-wrap">
-    <div class="wheel"><svg viewBox="0 0 500 500" id="wheelSvg"><circle cx="250" cy="250" r="230" fill="none" stroke="var(--line2)" stroke-width="1" stroke-dasharray="2 6"/><circle cx="250" cy="250" r="200" fill="none" stroke="var(--line)" stroke-width="1"/><g stroke="var(--line2)" stroke-width="1"><line x1="250" y1="250" x2="250" y2="60"/><line x1="250" y1="250" x2="412" y2="148"/><line x1="250" y1="250" x2="440" y2="352"/><line x1="250" y1="250" x2="312" y2="440"/><line x1="250" y1="250" x2="188" y2="440"/><line x1="250" y1="250" x2="60" y2="352"/><line x1="250" y1="250" x2="88" y2="148"/><line x1="250" y1="250" x2="250" y2="60"/></g><circle cx="250" cy="250" r="62" class="wheel-center"/><text x="250" y="240" class="wheel-center-text">each sprint</text><text x="250" y="258" class="wheel-center-text" style="font-size:16px;font-weight:600">adds.</text><text x="250" y="276" class="wheel-center-text">never rewrites</text><g id="wheelNodes"></g></svg></div>
-    <div class="wheel-detail" id="wheelDetail"><div class="wd-id">C1</div><div class="wd-name">Only add</div><div class="wd-rule">No dropped or renamed columns. No new required column without a default.</div><div class="wd-check">Tested by upgrading a copy of the previous release.</div></div>
-  </div>
-  <h3 style="margin-top:50px">Earlier tests always run again</h3>
-  <div class="stairs">
-    <svg viewBox="0 0 1000 240" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="stairGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--acc)" stop-opacity=".3"/><stop offset="1" stop-color="var(--acc)" stop-opacity=".9"/></linearGradient></defs><g><rect x="60" y="180" width="160" height="40" fill="var(--card)" stroke="var(--acc)" stroke-width="1.5"/><rect x="60" y="180" width="160" height="40" fill="url(#stairGrad)" opacity=".5"/><text x="140" y="170" text-anchor="middle" font-family="Cormorant Garamond" font-size="24" font-weight="600" fill="var(--acc)">R1</text><text x="140" y="205" text-anchor="middle" font-family="Inter" font-size="10" fill="var(--ink)" letter-spacing=".1em">SPRINT 1</text><rect x="240" y="145" width="160" height="75" fill="var(--card)" stroke="var(--acc)" stroke-width="1.5"/><rect x="240" y="145" width="160" height="75" fill="url(#stairGrad)" opacity=".55"/><text x="320" y="135" text-anchor="middle" font-family="Cormorant Garamond" font-size="24" font-weight="600" fill="var(--acc)">R2</text><text x="320" y="180" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--ink)">+ SPRINT 2</text><rect x="420" y="110" width="160" height="110" fill="var(--card)" stroke="var(--acc)" stroke-width="1.5"/><rect x="420" y="110" width="160" height="110" fill="url(#stairGrad)" opacity=".6"/><text x="500" y="100" text-anchor="middle" font-family="Cormorant Garamond" font-size="24" font-weight="600" fill="var(--acc)">R3</text><text x="500" y="155" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--ink)">+ SPRINT 3</text><text x="500" y="172" text-anchor="middle" font-family="Inter" font-size="8" fill="var(--mut)">+ seam tests</text><rect x="600" y="75" width="160" height="145" fill="var(--card)" stroke="var(--acc)" stroke-width="1.5"/><rect x="600" y="75" width="160" height="145" fill="url(#stairGrad)" opacity=".7"/><text x="680" y="65" text-anchor="middle" font-family="Cormorant Garamond" font-size="24" font-weight="600" fill="var(--acc)">R4</text><text x="680" y="130" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--ink)">+ SPRINT 4</text><text x="680" y="147" text-anchor="middle" font-family="Inter" font-size="8" fill="var(--mut)">boundary clean</text><rect x="780" y="40" width="160" height="180" fill="var(--acc)" stroke="var(--acc)" stroke-width="1.5"/><text x="860" y="30" text-anchor="middle" font-family="Cormorant Garamond" font-size="24" font-weight="600" fill="#fff">R5</text><text x="860" y="100" text-anchor="middle" font-family="Inter" font-size="9" fill="#fff">+ SPRINT 5</text><text x="860" y="117" text-anchor="middle" font-family="Inter" font-size="8" fill="rgba(255,255,255,.8)">full security</text><text x="860" y="134" text-anchor="middle" font-family="Inter" font-size="8" fill="rgba(255,255,255,.8)">re-test</text></g><path d="M40 220 L960 20" stroke="var(--acc)" stroke-width="1.5" stroke-dasharray="4 4" fill="none" opacity=".5"/></svg>
-    <p class="stairs-note">R3 adds the Phase 1 seam tests. R4 keeps Phase 1 untouched with a clean boundary check. R5 adds a full security re-test. A failing earlier test blocks the release.</p>
-  </div>
-  <details><summary>Who may use what</summary><ul><li><strong>Sprint 1:</strong> shared basics only.</li><li><strong>Sprint 2:</strong> Sprint 1 public APIs and events; never Sprint 1 inner workings.</li><li><strong>Sprint 3:</strong> Sprint 1 and 2 public APIs and the frozen event list; no new booking states.</li><li><strong>Sprint 4:</strong> Phase 1 public APIs, events and seams.</li><li><strong>Sprint 5:</strong> Phase 1 and Sprint 4 public APIs.</li></ul></details>
 </section>
 
 <section id="demo">
@@ -723,21 +801,6 @@ footer .meta{
   </div>
 </section>
 
-<div class="atmos">
-  <div class="atmos-img" style="background-image:url('https://picsum.photos/seed/stonePathGarden/1800/500.jpg')"></div>
-  <div class="atmos-tint"></div>
-  <div class="atmos-quote"><p>Built in. Not bolted on. Not rewritten.</p></div>
-</div>
-
-<section id="end">
-  <p class="k">Built in for Sprint 2</p>
-  <h2 class="s">Handed over, <em>not rewritten</em></h2>
-  <p class="lead">Eight things Sprint 1 builds in, so the next sprint adds without editing what already works.</p>
-  <div class="handoff-grid" id="ho"></div>
-  <h3 style="margin-top:50px">Risks we are watching</h3>
-  <div class="cols" id="rk"></div>
-</section>
-
 <footer>
   <p class="k">FindStay · Sprint 1</p>
   <h2 class="s">Foundations laid <em>well</em> are foundations laid <em>once</em>.</h2>
@@ -749,19 +812,67 @@ footer .meta{
 
 <div class="req-overlay" id="storyOverlay" hidden aria-hidden="true">
   <div class="req-backdrop" data-close-story></div>
-  <section class="req-modal" role="dialog" aria-modal="true" aria-labelledby="storyTitle">
+  <div class="req-modal" role="dialog" aria-modal="true" aria-labelledby="storyTitle">
     <div class="req-modal-head">
       <div><p class="req-kicker" id="storyKicker">Story</p><h2 class="s" id="storyTitle">Loading story</h2></div>
-      <button class="req-close" type="button" aria-label="Close story" data-close-story>&times;</button>
+      <div class="req-head-actions">
+        <button class="gate-btn" id="readyGateBtn" type="button" title="View and tick Ready checklist">
+          <span class="gate-ring" id="readyGateRing"></span>
+          <span>Ready</span>
+          <span class="gate-pct" id="readyGatePct">0%</span>
+        </button>
+        <button class="gate-btn done-gate" id="doneGateBtn" type="button" title="View and tick Completed checklist">
+          <span class="gate-ring" id="doneGateRing"></span>
+          <span>Completed</span>
+          <span class="gate-pct" id="doneGatePct">0%</span>
+        </button>
+        <button class="req-close" type="button" aria-label="Close story" data-close-story>&times;</button>
+      </div>
     </div>
-    <div class="req-modal-body">
-      <p class="story-summary" id="storySummary"></p>
-      <div class="req-meta" id="storyMeta"></div>
-      <p class="story-section-label">Requirements</p>
-      <div class="story-requirements" id="storyRequirements" role="tablist" aria-label="Requirements in this story"></div>
-      <div class="story-requirement-panel" id="storyRequirementPanel" hidden></div>
+    <div class="story-shell">
+      <nav class="story-nav" id="storyNav" role="tablist" aria-label="Story overview and requirements" aria-orientation="horizontal"></nav>
+      <div class="story-content" id="storyContent" role="tabpanel" tabindex="0" aria-live="polite"></div>
     </div>
-  </section>
+  </div>
+</div>
+
+<div class="roles-overlay" id="rolesOverlay" aria-hidden="true">
+  <div class="roles-backdrop" data-close-roles></div>
+  <aside class="roles-panel" role="dialog" aria-modal="true" aria-labelledby="rolesTitle">
+    <div class="sheet-grabber" aria-hidden="true"></div>
+    <div class="roles-head">
+      <div>
+        <p class="req-kicker">Scrum Team</p>
+        <h2 class="s" id="rolesTitle">Roles &amp; Priorities</h2>
+      </div>
+      <button class="req-close" id="rolesClose" type="button" aria-label="Close roles panel" data-close-roles>&times;</button>
+    </div>
+    <div class="roles-body">
+      <div class="role-item">
+        <div class="ic-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg></div>
+        <div><span class="s">Product Owner</span><p>Sets the order of work, makes open decisions, accepts or rejects each story at Sprint Review.</p></div>
+      </div>
+      <div class="role-item">
+        <div class="ic-box"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+        <div><span class="s">Scrum Master</span><p>A team member, part-time is fine. Protects the schedule, removes blockers, leads the retrospective.</p></div>
+      </div>
+      <div class="role-item">
+        <div class="ic-box"><svg viewBox="0 0 24 24"><path d="M8 6l-4 6 4 6M16 6l4 6-4 6"/></svg></div>
+        <div><span class="s">Developers</span><p>Plan and build the sprint, own quality, release, and demonstrate. Two tracks: A (platform) and B (screens).</p></div>
+      </div>
+      <div class="roles-rules">
+        <h3>Priorities &amp; the unfinished-work rule</h3>
+        <ul>
+          <li>Every story is Must, Should or Could. Work follows that order each day.</li>
+          <li>A story ships whole or not at all. Unfinished work stays hidden behind its on/off switch.</li>
+          <li>A requirement counts as delivered only when its story is Done at Sprint Review.</li>
+          <li>An unfinished Must story in Sprints 1 to 3 blocks dependent stories; the Product Owner decides at the Day 5 check.</li>
+          <li>Should and Could stories may slide to a later sprint. Moving anything past week 10 needs a formal change request.</li>
+          <li>Reserve 10% of every sprint for fixing the previous release, and 15% in Sprint 4.</li>
+        </ul>
+      </div>
+    </div>
+  </aside>
 </div>
 
 <script>
@@ -783,88 +894,465 @@ function requirementWhy(id){
   const kind=requirementPrefix(id);
   return kind==='UR'?'It keeps the plan connected to a real need from a person who will use or run FindStay.':kind==='FR'?'It gives the team a clear feature to build and check.':kind==='NFR'?'It makes sure the finished work is safe, clear, reliable or easy to use.':kind==='BRL'?'It keeps everyone working by the same rule, so the system stays fair and safe.':kind==='BR'?'It keeps the release focused on the problem FindStay is here to solve.':kind==='TA'?'It makes an important behind-the-scenes promise without asking the team to remember it later.':'It makes sure the team has the support and proof needed for a safe release.';
 }
-function closeStory(){const overlay=$('#storyOverlay');overlay.hidden=true;overlay.setAttribute('aria-hidden','true');document.body.classList.remove('overlay-open')}
-function addAcceptanceChecks(panel,s,item,id){
-  const heading=E('p','story-section-label','What proves this story is finished');
-  const list=E('ul','acceptance-list');
-  (storyAcceptance['S1-'+s[0]]||[s[6]]).forEach(check=>{const li=E('li','');li.textContent=check;list.append(li)});
-  panel.append(heading,list);
-  if(item){
-    const why=E('div','req-why');why.innerHTML='<b>Why this requirement matters</b><p></p>';$('p',why).textContent=requirementWhy(id);panel.append(why);
-    const source=E('details','req-source');const summary=E('summary','');summary.textContent='See the exact requirement wording';const text=E('p','');text.textContent=item.text;source.append(summary,text);panel.append(source);
-  }
+const kindShort={UR:'User need',FR:'Feature',NFR:'Quality',BR:'Promise',BRL:'Team rule',TA:'Behind the scenes',PD:'Delivery work'};
+const overviewIcon='<svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>';
+const L={
+  Ready:[
+    'Requirement IDs and success criteria are listed',
+    'Decisions it depends on are made, or a default is recorded',
+    'What it needs from earlier sprints is already released',
+    'Each new screen has a sketch',
+    'Test data and provider accounts are available'
+  ],
+  Done:[
+    'Code reviewed and merged; automatic checks pass',
+    'Every requirement ID has an automated test labelled with it',
+    'Database changes only add, stay in range, and work on empty and previous-release databases',
+    'The API has no breaking change',
+    'Security checks pass: no secrets in code, inputs checked, role and organisation checks tested',
+    'Every state change is logged; user-facing changes send a notification',
+    'Works at 360 px on a slow connection, in four browsers',
+    'On the test system with earlier tests passing, then live',
+    'Data diagram, API description and runbook are updated',
+    'Demonstrated at Sprint Review and accepted'
+  ]
+};
+const CHECKS_KEY='findstay_s1_story_checks_v1';
+let storyChecks={};
+try{storyChecks=JSON.parse(localStorage.getItem(CHECKS_KEY)||'{}')||{}}catch(e){storyChecks={}}
+function getStoryGateState(storyId,gate){
+  if(!storyChecks[storyId])storyChecks[storyId]={Ready:[],Done:[]};
+  if(!Array.isArray(storyChecks[storyId][gate]))storyChecks[storyId][gate]=[];
+  return storyChecks[storyId][gate];
 }
-async function selectStoryRequirement(s,id,button){
-  const panel=$('#storyRequirementPanel');panel.hidden=false;panel.innerHTML='';
-  $$('#storyRequirements button').forEach(b=>{const selected=b===button;b.classList.toggle('on',selected);b.setAttribute('aria-selected',String(selected))});
-  await requirementReady;
-  const item=requirementData[id];
-  if(item){const label=E('p','req-kicker','Requirement · '+id);const title=E('h3','');title.textContent=friendlyRequirement(id,item);panel.append(label,title)}
-  else {const label=E('p','req-kicker','Requirement · '+id);const title=E('h3','');title.textContent='Requirement details are not available right now.';panel.append(label,title)}
-  addAcceptanceChecks(panel,s,item,id);
+function saveStoryChecks(){
+  try{localStorage.setItem(CHECKS_KEY,JSON.stringify(storyChecks))}catch(e){}
+}
+function getGateStats(storyId,gate){
+  const items=L[gate],arr=getStoryGateState(storyId,gate);
+  let checked=0;
+  for(let i=0;i<items.length;i++)if(arr[i])checked++;
+  const total=items.length,pct=Math.round((checked/total)*100);
+  return{checked,total,pct,ratio:checked/total};
+}
+let currentStory=null,activeGateView=null;
+function updateStoryHeaderGates(s){
+  if(!s)return;
+  const r=getGateStats(s[0],'Ready'),d=getGateStats(s[0],'Done');
+  const rb=$('#readyGateBtn'),db=$('#doneGateBtn');
+  rb.style.setProperty('--gp',r.ratio);
+  db.style.setProperty('--gp',d.ratio);
+  $('#readyGatePct').textContent=r.pct+'%';
+  $('#doneGatePct').textContent=d.pct+'%';
+  rb.classList.toggle('complete',r.pct===100);
+  db.classList.toggle('complete',d.pct===100);
+  rb.classList.toggle('active',activeGateView==='Ready');
+  db.classList.toggle('active',activeGateView==='Done');
+}
+let storyReturnFocus=null,storyRenderToken=0;
+function closeStory(){const overlay=$('#storyOverlay');overlay.hidden=true;overlay.setAttribute('aria-hidden','true');document.body.classList.remove('overlay-open');if(storyReturnFocus&&storyReturnFocus.focus)storyReturnFocus.focus()}
+function storyIds(s){return s[8].split(' ').filter(Boolean)}
+function acceptanceList(s){const list=E('ul','acceptance-list');(storyAcceptance['S1-'+s[0]]||[s[6]]).forEach(check=>{const li=E('li','');li.textContent=check;list.append(li)});return list}
+function requirementAcceptanceList(s,item){const list=E('ul','acceptance-list');const checks=(item&&Array.isArray(item.acceptance)&&item.acceptance.length)?item.acceptance:(storyAcceptance['S1-'+s[0]]||[s[6]]);checks.forEach(check=>{const li=E('li','');li.textContent=check;list.append(li)});return list}
+function setRow(label,value){const row=E('div','set-row');const a=E('span','');a.textContent=label;const b=E('span','');b.textContent=value;row.append(a,b);return row}
+function setActionRow(label,btnText,onClick){
+  const row=E('div','set-row');
+  const a=E('span','');a.textContent=label;
+  const b=E('button','gate-link-btn');b.type='button';b.textContent=btnText;b.onclick=onClick;
+  row.append(a,b);return row;
+}
+function renderStoryChecklist(s,gate){
+  storyRenderToken++;activeGateView=gate;
+  $$('#storyNav button').forEach(b=>{b.classList.remove('on');b.setAttribute('aria-selected','false')});
+  updateStoryHeaderGates(s);
+  const c=$('#storyContent');c.innerHTML='';
+  const stats=getGateStats(s[0],gate),items=L[gate],state=getStoryGateState(s[0],gate);
+  const head=E('div','chk-head');
+  const tabs=E('div','chk-tabs');
+  const rStats=getGateStats(s[0],'Ready'),dStats=getGateStats(s[0],'Done');
+  const rTab=E('button','pill'+(gate==='Ready'?' on':''),'Ready to start · '+rStats.pct+'% ('+rStats.checked+'/'+rStats.total+')');
+  rTab.type='button';rTab.onclick=()=>renderStoryChecklist(s,'Ready');
+  const dTab=E('button','pill'+(gate==='Done'?' on':''),'Completed to ship · '+dStats.pct+'% ('+dStats.checked+'/'+dStats.total+')');
+  dTab.type='button';dTab.onclick=()=>renderStoryChecklist(s,'Done');
+  tabs.append(rTab,dTab);
+  head.append(tabs);
+  const sum=E('div','chk-summary');
+  const left=E('div','');
+  const kicker=E('p','req-kicker',gate==='Ready'?'Definition of Ready · S1-'+s[0]:'Definition of Done · S1-'+s[0]);
+  const title=E('h3','',gate==='Ready'?'Is this story ready to start?':'Is this story completed and ready to ship?');
+  const rem=stats.total-stats.checked;
+  const desc=E('p','mut');
+  desc.style.marginTop='8px';
+  desc.textContent=rem===0?(gate==='Ready'?'All 5 checks are ticked — this story is 100% Ready to pull into the sprint.':'All 10 checks are ticked — this story is 100% Completed and ready for Sprint Review.'):rem+' of '+stats.total+' items still unchecked ('+stats.pct+'% complete). Tick each item below as the team verifies it.';
+  left.append(kicker,title,desc);
+  const rg=E('div','rg','<b class="s">'+stats.pct+'%</b>');
+  rg.style.setProperty('--p',stats.ratio);
+  sum.append(left,rg);
+  const note=E('p','chk-filter-note',stats.checked+' checked · '+rem+' not yet checked');
+  const list=E('div','chk-list');
+  items.forEach((text,idx)=>{
+    const on=!!state[idx];
+    const btn=E('button','ck'+(on?' on':''),'<span></span><div style="flex:1"></div><i class="chk-badge '+(on?'ok':'todo')+'" style="font-style:normal">'+(on?'Checked':'Pending')+'</i>');
+    btn.type='button';
+    $('div',btn).textContent=text;
+    btn.onclick=()=>{
+      const st=$('#storyContent').scrollTop;
+      state[idx]=!state[idx];
+      saveStoryChecks();
+      layoutTimeline();
+      renderStoryChecklist(s,gate);
+      $('#storyContent').scrollTop=st;
+    };
+    list.append(btn);
+  });
+  c.append(head,sum,note,list);
+}
+function renderStoryOverview(s){
+  storyRenderToken++;activeGateView=null;updateStoryHeaderGates(s);
+  const c=$('#storyContent');c.innerHTML='';const ids=storyIds(s);
+  const d=storyDesign['S1-'+s[0]]||{};
+  const summary=E('p','story-summary');summary.textContent=s[6];
+  const rStats=getGateStats(s[0],'Ready'),dStats=getGateStats(s[0],'Done');
+  const rows=E('div','set-rows');
+  if(d.who)rows.append(setRow('Who this helps',d.who));
+  rows.append(
+    setRow('Area',s[7]),
+    setRow('Priority',s[2]=='M'?'Must have':'Should have'),
+    setRow('Track',s[3]=='A'?'Track A · backend & platform':'Track B · screens & workflows'),
+    setRow('Timeline','Day '+s[4]+' to Day '+s[5]+' ('+(s[5]-s[4]+1)+' days)'),
+    setRow('Requirements',ids.length?ids.length+' linked':'Release check')
+  );
+  if(d.screens)rows.append(setRow('Screens involved',d.screens));
+  if(d.tables)rows.append(setRow('Database tables',d.tables));
+  if(d.api)rows.append(setRow('System actions',d.api));
+  rows.append(
+    setActionRow('Ready status',rStats.pct+'% ('+rStats.checked+'/'+rStats.total+' checked) · Inspect checklist →',()=>renderStoryChecklist(s,'Ready')),
+    setActionRow('Completed status',dStats.pct+'% ('+dStats.checked+'/'+dStats.total+' checked) · Inspect checklist →',()=>renderStoryChecklist(s,'Done'))
+  );
+  c.append(E('p','req-kicker','Overview · S1-'+s[0]),summary,rows,E('p','story-section-label','What proves this story is finished'),acceptanceList(s));
+  if(ids.length)c.append(E('p','req-hint','Select any requirement pill above to read its plain-English details and acceptance criteria, or click Ready / Completed in the header to tick the story checklists.'));
+}
+async function renderStoryRequirement(s,id){
+  const token=++storyRenderToken;const c=$('#storyContent');c.innerHTML='';
+  const title=E('h3','','Loading requirement…');c.append(E('p','req-kicker','Requirement · '+id),title);
+  await requirementReady;if(token!==storyRenderToken)return;
+  const item=requirementData[id],kind=requirementPrefix(id);
+  title.textContent=item?friendlyRequirement(id,item):'Requirement details are not available right now.';
+  const rows=E('div','set-rows');
+  rows.append(setRow('Type',requirementKinds[kind]||kind));
+  if(item&&item.module)rows.append(setRow('Area',item.module.charAt(0).toUpperCase()+item.module.slice(1)));
+  rows.append(setRow('Delivered by','S1-'+s[0]+' · '+s[1]));
+  if(item&&item.verification)rows.append(setRow('Verification',item.verification));
+  const why=E('div','req-why','<b>Why this requirement matters</b><p></p>');$('p',why).textContent=requirementWhy(id);
+  c.append(rows,why,E('p','story-section-label','Acceptance criteria · '+id),requirementAcceptanceList(s,item));
+  if(item){const w=E('div','req-wording','<b>Exact requirement wording</b><p></p>');$('p',w).textContent=item.text;c.append(w)}
+}
+function selectStoryTab(button,render){
+  activeGateView=null;if(currentStory)updateStoryHeaderGates(currentStory);
+  $$('#storyNav button').forEach(b=>{const on=b===button;b.classList.toggle('on',on);b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});
+  button.scrollIntoView({block:'nearest',inline:'nearest'});$('#storyContent').scrollTop=0;render();
+}
+function storyNavButton(tag,label,sub,render){
+  const b=E('button','','<span class="tag">'+tag+'</span><span class="nav-text"><span></span>'+(sub?'<small></small>':'')+'</span>');
+  b.type='button';b.setAttribute('role','tab');$('.nav-text span',b).textContent=label;if(sub)$('small',b).textContent=sub;
+  b.onclick=()=>selectStoryTab(b,render);return b;
 }
 function showStory(s){
+  currentStory=s;activeGateView=null;
+  storyReturnFocus=document.activeElement;
   const overlay=$('#storyOverlay');overlay.hidden=false;overlay.setAttribute('aria-hidden','false');document.body.classList.add('overlay-open');
-  $('#storyKicker').textContent='Story S1-'+s[0]+' · Days '+s[4]+'–'+s[5];$('#storyTitle').textContent=s[1];$('#storySummary').textContent=s[6];
-  $('#storyMeta').innerHTML='<span>'+s[7]+'</span><span>'+(s[2]=='M'?'Must have':'Should have')+'</span><span>Track '+s[3]+'</span>';
-  const requirements=$('#storyRequirements');requirements.innerHTML='';const ids=s[8].split(' ').filter(Boolean);
-  if(!ids.length){requirements.innerHTML='<span class="mut">This release story has no separate requirement IDs.</span>';const panel=$('#storyRequirementPanel');panel.hidden=false;panel.innerHTML='';addAcceptanceChecks(panel,s,null,'');}
-  ids.forEach((id,index)=>{const button=E('button',index?'':'on',id);button.type='button';button.setAttribute('role','tab');button.setAttribute('aria-selected',String(!index));button.onclick=()=>selectStoryRequirement(s,id,button);requirements.append(button);if(!index)selectStoryRequirement(s,id,button)});
+  $('#storyKicker').textContent='Story S1-'+s[0]+' · Days '+s[4]+'–'+s[5];$('#storyTitle').textContent=s[1];
+  const nav=$('#storyNav');nav.innerHTML='';const ids=storyIds(s);
+  const overview=storyNavButton(overviewIcon,'Overview','',()=>renderStoryOverview(s));nav.append(overview);
+  ids.forEach(id=>{const kind=requirementPrefix(id);nav.append(storyNavButton(kind,id,'',()=>renderStoryRequirement(s,id)))});
+  $('#readyGateBtn').onclick=()=>renderStoryChecklist(s,'Ready');
+  $('#doneGateBtn').onclick=()=>renderStoryChecklist(s,'Done');
+  selectStoryTab(overview,()=>renderStoryOverview(s));
+  nav.scrollLeft=0;
   $('.req-close').focus();
 }
-document.addEventListener('click',e=>{if(e.target.closest('[data-close-story]'))closeStory()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#storyOverlay').hidden)closeStory()});
+$('#storyNav').addEventListener('wheel',e=>{
+  if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){e.preventDefault();$('#storyNav').scrollLeft+=e.deltaY}
+},{passive:false});
+$('#storyNav').addEventListener('keydown',e=>{
+  if(!['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+  const tabs=$$('#storyNav button'),i=tabs.indexOf(document.activeElement);if(i<0)return;e.preventDefault();
+  const n=e.key=='Home'?0:e.key=='End'?tabs.length-1:(i+(e.key=='ArrowDown'||e.key=='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+  tabs[n].focus();tabs[n].click();
+});
+const rolesOverlay=$('#rolesOverlay'),rolesBtn=$('#rolesBtn');
+function openRoles(){
+  rolesOverlay.classList.add('open');rolesOverlay.setAttribute('aria-hidden','false');
+  rolesBtn.setAttribute('aria-expanded','true');document.body.classList.add('overlay-open');
+  $('#rolesClose').focus();
+}
+function closeRoles(){
+  if(!rolesOverlay.classList.contains('open'))return;
+  rolesOverlay.classList.remove('open');rolesOverlay.setAttribute('aria-hidden','true');
+  rolesBtn.setAttribute('aria-expanded','false');
+  if($('#storyOverlay').hidden)document.body.classList.remove('overlay-open');
+  rolesBtn.focus();
+}
+rolesBtn.onclick=openRoles;
+document.addEventListener('click',e=>{
+  if(e.target.closest('[data-close-story]'))closeStory();
+  if(e.target.closest('[data-close-roles]'))closeRoles();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(rolesOverlay.classList.contains('open'))closeRoles();
+    else if(!$('#storyOverlay').hidden)closeStory();
+  }
+});
 const tb=$('#th');tb.onclick=()=>{const r=document.documentElement,dk=r.dataset.theme?r.dataset.theme=='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dk?'light':'dark';tb.textContent='Theme · '+(dk?'Light':'Dark')};
 addEventListener('scroll',()=>{$('#hdr').classList.toggle('scrolled',scrollY>40)},{passive:true});
 const J=[['Sign up','Registers with email (or a phone code), confirms, and logs in securely.','<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg>'],['Create organisation','An organisation is created automatically. The owner invites staff and grants permission for one property only.','<svg viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13M9 21v-6h6v6"/></svg>'],['Submit documents','Identity and property documents go in; a status tracker shows progress. Identity numbers are encrypted.','<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>'],['Build a listing','Units, photos, rates, amenities, house rules and an availability calendar. Incomplete listings cannot be submitted.','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>'],['Admin approves','Administrators approve, reject, suspend, restore or ask for corrections, always with a reason.','<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>'],['Published','The listing goes live and the owner gets an email.','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/></svg>']];
 J.forEach((j,i)=>{const b=E('button','nd','<span class="ic">'+j[2]+'</span><span class="lbl">'+j[0]+'</span>');b.onclick=()=>pick(i);$('#jr').append(b)});
 function pick(i){$$('.nd').forEach((b,k)=>{b.classList.toggle('on',k==i);b.classList.toggle('p',k<i)});const n=(i+1)%J.length;$('#jd').innerHTML='<div><b class="s">'+J[i][0]+'</b><p>'+J[i][1]+'</p></div><button class="pill">'+(i==J.length-1?'Start over':'Next step →')+'</button>';$('#jd button').onclick=()=>pick(n)}
 pick(0);
-const S=[['01','Basic working system','M','A',1,3,'An empty app builds, tests and goes live by itself; the build fails if one part reaches into another’s inner workings.','Platform Foundation','TA-01 TA-02 NFR-45 NFR-46 NFR-47 NFR-48 NFR-52 NFR-54 NFR-55 NFR-56 NFR-57 NFR-58 NFR-63 PD-01 PD-02 PD-07','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>'],['02','Live hosting and backups','M','A',2,4,'Live on cloud hosting; a backup is restored into a scratch database and timed.','Platform Foundation','PD-06 PD-10 PD-11 PD-12 TA-11 NFR-27 NFR-42 NFR-43 UR-ON05','<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg>'],['03','Design kit and layouts','M','B',2,5,'Owner and admin layouts work on phone, tablet and desktop with consistent navigation and messages.','UI Foundation','NFR-01 NFR-02 NFR-03 NFR-04 NFR-05 NFR-07 NFR-09 NFR-10 NFR-12 UR-ON01 BR-10','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>'],['04','Sign-up and login','M','A',2,5,'A user signs up, confirms by email (or phone code), logs in and out; protected endpoints reject anonymous users.','Identity','UR-G01 FR-01 FR-02 FR-03 FR-05 BRL-01 NFR-19 NFR-22 TA-07 TA-08','<svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>'],['05','Password recovery, profile','M','A',5,6,'A user recovers a password through a verified channel and edits only their own profile.','Identity','FR-04 FR-06','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v3M12 20v3"/></svg>'],['06','Permissions and security','M','A',4,6,'Every endpoint is guarded by permissions stored in tables; admin-only routes are out of reach for others.','Identity & Security','FR-07 BRL-02 NFR-20 NFR-21 NFR-23 NFR-24 UR-AN01','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'],['07','Organisations and staff','M','A',4,7,'An owner gets an organisation, invites staff, grants per-property permissions and sees only their own data.','Organisation','UR-O15 UR-PS01 UR-PSN01 UR-PM03 FR-09 BRL-04 BRL-05 UR-ON02','<svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>'],['08','Tamper-proof activity log','S','A',5,7,'Admin and verification actions are recorded and can never be edited or deleted.','Audit','UR-A07 UR-AN02 NFR-66 BR-11 BRL-19','<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>'],['09','Photo and document uploads','M','B',4,6,'Photos upload and serve as optimised WebP; verification and tenancy documents stay private.','Media','TA-12 TA-13 NFR-17','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>'],['10','Email, SMS, in-app messages','M','A',5,7,'Account and verification events reach users by email, SMS and in-app.','Notification','FR-68 FR-69 FR-70 FR-71 NFR-60','<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>'],['11','Consent and privacy','S','A',6,7,'Consent is captured at sign-up, only needed data is collected.','Privacy','NFR-31 NFR-32 NFR-35 NFR-36','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>'],['12','Owner verification','M','B',6,8,'An owner submits identity and property documents; identity data is encrypted at rest.','Verification','UR-O01 FR-08 NFR-28 NFR-34 TA-09','<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M2 10h20"/></svg>'],['13','Properties, units, rates','M','B',4,8,'A verified owner creates, edits and pauses a listing with units, photos, rates, amenities and house rules.','Catalog','FR-11 FR-12 FR-13 FR-14 FR-15 FR-16 FR-17 FR-22 BRL-06 BR-03 BR-02','<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>'],['14','Availability calendar','M','B',7,8,'An owner manages each unit’s calendar; the database rejects overlapping blocks.','Availability','UR-O02 UR-O03 FR-18 FR-39','<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'],['15','Approval and publishing','M','B',7,8,'An admin approves, rejects, suspends, restores or requests corrections; only approved listings publish.','Admin','UR-A02 FR-21 FR-88','<svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>'],['16','Admin users and settings','S','B',6,8,'An admin creates, suspends and restores users, edits settings and sees a basic dashboard.','Admin','UR-A01 FR-87 UR-A08 FR-92 FR-86','<svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>'],['17','Stabilise and release R1','M','A',9,10,'R1 is tagged and live; Sprint Review accepted; retrospective actions recorded.','Release','','<svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>']];
+const S=[
+  ['01','Project setup & system design','M','A',1,3,'Set up the starter website, backend server, and database folders, and write the database and screen designs before feature coding begins.','Platform Setup','TA-01 TA-02 NFR-45 NFR-46 NFR-47 NFR-48 NFR-52 NFR-54 NFR-55 NFR-56 NFR-57 NFR-58 NFR-63 PD-01 PD-02 PD-07','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>'],
+  ['02','Live hosting & daily backups','M','A',2,4,'Put the starter website, backend server, and database online, turn on daily database backups, and practise restoring a backup.','Cloud & Backups','PD-06 PD-10 PD-11 PD-12 TA-11 NFR-27 NFR-42 NFR-43 UR-ON05','<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg>'],
+  ['03','Mobile & desktop page layouts','M','B',2,5,'Build the shared Owner and Admin page layouts, menus, buttons, and status messages so every screen works cleanly on phones and desktops.','Screen Layouts','NFR-01 NFR-02 NFR-03 NFR-04 NFR-05 NFR-07 NFR-09 NFR-10 NFR-12 UR-ON01 BR-10','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>'],
+  ['04','Sign-up, confirmation & sign-in','M','A',2,5,'Let owners, staff, and admins create an account, confirm their email or phone code, and sign in and out safely.','Accounts & Sign-In','UR-G01 FR-01 FR-02 FR-03 FR-05 BRL-01 NFR-19 NFR-22 TA-07 TA-08','<svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>'],
+  ['05','Password reset & user profile','M','A',5,6,'Let users reset a forgotten password through their confirmed email and update their own profile details.','Accounts & Sign-In','FR-04 FR-06','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v3M12 20v3"/></svg>'],
+  ['06','Role permissions & safe access','M','A',4,6,'Make sure every screen and server action checks the signed-in person’s role so admin and owner tools stay protected.','Security & Roles','FR-07 BRL-02 NFR-20 NFR-21 NFR-23 NFR-24 UR-AN01','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'],
+  ['07','Owner companies & staff access','M','A',4,7,'Give each property owner their own company space, let them invite staff for specific properties, and keep every owner’s data separate.','Organisations & Staff','UR-O15 UR-PS01 UR-PSN01 UR-PM03 FR-09 BRL-04 BRL-05 UR-ON02','<svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>'],
+  ['08','Permanent activity log','S','A',5,7,'Record a permanent history of important admin, verification, and account actions that no one can edit or delete.','Activity Log','UR-A07 UR-AN02 NFR-66 BR-11 BRL-19','<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>'],
+  ['09','Photo & document uploads','M','B',4,6,'Let owners upload property photos (compressed to fast-loading WebP) while keeping identity and ownership documents private.','Photos & Files','TA-12 TA-13 NFR-17','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>'],
+  ['10','Email, SMS & in-app alerts','M','A',5,7,'Send automatic email, SMS, and in-app notifications when an account, verification case, or listing status changes.','Notifications','FR-68 FR-69 FR-70 FR-71 NFR-60','<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>'],
+  ['11','Privacy notice & user consent','S','A',6,7,'Show a clear Ghana Act 843 privacy notice at sign-up, record user consent, and ask only for needed personal information.','Privacy & Consent','NFR-31 NFR-32 NFR-35 NFR-36','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>'],
+  ['12','Owner ID & property verification','M','B',6,8,'Let owners submit their Ghana Card, ownership proof, and tourism licence for review, with ID numbers encrypted in the database.','Owner Verification','UR-O01 FR-08 NFR-28 NFR-34 TA-09','<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M2 10h20"/></svg>'],
+  ['13','Create properties, rooms & prices','M','B',4,8,'Let verified owners create, edit, and pause property listings with individual rooms, photos, nightly GHS prices, amenities, and house rules.','Property Listings','FR-11 FR-12 FR-13 FR-14 FR-15 FR-16 FR-17 FR-22 BRL-06 BR-03 BR-02','<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>'],
+  ['14','Room availability calendar','M','B',7,8,'Let owners and authorised staff block or unblock dates on each room’s calendar, while preventing overlapping blocks.','Availability Calendar','UR-O02 UR-O03 FR-18 FR-39','<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'],
+  ['15','Admin review & listing approval','M','B',7,8,'Let administrators review submitted listings and approve, reject, suspend, restore, or request corrections with a written reason.','Admin Approvals','UR-A02 FR-21 FR-88','<svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>'],
+  ['16','Admin dashboard, users & settings','S','B',6,8,'Give administrators a summary dashboard, tools to create, suspend, or restore user accounts, and a page to update platform settings.','Admin Controls','UR-A01 FR-87 UR-A08 FR-92 FR-86','<svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>'],
+  ['17','Final testing & Release R1','M','A',9,10,'Run full checks with two pilot property owners, test a backup recovery, put Release R1 live, and demo the finished sprint.','Release R1','','<svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>']
+];
 const storyAcceptance={
-  'S1-01':['The basic app builds, is checked and goes live automatically.','The team is warned if one part of the system reaches into another part’s private work.','The database shape, screen plan and test plan are written down.'],
-  'S1-02':['The basic app is live in its planned online homes.','The team restores a saved copy into a safe practice space and records how long it took.','Private keys are kept out of the project, and the team is warned when the service is unhealthy.'],
-  'S1-03':['Owner and admin screens work on a small phone, tablet and desktop.','Navigation and messages look and behave consistently.','The team checks common browsers, accessibility and a slow connection.'],
-  'S1-04':['A new person can sign up, confirm their contact details, sign in and sign out.','Private pages turn away anyone who is not signed in or has an invalid sign-in pass.','Passwords and other private sign-in secrets never appear in the app’s public files.'],
-  'S1-05':['A person can safely reset a password through a confirmed contact method.','A person can edit only the profile details they are allowed to edit.','The reset link expires and cannot be used twice.'],
-  'S1-06':['Every protected action checks what the person is allowed to do.','Administrator-only pages stay out of reach for everyone else.','The team checks for common unsafe input and attempts to access someone else’s information.'],
-  'S1-07':['An owner receives an organisation during onboarding and can invite staff.','Staff permissions can be given or removed for a specific property.','One owner cannot see or change another owner’s information.'],
-  'S1-08':['Important admin and verification actions record who did what and when.','Those records cannot be edited or deleted.','The team proves that attempted changes to the records are blocked.'],
-  'S1-09':['Owners can upload photos, while sensitive documents remain private.','Public listing photos are clear and use less data.','The team checks file size, file type, access limits and expiring private links.'],
-  'S1-10':['Important account and verification updates reach people through the planned messages.','A failed message is recorded and tried again.','The team can change a message provider without rebuilding the rest of the system.'],
-  'S1-11':['Consent is collected during registration.','The app asks only for information it needs.','Only authorised people can see personal and financial information.'],
-  'S1-12':['An owner can submit identity and property documents and see the approval status.','Sensitive identity details are safely locked away.','People who are not reviewers cannot read the documents.'],
-  'S1-13':['A verified owner can create, edit and pause a complete listing.','A listing missing required details cannot be sent for approval.','The team checks that only verified owners can create listings.'],
-  'S1-14':['An owner can manage available dates for each unit.','The system stops two active blocks from covering the same dates.','When two people try at once, only one block is saved.'],
-  'S1-15':['An administrator can approve, reject, suspend, restore or ask for corrections.','Only approved listings can become published.','Every decision includes a reason and is recorded.'],
-  'S1-16':['An administrator can create, suspend and restore users, and change settings.','A basic dashboard is available.','A suspended person cannot sign in and settings changes are recorded.'],
-  'S1-17':['Release R1 is marked and live.','The Product Owner accepts the Sprint Review.','The team records what to improve next and completes final checks with pilot owners.']
+  'S1-01':[
+    'The website, backend server, and database folders are set up and connected.',
+    'The database table diagram (ERD), API routes, and screen plan are written down.',
+    'Automatic checks run on every code save to catch broken code or rule violations.'
+  ],
+  'S1-02':[
+    'The website, backend server, and database are live in their cloud homes.',
+    'Daily automatic database backups are turned on and a test restore is timed.',
+    'All passwords and secret keys are kept out of the code files, and health alerts are active.'
+  ],
+  'S1-03':[
+    'Owner and Admin pages fit cleanly on small phones (360px), tablets, and desktops.',
+    'Menus, icons, buttons, and status messages look and behave consistently.',
+    'Screens work across Chrome, Edge, Firefox, and Safari even on a slow mobile connection.'
+  ],
+  'S1-04':[
+    'A new user can register, confirm their email or phone code, sign in, and sign out.',
+    'Private pages block anyone who is not signed in or whose session has expired.',
+    'Passwords are handled safely by the sign-in service and never stored in FindStay tables.'
+  ],
+  'S1-05':[
+    'A user can reset a forgotten password through a single-use link sent to their email.',
+    'A signed-in user can view and edit only their own profile details.',
+    'Expired or already-used password reset links are rejected.'
+  ],
+  'S1-06':[
+    'Every protected page and server action checks the user’s role and permissions.',
+    'Administrator screens and actions are completely blocked for non-admin users.',
+    'All form inputs are checked to block unsafe text or attempts to view other people’s records.'
+  ],
+  'S1-07':[
+    'Each owner automatically gets their own company space during onboarding.',
+    'An owner can invite staff and grant or remove permissions for specific properties.',
+    'One owner can never see or edit another owner’s company, properties, or staff.'
+  ],
+  'S1-08':[
+    'Important admin, verification, and account actions record who did what and when.',
+    'Activity log entries are permanent and cannot be edited or deleted by anyone.',
+    'Administrators can search and filter the activity log by user, action, or date.'
+  ],
+  'S1-09':[
+    'Property photos are compressed into fast-loading WebP images for public viewing.',
+    'Owner ID cards and property documents stay locked in a private folder.',
+    'Oversized or invalid files are rejected, and private documents use temporary expiring links.'
+  ],
+  'S1-10':[
+    'Account, verification, and listing updates notify the user by email, SMS, and in-app alert.',
+    'If a message fails to send, the failure is logged and retried automatically.',
+    'Email and SMS providers can be swapped in settings without changing feature code.'
+  ],
+  'S1-11':[
+    'Users see a clear Ghana Act 843 privacy notice and give consent when signing up.',
+    'Forms ask only for personal details that are genuinely needed.',
+    'Personal and verification details are visible only to the owner and authorised reviewers.'
+  ],
+  'S1-12':[
+    'An owner can upload their Ghana Card, ownership proof, and tourism licence and track review status.',
+    'Ghana Card numbers are encrypted before being saved in the database.',
+    'If an admin asks for corrections, the owner can upload updated files and resubmit.'
+  ],
+  'S1-13':[
+    'A verified owner can create, edit, and pause a property with rooms, photos, GHS prices, amenities, and rules.',
+    'A listing missing required details (such as photos, price, or room capacity) cannot be sent for approval.',
+    'Only verified owners can create or submit listings.'
+  ],
+  'S1-14':[
+    'An owner or authorised staff member can block or unblock dates on each room’s calendar.',
+    'The database blocks any attempt to save two overlapping unavailable ranges on the same room.',
+    'If two people try to block the same dates at the same moment, only the first one succeeds.'
+  ],
+  'S1-15':[
+    'An administrator can approve, reject, suspend, restore, or ask for corrections on submitted listings.',
+    'A listing goes live (Published) only after an administrator approves it.',
+    'Every decision requires a written reason, logs the history, and notifies the owner.'
+  ],
+  'S1-16':[
+    'An administrator sees a summary dashboard of pending verifications, listings, and users.',
+    'An administrator can create, suspend, or restore user accounts and update platform settings.',
+    'Suspended users are blocked immediately, and all admin changes are recorded in the activity log.'
+  ],
+  'S1-17':[
+    'Two pilot property owners complete the full sign-up-to-published-listing journey.',
+    'The team proves one owner cannot see another’s data and completes a backup restore drill.',
+    'Release R1 is live and accepted by the Product Owner at Sprint Review.'
+  ]
 };
-const milestones={1:'Plan',5:'Mid-check',9:'Release',10:'Review'},freeze={8:'Freeze'};
-const gh=$('#ganttHead');gh.appendChild(E('div','gl','Track'));
-for(let d=1;d<=10;d++){const cls=milestones[d]?'gd milestone':(freeze[d]?'gd freeze':'gd');const lbl=milestones[d]||freeze[d]||'Build';gh.appendChild(E('div',cls,'D'+d+'<span class="gdl">'+lbl+'</span>'))}
-const gb=$('#ganttBody');const rows=S.map(s=>{const row=E('div','gantt-row');const btn=E('button','gantt-label','<span class="glic">'+s[9]+'</span><span>S1-'+s[0]+' '+s[1]+'</span>');const track=E('div','gantt-track');const bar=E('div','gantt-bar '+(s[3]=='B'?'B':'')+(s[2]=='S'?' sh':''),'S1-'+s[0]);bar.style.left=((s[4]-1)*10)+'%';bar.style.width='calc('+((s[5]-s[4]+1)*10)+'% - 4px)';bar.style.marginLeft='2px';track.appendChild(bar);row.append(btn,track);btn.onclick=()=>showDetail(s);bar.onclick=()=>showDetail(s);gb.append(row);return{row,s}});
-function showDetail(s){$('#ganttDetail').innerHTML='<div class="gd-title">S1-'+s[0]+' · '+s[1]+'</div><div class="gd-meta">'+s[7]+' · '+(s[2]=='M'?'Must':'Should')+' · Track '+s[3]+' · Days '+s[4]+'–'+s[5]+'</div><div>'+s[6]+'</div>'+(s[8]?('<div class="gd-reqs">'+s[8].split(' ').filter(Boolean).map(x=>'<button type="button" class="ch" data-requirement="'+x+'" aria-label="Read '+x+' in plain English">'+x+'</button>').join('')+'</div><p class="req-hint">Tap any requirement ID to read what it means in plain English.</p>'):'')}
-showDetail(S[0]);
-[['All',()=>1],['Track A',s=>s[3]=='A'],['Track B',s=>s[3]=='B'],['Must only',s=>s[2]=='M'],['Should only',s=>s[2]=='S']].forEach((f,k)=>{const b=E('button','pill'+(k?'':' on'),f[0]);b.onclick=()=>{$$('#dayFilters .pill').forEach(x=>x.classList.remove('on'));b.classList.add('on');rows.forEach(r=>r.row.hidden=!f[1](r.s))};$('#dayFilters').append(b)});
-const L={Ready:['Requirement IDs and success criteria are listed','Decisions it depends on are made, or a default is recorded','What it needs from earlier sprints is already released','Each new screen has a sketch','Test data and provider accounts are available'],Done:['Code reviewed and merged; automatic checks pass','Every requirement ID has an automated test labelled with it','Database changes only add, stay in range, and work on empty and previous-release databases','The API has no breaking change','Security checks pass: no secrets in code, inputs checked, role and organisation checks tested','Every state change is logged; user-facing changes send a notification','Works at 360 px on a slow connection, in four browsers','On the test system with earlier tests passing, then live','Data diagram, API description and runbook are updated','Demonstrated at Sprint Review and accepted']};
-let cur='Ready';const ST={Ready:[],Done:[]};
-Object.keys(L).forEach((k,i)=>{const b=E('button','pill'+(i?'':' on'),k+(k=='Ready'?' to start':' to ship'));b.onclick=()=>{cur=k;$$('#tabs .pill').forEach(x=>x.classList.remove('on'));b.classList.add('on');dl()};$('#tabs').append(b)});
-function dl(){const ls=$('#ls');ls.innerHTML='';L[cur].forEach((t,i)=>{const b=E('button','ck'+(ST[cur][i]?' on':''),'<span></span>'+t);b.onclick=()=>{ST[cur][i]=!ST[cur][i];dl()};ls.append(b)});const n=ST[cur].filter(Boolean).length,m=L[cur].length;$('#rg').style.setProperty('--p',n/m);$('#rn').textContent=n+'/'+m;$('#msg').textContent=n==m?(cur=='Ready'?'Ready. Pull it into the sprint.':'Done. Show it at Sprint Review.'):'Tick each item as it becomes true.'}
-dl();
-const D=[['J-06','Several companies, data kept apart','Day 1','Yes. Each owner’s data sits under an organisation from day one, in one shared database.'],['P-02','How units (rooms) are modelled','Day 1','Track each unit individually, optionally grouped by type for display.'],['P-04','Role model versus BRL-02','Day 1','An account has memberships; BRL-02 is reworded.'],['P-08','Phone verification and SMS provider','Day 2','Pick a provider on Day 2. Fallback: email-only codes in R1, and FR-70 moves to Sprint 2 by change request.'],['P-09','How sign-in sessions last','Day 3','Supabase issues one-hour passes and renews them. Supabase handles logout, with a session check kept for sensitive actions.'],['P-12','Regulator name for Act 843, licence documents','Day 6','Use “Data Protection Commission or Authority” until confirmed; licence list from the Ghana Tourism Authority.']];
-let dn=0;D.forEach(d=>{const c=E('div','dc','<div><span class="ch">'+d[0]+'</span> <span class="mut">needed by '+d[2]+'</span></div><h3>'+d[1]+'</h3><p>'+d[3]+'</p>');const b=E('button','pill','Use default');b.onclick=()=>{const o=b.classList.toggle('on');b.textContent=o?'✓ Confirmed':'Use default';dn+=o?1:-1;$('#dn').textContent=dn+' of 6 confirmed'};c.append(b);$('#dg').append(c)});
- $('#dl').innerHTML=['P-03 Booking states (S2 D1): add Expired; pending does not hold the unit.','P-10 Background jobs (S2 D1): non-sleeping hosting.','P-07 Monetisation (S2 D1): commission and guest convenience fee in Phase 1.','J-03 Fees (S2 D1): percentages in settings.','J-03 Payouts (S3 D1): pay after the stay is completed.','P-06 Cancellation policy (S3 D1): platform templates per listing.','P-05 Targets (S3 D1): NFR-13 (3 s) pass or fail; 99.5% uptime; load test to 1,000 users.','Hostel scope (S4 D8): needed to plan Sprint 5.','J-04 AI support (S4 D8): Phase 2, Sprint 5, Could.','J-05 Text-to-speech (S4 D8): icons in Sprint 1; speech in Sprint 5.','P-11 Calendar integration (S4 D8): stays in Sprint 5.','Closed: J-01, J-02, P-01 decided in the phased plan.'].map(t=>'<li>'+t+'</li>').join('');
-const R=[['C1','Only add','No dropped or renamed columns; no new required column without a default.','Tested by upgrading a copy of the previous release.'],['C2','Own number range','S1 V1_01–V1_19, S2 V1_20–V1_39, S3 V1_40–V1_59, S4 V2_01–V2_29, S5 V2_30–V2_59.','Checked in every database change.'],['C3','No breaking APIs','Only new connection points and optional fields.','Checked automatically against the previous release tag.'],['C4','Events only grow','New event types and optional fields only; receivers ignore unknown fields.','Event tests. Sprint 2 event list is frozen.'],['C5','One-way dependencies','A sprint uses only parts from its own or earlier sprints.','Spring Modulith verify() fails the build if broken.'],['C6','Front doors only','Later sprints use the public api package, events and the eight seams.','Review checklist, boundary check at Sprint Review.'],['C7','Hidden until ready','Future features are built but switched off via platform_setting.','Switches in platform_setting, off by default on live.'],['C8','Always reversible','Changes only add, so the previous version still runs.','Tagged releases, backup first, roll-back practised.']];
-const wn=$('#wheelNodes'),cx=250,cy=250,r=200;R.forEach((rule,i)=>{const angle=(-90+i*45)*Math.PI/180;const x=cx+r*Math.cos(angle),y=cy+r*Math.sin(angle);const g=E('g','wheel-node');g.setAttribute('transform','translate('+x+','+y+')');g.dataset.i=i;g.innerHTML='<circle r="38" class="wn-bg" fill="var(--card)" stroke="var(--acc)" stroke-width="1.5"/><text class="wn-num" text-anchor="middle" dy="-4" font-family="Cormorant Garamond" font-size="16" font-weight="600" fill="var(--acc)">'+rule[0]+'</text><text class="wn-text" text-anchor="middle" dy="14" font-family="Inter" font-size="8" fill="var(--ink)" letter-spacing=".05em">'+rule[1].toUpperCase()+'</text>';g.onclick=()=>pickRule(i);wn.append(g)});
-function pickRule(i){$$('.wheel-node').forEach((n,k)=>n.classList.toggle('on',k==i));const r=R[i];$('#wheelDetail').innerHTML='<div class="wd-id">'+r[0]+'</div><div class="wd-name">'+r[1]+'</div><div class="wd-rule">'+r[2]+'</div><div class="wd-check">'+r[3]+'</div>'}
-pickRule(0);
+const storyDesign={
+  'S1-01':{
+    who:'Development team (so all 11 members can build without conflicts)',
+    screens:'Starter shell routes for Owner Portal (/owner), Admin Portal (/admin), and Guest Portal (/)',
+    tables:'Starter Flyway migration setup (V1_01), shared settings & lookup tables',
+    api:'Health check (/actuator/health), shared Ghana Cedi/pesewa money helper, Ghana GMT time helper, and module boundary check'
+  },
+  'S1-02':{
+    who:'Property owners & administrators (relying on a dependable, backed-up live system)',
+    screens:'Live cloud URLs for Owner and Admin portals behind Cloudflare security',
+    tables:'Daily automated Supabase PostgreSQL backups + Day 4 scratch restore verification',
+    api:'Cloudflare Workers Static Assets + Render Spring Boot API + Sentry error alerts + uptime monitor'
+  },
+  'S1-03':{
+    who:'Small property owners, staff, and administrators on mobile phones and desktops',
+    screens:'Owner Portal layout, Admin Portal layout, mobile navigation bar/drawer, toast alerts, and empty/loading states',
+    tables:'None (UI layout and design components)',
+    api:'Consistent error and status message display across all screens'
+  },
+  'S1-04':{
+    who:'Guests, Property Owners, Property Staff, and Administrators signing up and signing in',
+    screens:'Sign Up (/auth/register), Confirm Email/OTP (/auth/verify), and Sign In (/auth/login)',
+    tables:'identity.user_profile, identity.role (seeded with Guest, Owner, Property Staff, Administrator)',
+    api:'Supabase Auth sign-up/login/logout + Spring Boot JWT verification via JWKS + GET /api/v1/me'
+  },
+  'S1-05':{
+    who:'Any signed-in user updating their details or recovering a forgotten password',
+    screens:'Forgot Password (/auth/forgot-password), Reset Password (/auth/reset-password), and My Profile (/profile)',
+    tables:'identity.user_profile (name, phone, avatar_url, preferred_language)',
+    api:'Supabase password reset flow + GET /api/v1/me and PATCH /api/v1/me'
+  },
+  'S1-06':{
+    who:'All users (protecting private owner records and admin-only controls)',
+    screens:'Access-denied states and role-aware menus in Owner and Admin portals',
+    tables:'identity.role, identity.permission, identity.role_permission',
+    api:'@RequiresPermission security guard on every API route + input validation + HTTPS enforcement'
+  },
+  'S1-07':{
+    who:'Property owners managing a business and inviting staff for specific properties',
+    screens:'Company & Staff Management (/owner/staff) and Staff Invite Acceptance (/owner/invitations)',
+    tables:'organization.organization, organization.membership, organization.membership_permission',
+    api:'POST /api/v1/owner/staff/invite, PUT /api/v1/owner/staff/:id/permissions + automatic OrgScope data isolation'
+  },
+  'S1-08':{
+    who:'Administrators auditing platform activity and investigating disputes or changes',
+    screens:'Admin Activity Log viewer (/admin/audit) with user, action, and date filters',
+    tables:'audit.audit_log (append-only table—UPDATE and DELETE blocked at database level)',
+    api:'Shared AuditRecorder service + GET /api/v1/admin/audit-logs'
+  },
+  'S1-09':{
+    who:'Property owners uploading listing photos and private verification documents',
+    screens:'Photo Uploader component and Document Uploader component in the Owner Portal',
+    tables:'media.media_asset, media.document (linking files to properties or verification cases)',
+    api:'POST /api/v1/media/upload-url, WebP image optimisation, and temporary signed URLs for private files'
+  },
+  'S1-10':{
+    who:'Owners, staff, and users receiving updates about their account, verification, or listings',
+    screens:'In-app Notification Bell & Inbox (/notifications) + formatted Email and SMS messages',
+    tables:'notification.notification, notification.notification_template, notification.notification_delivery',
+    api:'NotificationSender service + Email & Ghana SMS adapters + GET /api/v1/notifications'
+  },
+  'S1-11':{
+    who:'All users (protecting personal data under Ghana’s Data Protection Act, 2012 — Act 843)',
+    screens:'Privacy Notice modal/page and mandatory Act 843 consent checkbox on Sign Up & Onboarding',
+    tables:'identity.consent_record (user_id, policy_version, consented_at, ip_address)',
+    api:'POST /api/v1/me/consents + strict field filtering so private data is never exposed publicly'
+  },
+  'S1-12':{
+    who:'Property owners proving their identity and property ownership before listing',
+    screens:'Owner Verification Wizard (/owner/verification) and Verification Status Tracker',
+    tables:'verification.verification_case (with AES-256 encrypted Ghana Card number), verification.verification_document',
+    api:'POST /api/v1/owner/verification-cases, POST /api/v1/owner/verification-cases/:id/resubmit, GET /api/v1/owner/verification-cases/mine'
+  },
+  'S1-13':{
+    who:'Verified property owners creating and managing hotels, guesthouses, and apartments in Takoradi',
+    screens:'Owner Listings List (/owner/listings), Property & Units Editor (/owner/listings/:id/edit), and Listing Preview',
+    tables:'catalog.property, catalog.unit, catalog.listing, catalog.rate_plan (in integer pesewas), catalog.amenity, catalog.area (Takoradi areas)',
+    api:'CRUD /api/v1/owner/properties & /listings, POST /api/v1/owner/listings/:id/submit,POST /pause, and public CatalogQuery seam'
+  },
+  'S1-14':{
+    who:'Owners and property staff managing when each room or unit is available',
+    screens:'Unit Availability Calendar (/owner/listings/:id/calendar) with date-range block/unblock controls',
+    tables:'availability.availability_block (with PostgreSQL btree_gist overlap exclusion constraint per unit_id)',
+    api:'GET /api/v1/owner/units/:unitId/calendar, POST /api/v1/owner/units/:unitId/blocks, DELETE /api/v1/owner/units/:unitId/blocks/:blockId'
+  },
+  'S1-15':{
+    who:'Administrators reviewing owner verifications and property listings before they go live',
+    screens:'Admin Verification & Listing Approval Queue (/admin/approvals) and Detailed Review Drawer/Screen',
+    tables:'catalog.listing_status_history, verification.review_decision',
+    api:'POST /api/v1/admin/listings/:id/{approve|reject|request-corrections|suspend|restore} with mandatory reason & audit log'
+  },
+  'S1-16':{
+    who:'Administrators monitoring platform activity, managing user accounts, and toggling settings',
+    screens:'Admin Dashboard (/admin), User Management (/admin/users), and Platform Settings (/admin/settings)',
+    tables:'admin.platform_setting (key-value settings and feature flags)',
+    api:'GET /api/v1/admin/dashboard, POST /api/v1/admin/users/:id/{suspend|restore}, GET/PUT /api/v1/admin/settings'
+  },
+  'S1-17':{
+    who:'Pilot property owners, administrators, and the Product Owner reviewing Release R1',
+    screens:'All Release R1 screens tested end to end across the 7-step Sprint Review demo script',
+    tables:'Full V1_01–V1_19 schema verified on staging and production + backup restore check',
+    api:'All Sprint 1 endpoints verified by the R1 automated regression suite'
+  }
+};
+const tlContainer=$('#timeline');
+let tlFilter=()=>true;
+function layoutTimeline(){
+  tlContainer.innerHTML='';
+  const list=S.filter(tlFilter).slice().sort((a,b)=>a[4]-b[4]||a[5]-b[5]||a[0].localeCompare(b[0]));
+  list.forEach((s,idx)=>{
+    const side=idx%2===0?'right':'left';
+    const cls='vtl-item '+side+(s[2]==='S'?' should':(s[3]==='B'?' track-b':''));
+    const item=E('div',cls);item.setAttribute('role','listitem');
+    const axis=E('div','vtl-axis');axis.setAttribute('aria-hidden','true');
+    const card=E('button','vtl-card');card.type='button';
+    card.setAttribute('aria-label','Story S1-'+s[0]+': '+s[1]+', Days '+s[4]+' to '+s[5]+'. Open story details.');
+    const arm=E('div','vtl-arm-row','<span class="vtl-line"></span><span class="vtl-dot"></span><span class="vtl-num-wrap"><span class="vtl-num">'+s[0]+'</span><span class="vtl-days">Days '+s[4]+'–'+s[5]+'</span></span>');
+    const banner=E('div','vtl-banner',s[9]+'<span></span>');
+    $('span',banner).textContent=s[1];
+    const body=E('div','vtl-body');
+    const sum=E('p','vtl-summary');sum.textContent=s[6];
+    const pts=E('ul','vtl-points');
+    (storyAcceptance['S1-'+s[0]]||[]).forEach(t=>{const li=E('li','');li.textContent=t;pts.append(li)});
+    const reqCount=storyIds(s).length;
+    const rPct=getGateStats(s[0],'Ready').pct,dPct=getGateStats(s[0],'Done').pct;
+    const meta=E('div','vtl-meta','<span>S1-'+s[0]+'</span><span>·</span><span>Track '+s[3]+'</span><span>·</span><span>Ready '+rPct+'%</span><span>·</span><span>Completed '+dPct+'%</span><span>·</span><span>'+(reqCount?reqCount+' reqs →':'Open →')+'</span>');
+    body.append(sum,pts,meta);
+    card.append(arm,banner,body);
+    card.onclick=()=>showStory(s);
+    item.append(axis,card);
+    tlContainer.append(item);
+  });
+}
+layoutTimeline();
+[['All',()=>true],['Track A',s=>s[3]=='A'],['Track B',s=>s[3]=='B'],['Must only',s=>s[2]=='M'],['Should only',s=>s[2]=='S']].forEach((f,k)=>{const b=E('button','pill'+(k?'':' on'),f[0]);b.type='button';b.onclick=()=>{$$('#dayFilters .pill').forEach(x=>x.classList.remove('on'));b.classList.add('on');tlFilter=f[1];layoutTimeline()};$('#dayFilters').append(b)});
 const DM=['An owner signs up with email, confirms it, and logs in.','The owner’s organisation is created automatically; they invite a staff member with permission for one property only.','The owner uploads identity and property documents; an administrator sees the case in the approval queue.','The owner creates a property with two units, photos (served as WebP), rates, amenities and house rules, and blocks some dates.','The administrator approves the listing; it becomes Published and the owner receives an email.','The administrator suspends and restores a user; both actions appear in the activity log.','A second owner cannot see the first owner’s data. The live system passes a restore drill from last night’s backup.'];
 let dk=0;DM.forEach((t,i)=>{const b=E('button','st','<span>'+(i+1)+'</span>'+t);b.onclick=()=>{dk=dk==i+1?i:i+1;$$('.st').forEach((x,j)=>x.classList.toggle('on',j<dk));$$('#demoStops .stop').forEach((s,j)=>{s.querySelector('circle').setAttribute('fill',j<dk?'var(--acc)':'var(--card)');s.querySelector('text').setAttribute('fill',j<dk?'#fff':'var(--acc)')});$('#pb').style.width=dk/DM.length*100+'%'};$('#demoList').append(b);$$('#demoStops .stop')[i].onclick=()=>b.click()});
-const HO=[['Blocked dates','A reason list and a database rule against overlaps. Sprint 2 adds HOLD and BOOKING by data update.','<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'],['Listing lookup','A public CatalogQuery returns everything search needs. Sprint 2 never touches listing internals.','<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>'],['Billing period','Only NIGHTLY is active; Sprints 4 and 5 add MONTHLY, TERM and ACADEMIC_YEAR.','<svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>'],['Message templates','Keyed by event type and added by migration.','<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'],['Activity log','Stores a generic entity type and ID; later parts use the same AuditRecorder.','<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>'],['Roles & permissions','Stored as rows, with prefixes like listing.*, booking.*, payment.*.','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'],['Settings & switches','platform_setting plus a feature-flag table.','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg>'],['Ready to reuse','OrgScope filter, Money (pesewas), time handling, scheduler, event bus.','<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-6 0v4M5 9h14l1 12H4z"/></svg>']];
-HO.forEach(h=>$('#ho').append(E('div','card','<div class="ic-box">'+h[2]+'</div><span class="s">'+h[0]+'</span><p>'+h[1]+'</p>')));
-const RK=[['Biggest setup sprint','If the basic system is not live by Day 3, stop adding features until it is.','<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>'],['SMS provider (P-08)','May delay one-time codes. Fallback: email-only codes in R1.','<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>'],['Check on Day 2','Supabase storage limits and Render’s non-sleeping hosting plan.','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>']];
-RK.forEach(h=>$('#rk').append(E('div','card warn','<div class="ic-box">'+h[2]+'</div><span class="s">'+h[0]+'</span><p>'+h[1]+'</p>')));
 const io=new IntersectionObserver(es=>es.forEach(x=>x.isIntersecting&&x.target.classList.add('in')),{threshold:.06});
 $$('section').forEach(s=>io.observe(s));
 </script>

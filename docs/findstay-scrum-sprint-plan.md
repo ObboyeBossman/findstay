@@ -219,12 +219,12 @@ IDs are from the phased plan (Section 6). **Needed by** is the sprint day on whi
 
 | ID | Topic | Needed by | Proposed default if undecided |
 |----|-------|:---------:|-------------------------------|
-| J-06 | Multi-company onboarding and data isolation | S1 D1 | Yes: `organization` from day one, one shared database. |
-| P-02 | Unit model (FR-15 versus FR-40) | S1 D1 | Tracked units, optionally grouped by type for display (the plan's recommendation). |
-| P-04 | Role model versus BRL-02 | S1 D1 | Account has memberships; BRL-02 reworded (the plan's recommendation). |
-| P-08 | Phone verification and SMS provider | S1 D2 | Choose an SMS provider on D2. Fallback: email-only OTP in R1 and FR-70 moves to Sprint 2 through change control. |
-| P-09 | Token lifecycle | S1 D3 | Supabase Auth issues one-hour access JWTs and rotates refresh tokens. React refreshes through the Supabase client; Spring validates access JWTs through Supabase JWKS. Logout is handled by Supabase Auth, with session validation reserved for sensitive actions. |
-| P-12 | Regulator name for Act 843 and tourism licence documents | S1 D6 | Use "Data Protection Commission or Authority" wording in notices until confirmed; licence document list from the Ghana Tourism Authority. |
+| J-06 | Multi-company onboarding and data isolation | Closed (S1) | **Settled:** Yes — `organization` per owner from Day 1 in one shared database, isolated by `organization_id`. |
+| P-02 | Unit model (FR-15 versus FR-40) | Closed (S1) | **Settled:** Track each bookable unit individually (with its own calendar and overlap lock), optionally grouped by unit type for display. |
+| P-04 | Role model versus BRL-02 | Closed (S1) | **Settled:** Account holds role memberships (Guest + Owner/Staff per organisation or property); BRL-02 reworded. |
+| P-08 | Phone verification and SMS provider | Closed (S1) | **Settled:** Integrate a Ghana-supported SMS provider (Arkesel / Hubtel / mNotify) behind `NotificationSender`, with email-only OTP fallback in R1 if sender-ID approval takes past Day 2. |
+| P-09 | Token lifecycle | Closed (S1) | **Settled:** Supabase Auth issues 1-hour access JWTs with refresh-token rotation; Spring validates via JWKS and checks active account/membership status on sensitive actions. |
+| P-12 | Regulator name for Act 843 and tourism licence documents | Closed (S1) | **Settled:** Reference the Data Protection Commission (DPC) under Act 843 in privacy notices; require Ghana Card + proof of ownership/authorisation + Ghana Tourism Authority (GTA) licence (where applicable). |
 | P-03 | Booking states and hold rules | S2 D1 | Add Expired. Pending does not hold the unit; owner acceptance starts the 30-minute window and places the hold; the owner response timeout is a setting; confirming one booking declines overlapping pending requests with a notification. |
 | P-10 | Background job hosting | S2 D1 | Non-sleeping hosting tier; expiry job idempotent with catch-up on startup. |
 | P-07 | Monetisation split (BR-12) | S2 D1 | Commission and convenience fee in Phase 1; the rest in Sprint 5. |

@@ -2,541 +2,1083 @@
   "UR-A01": {
     "text": "Manage user accounts (create, suspend, restore).",
     "module": "admin",
-    "story": "S1-16"
+    "story": "S1-16",
+    "acceptance": [
+      "An administrator can create a new user account, suspend an active account, or restore a suspended account from the Admin Users screen.",
+      "A suspended user is immediately blocked from signing in or using protected pages until restored.",
+      "Every account creation, suspension, or restoration is saved in the activity log with the admin's name, reason, and time."
+    ],
+    "verification": "Automated test (@Req(\"UR-A01\")) + Sprint Review check (S1-16)"
   },
   "UR-A02": {
     "text": "Review, approve, reject, suspend, restore or request corrections to property listings.",
     "module": "verification",
-    "story": "S1-15"
+    "story": "S1-15",
+    "acceptance": [
+      "An administrator can open any submitted listing in the approval queue and choose Approve, Reject, Request Corrections, Suspend, or Restore.",
+      "Rejecting, suspending, or asking for corrections requires the administrator to write a clear reason for the property owner.",
+      "The property owner receives an automatic notification whenever their listing status changes."
+    ],
+    "verification": "Automated test (@Req(\"UR-A02\")) + Sprint Review check (S1-15)"
   },
   "UR-A07": {
     "text": "Inspect and maintain audit logs of significant actions.",
     "module": "audit",
-    "story": "S1-08"
+    "story": "S1-08",
+    "acceptance": [
+      "An administrator can view and filter the activity log by person, action type, record, or date.",
+      "Activity log entries are permanent and cannot be edited or deleted by anyone."
+    ],
+    "verification": "Automated test (@Req(\"UR-A07\")) + Sprint Review check (S1-08)"
   },
   "UR-A08": {
     "text": "Manage platform settings.",
     "module": "admin",
-    "story": "S1-16"
+    "story": "S1-16",
+    "acceptance": [
+      "An administrator can view and update platform-wide settings and feature switches from the Admin Settings screen.",
+      "Every change to a setting records the old value, the new value, who changed it, and when."
+    ],
+    "verification": "Automated test (@Req(\"UR-A08\")) + Sprint Review check (S1-16)"
   },
   "UR-AN01": {
     "text": "Strong security and administrator-only access.",
     "module": "platform",
-    "story": "S1-06"
+    "story": "S1-06",
+    "acceptance": [
+      "Only signed-in administrators can open admin pages or run admin actions.",
+      "Guests, property owners, and property staff are automatically blocked if they try to open any admin link."
+    ],
+    "verification": "Automated test (@Req(\"UR-AN01\")) + Sprint Review check (S1-06)"
   },
   "UR-AN02": {
     "text": "Tamper-proof, auditable logs of significant actions.",
     "module": "audit",
-    "story": "S1-08"
+    "story": "S1-08",
+    "acceptance": [
+      "Every important action (approvals, rejections, role changes, suspensions, setting updates) automatically creates a permanent log entry.",
+      "The database blocks any attempt to alter or erase past log entries."
+    ],
+    "verification": "Automated test (@Req(\"UR-AN02\")) + Sprint Review check (S1-08)"
   },
   "UR-G01": {
     "text": "Register, log in, log out and manage an account with email/phone, OTP verification and password recovery.",
     "module": "identity",
-    "story": "S1-04"
+    "story": "S1-04",
+    "acceptance": [
+      "A new user can create an account with their email and password, confirm their email code/link, and sign in.",
+      "A signed-in user can sign out at any time or reset a forgotten password through their confirmed email."
+    ],
+    "verification": "Automated test (@Req(\"UR-G01\")) + Sprint Review check (S1-04)"
   },
   "UR-O01": {
     "text": "Register, complete onboarding and submit identity and property documents for verification; track approval status.",
     "module": "verification",
-    "story": "S1-12"
+    "story": "S1-12",
+    "acceptance": [
+      "A property owner can complete onboarding by uploading their Ghana Card, proof of property ownership/authorisation, and Ghana Tourism Authority (GTA) licence.",
+      "The owner can check their verification status at any time (Pending Review, Needs Correction, Approved, or Rejected) and see reviewer notes."
+    ],
+    "verification": "Automated test (@Req(\"UR-O01\")) + Sprint Review check (S1-12)"
   },
   "UR-O02": {
     "text": "Create, edit, deactivate and manage property listings including photos, descriptions, units, prices, amenities, house rules and availability.",
     "module": "catalog",
-    "story": "S1-14"
+    "story": "S1-14",
+    "acceptance": [
+      "Once verified, an owner can create, edit, pause, and manage property listings—including rooms/units, photos, nightly prices in GHS, amenities, house rules, and available dates.",
+      "Owners who have not yet been verified cannot submit or publish a listing."
+    ],
+    "verification": "Automated test (@Req(\"UR-O02\")) + Sprint Review check (S1-14)"
   },
   "UR-O03": {
     "text": "Manage property and unit availability calendars.",
     "module": "availability",
-    "story": "S1-14"
+    "story": "S1-14",
+    "acceptance": [
+      "An owner or authorised staff member can view a calendar for each room/unit and block or unblock dates when the unit is unavailable.",
+      "The system prevents two unavailable blocks from overlapping on the same unit for the same dates."
+    ],
+    "verification": "Automated test (@Req(\"UR-O03\")) + Sprint Review check (S1-14)"
   },
   "UR-O15": {
     "text": "Grant and manage access permissions for property staff.",
     "module": "organization",
-    "story": "S1-07"
+    "story": "S1-07",
+    "acceptance": [
+      "An owner can invite staff members to their organisation and choose which properties and actions each staff member is allowed to manage.",
+      "An owner can remove a staff member's access to a property at any time, and the change takes effect immediately."
+    ],
+    "verification": "Automated test (@Req(\"UR-O15\")) + Sprint Review check (S1-07)"
   },
   "UR-ON01": {
     "text": "Simple, uncluttered interface suited to small providers.",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "Screens use clear headings, everyday language, and step-by-step forms so small property owners can use FindStay without training.",
+      "Key tasks like uploading verification documents, adding a property, or blocking dates take only a few clear steps."
+    ],
+    "verification": "Automated test (@Req(\"UR-ON01\")) + Sprint Review check (S1-03)"
   },
   "UR-ON02": {
     "text": "Access limited to own properties and financial records.",
     "module": "platform",
-    "story": "S1-07"
+    "story": "S1-07",
+    "acceptance": [
+      "Each property owner and their staff can see and manage only their own organisation's properties, units, documents, and records.",
+      "One owner can never view or edit another owner's properties or documents."
+    ],
+    "verification": "Automated test (@Req(\"UR-ON02\")) + Sprint Review check (S1-07)"
   },
   "UR-ON05": {
     "text": "Dependable service with backups so records are never lost.",
     "module": "platform",
-    "story": "S1-02"
+    "story": "S1-02",
+    "acceptance": [
+      "The database is backed up automatically every day, and the team tests restoring a backup to prove no records will be lost.",
+      "Automatic health checks alert the team if the website or server goes down."
+    ],
+    "verification": "Automated test (@Req(\"UR-ON05\")) + Sprint Review check (S1-02)"
   },
   "UR-PM03": {
     "text": "Assign access permissions to authorised staff.",
     "module": "organization",
-    "story": "S1-07"
+    "story": "S1-07",
+    "acceptance": [
+      "An owner or manager can assign specific permissions (such as viewing a listing, editing details, or managing the calendar) to each staff member.",
+      "Every permission grant or removal is saved and logged."
+    ],
+    "verification": "Automated test (@Req(\"UR-PM03\")) + Sprint Review check (S1-07)"
   },
   "UR-PS01": {
     "text": "Access only properties and functions explicitly authorised by an owner/manager or administrator.",
     "module": "organization",
-    "story": "S1-07"
+    "story": "S1-07",
+    "acceptance": [
+      "A property staff member only sees the specific properties and tools that the owner has given them permission to use.",
+      "If a staff member tries to open or edit another property in the same company without permission, the system blocks the request."
+    ],
+    "verification": "Automated test (@Req(\"UR-PS01\")) + Sprint Review check (S1-07)"
   },
   "UR-PSN01": {
     "text": "Restricted, role-limited access to protect sensitive data.",
     "module": "organization",
-    "story": "S1-07"
+    "story": "S1-07",
+    "acceptance": [
+      "Property staff cannot view sensitive owner identity documents (like Ghana Card numbers) or change company-wide staff roles.",
+      "Each staff account is restricted to only the tasks required for their job."
+    ],
+    "verification": "Automated test (@Req(\"UR-PSN01\")) + Sprint Review check (S1-07)"
   },
   "FR-01": {
     "text": "Allow guests, owners/managers, property staff and administrators to create or receive accounts appropriate to their roles.",
     "module": "identity",
-    "story": "S1-04"
+    "story": "S1-04",
+    "acceptance": [
+      "People can create or receive accounts for their role (Guest, Property Owner/Manager, Property Staff, or Administrator).",
+      "A single account can hold role memberships (for example, being a Guest while also managing or working at a property) without needing separate email addresses."
+    ],
+    "verification": "Automated test (@Req(\"FR-01\")) + Sprint Review check (S1-04)"
   },
   "FR-02": {
     "text": "Authenticate users before granting access to protected functions.",
     "module": "identity",
-    "story": "S1-04"
+    "story": "S1-04",
+    "acceptance": [
+      "Every private page and action checks that the user is signed in with a valid session before allowing access.",
+      "Anyone who is not signed in is redirected to the sign-in screen."
+    ],
+    "verification": "Automated test (@Req(\"FR-02\")) + Sprint Review check (S1-04)"
   },
   "FR-03": {
     "text": "Support user login and logout.",
     "module": "identity",
-    "story": "S1-04"
+    "story": "S1-04",
+    "acceptance": [
+      "A registered user can sign in with their email and password and stay signed in safely while using the app.",
+      "Clicking Sign Out ends the session immediately so the account cannot be used from that browser without signing in again."
+    ],
+    "verification": "Automated test (@Req(\"FR-03\")) + Sprint Review check (S1-04)"
   },
   "FR-04": {
     "text": "Provide password reset and account recovery through a verified contact channel.",
     "module": "identity",
-    "story": "S1-05"
+    "story": "S1-05",
+    "acceptance": [
+      "A user who forgets their password can request a password reset link sent to their confirmed email address.",
+      "The reset link expires after a short time and can only be used once to set a new password."
+    ],
+    "verification": "Automated test (@Req(\"FR-04\")) + Sprint Review check (S1-05)"
   },
   "FR-05": {
     "text": "Support email or phone verification (OTP).",
     "module": "identity",
-    "story": "S1-04"
+    "story": "S1-04",
+    "acceptance": [
+      "New accounts must confirm their email address (or phone code when SMS is enabled) before they are treated as verified.",
+      "Incorrect or expired confirmation codes are rejected with a clear message telling the user how to request a new code."
+    ],
+    "verification": "Automated test (@Req(\"FR-05\")) + Sprint Review check (S1-04)"
   },
   "FR-06": {
     "text": "Allow users to view and update authorised profile information.",
     "module": "identity",
-    "story": "S1-05"
+    "story": "S1-05",
+    "acceptance": [
+      "A signed-in user can view and update their own name, phone number, profile photo, and language preference.",
+      "A user cannot edit another person's profile or change their own approval status."
+    ],
+    "verification": "Automated test (@Req(\"FR-06\")) + Sprint Review check (S1-05)"
   },
   "FR-07": {
     "text": "Enforce role-based access control (RBAC) and prevent access to unauthorised data or functions.",
     "module": "identity",
-    "story": "S1-06"
+    "story": "S1-06",
+    "acceptance": [
+      "Every screen and server action checks the user's role and permissions before showing data or saving changes.",
+      "Users who do not have permission for an action receive a clear 'Access denied' message."
+    ],
+    "verification": "Automated test (@Req(\"FR-07\")) + Sprint Review check (S1-06)"
   },
   "FR-08": {
     "text": "Allow owners/managers to submit identity and property-verification information for review.",
     "module": "verification",
-    "story": "S1-12"
+    "story": "S1-12",
+    "acceptance": [
+      "A property owner can submit their Ghana Card details, proof of property ownership/authorisation, and Ghana Tourism Authority licence for admin review.",
+      "If an administrator asks for corrections, the owner can upload updated documents and send the application back for review."
+    ],
+    "verification": "Automated test (@Req(\"FR-08\")) + Sprint Review check (S1-12)"
   },
   "FR-09": {
     "text": "Support property-staff permissions explicitly granted by authorised owners/managers or administrators.",
     "module": "organization",
-    "story": "S1-07"
+    "story": "S1-07",
+    "acceptance": [
+      "Owners and administrators can grant or remove specific property permissions for staff members.",
+      "Permission changes take effect right away without requiring the staff member to create a new account."
+    ],
+    "verification": "Automated test (@Req(\"FR-09\")) + Sprint Review check (S1-07)"
   },
   "FR-11": {
     "text": "Allow verified owners/managers to create property listings.",
     "module": "catalog",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "A verified property owner can create a new property listing in draft mode and fill in its details step by step.",
+      "An owner whose verification has not yet been approved is prompted to complete verification before creating or submitting a listing."
+    ],
+    "verification": "Automated test (@Req(\"FR-11\")) + Sprint Review check (S1-13)"
   },
   "FR-12": {
     "text": "Allow owners/managers to update existing property listings.",
     "module": "catalog",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "An owner or authorised staff member can update an existing listing's title, description, location, rooms/units, photos, prices, amenities, and house rules.",
+      "Saved updates are validated so required information cannot be accidentally erased."
+    ],
+    "verification": "Automated test (@Req(\"FR-12\")) + Sprint Review check (S1-13)"
   },
   "FR-13": {
     "text": "Allow owners/managers to deactivate or pause property listings.",
     "module": "catalog",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "An owner can pause or deactivate a published listing whenever they want to stop showing it to guests.",
+      "A paused listing is hidden from public search until the owner resumes it."
+    ],
+    "verification": "Automated test (@Req(\"FR-13\")) + Sprint Review check (S1-13)"
   },
   "FR-14": {
     "text": "Allow owners/managers to upload property photographs and listing images.",
     "module": "catalog",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "An owner can upload photos for their property and rooms, reorder them, and choose a cover photo.",
+      "Only valid image files within the size limit are accepted, and uploaded photos are optimised for fast loading."
+    ],
+    "verification": "Automated test (@Req(\"FR-14\")) + Sprint Review check (S1-13)"
   },
   "FR-15": {
     "text": "Allow owners/managers to manage property descriptions, accommodation types, unit categories, capacity and quantities.",
     "module": "catalog",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "An owner can set the property's accommodation type (Hotel, Budget Hotel, Guesthouse, or Serviced Apartment) and add individual bookable units/rooms with guest capacity, bedrooms, and bathrooms.",
+      "Each unit is tracked individually so its calendar cannot be double-booked, and similar units can be grouped by category for display."
+    ],
+    "verification": "Automated test (@Req(\"FR-15\")) + Sprint Review check (S1-13)"
   },
   "FR-16": {
     "text": "Allow owners/managers to manage property amenities, facilities and house rules.",
     "module": "catalog",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "An owner can select available amenities (such as Wi-Fi, Air Conditioning, Backup Generator, Water Tank, Parking, Security) and write clear house rules (check-in/out times, smoking, pets).",
+      "Selected amenities and house rules are saved with the listing and shown on the listing preview."
+    ],
+    "verification": "Automated test (@Req(\"FR-16\")) + Sprint Review check (S1-13)"
   },
   "FR-17": {
     "text": "Allow owners/managers to manage accommodation prices and rates.",
     "module": "catalog",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "An owner can set the nightly price in Ghana Cedis (GHS) for each unit or room category.",
+      "Prices are saved accurately in integer pesewas so there are never rounding errors."
+    ],
+    "verification": "Automated test (@Req(\"FR-17\")) + Sprint Review check (S1-13)"
   },
   "FR-18": {
     "text": "Allow owners/managers to manage property and unit availability.",
     "module": "availability",
-    "story": "S1-14"
+    "story": "S1-14",
+    "acceptance": [
+      "An owner or authorised staff member can mark specific date ranges as unavailable on any unit's calendar and remove those blocks when dates open up.",
+      "End dates must be after start dates, and changes appear on the unit calendar right away."
+    ],
+    "verification": "Automated test (@Req(\"FR-18\")) + Sprint Review check (S1-14)"
   },
   "FR-21": {
     "text": "Publish a listing only after it meets verification and approval requirements set by administrators.",
     "module": "verification",
-    "story": "S1-15"
+    "story": "S1-15",
+    "acceptance": [
+      "A listing goes live (Published) only after both the owner's verification is Approved and an administrator approves the submitted listing.",
+      "An owner cannot publish their own listing directly without administrator approval."
+    ],
+    "verification": "Automated test (@Req(\"FR-21\")) + Sprint Review check (S1-15)"
   },
   "FR-22": {
     "text": "Validate required information before a listing is saved or published.",
     "module": "catalog",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "Before a listing can be submitted for approval, the system checks that all required details are complete: title, description, Takoradi area, accommodation type, at least 1 unit with capacity, nightly price, at least 3 photos, amenities, and house rules.",
+      "If anything is missing, the system highlights the exact missing items so the owner can fill them in."
+    ],
+    "verification": "Automated test (@Req(\"FR-22\")) + Sprint Review check (S1-13)"
   },
   "FR-39": {
     "text": "Provide a real-time availability calendar.",
     "module": "availability",
-    "story": "S1-14"
+    "story": "S1-14",
+    "acceptance": [
+      "Each unit has a real-time availability calendar showing which dates are open and which dates are blocked.",
+      "If two people try to block overlapping dates for the same unit at the same time, the database saves the first one and blocks the duplicate."
+    ],
+    "verification": "Automated test (@Req(\"FR-39\")) + Sprint Review check (S1-14)"
   },
   "FR-68": {
     "text": "Notify relevant users about verification-status changes.",
     "module": "notification",
-    "story": "S1-10"
+    "story": "S1-10",
+    "acceptance": [
+      "Whenever an owner's verification status or listing approval status changes, the owner is notified automatically with the decision and any reviewer notes.",
+      "The notification appears both in the app and by email (and SMS when enabled)."
+    ],
+    "verification": "Automated test (@Req(\"FR-68\")) + Sprint Review check (S1-10)"
   },
   "FR-69": {
     "text": "Provide email notifications.",
     "module": "notification",
-    "story": "S1-10"
+    "story": "S1-10",
+    "acceptance": [
+      "Important account, verification, and listing updates are sent to the user's confirmed email address using clear, readable templates.",
+      "If an email fails to send, the system records the failure and retries automatically."
+    ],
+    "verification": "Automated test (@Req(\"FR-69\")) + Sprint Review check (S1-10)"
   },
   "FR-70": {
     "text": "Support SMS notifications.",
     "module": "notification",
-    "story": "S1-10"
+    "story": "S1-10",
+    "acceptance": [
+      "The notification system supports sending SMS alerts to Ghana phone numbers (+233) through a local SMS provider.",
+      "If SMS is switched off during initial testing, the system falls back to email notifications without interrupting the user."
+    ],
+    "verification": "Automated test (@Req(\"FR-70\")) + Sprint Review check (S1-10)"
   },
   "FR-71": {
     "text": "Notify users about relevant account activities.",
     "module": "notification",
-    "story": "S1-10"
+    "story": "S1-10",
+    "acceptance": [
+      "Users receive notifications for important account events such as staff invitations, permission updates, and account status changes.",
+      "Users can see their recent notifications inside the portal and mark them as read."
+    ],
+    "verification": "Automated test (@Req(\"FR-71\")) + Sprint Review check (S1-10)"
   },
   "FR-86": {
     "text": "Provide a dedicated administrative dashboard.",
     "module": "admin",
-    "story": "S1-16"
+    "story": "S1-16",
+    "acceptance": [
+      "Administrators have a dedicated dashboard showing counts of pending owner verifications, listings waiting for approval, published listings, and recent activity.",
+      "Clicking any summary card takes the administrator straight to that queue."
+    ],
+    "verification": "Automated test (@Req(\"FR-86\")) + Sprint Review check (S1-16)"
   },
   "FR-87": {
     "text": "Allow administrators to manage users and accounts.",
     "module": "admin",
-    "story": "S1-16"
+    "story": "S1-16",
+    "acceptance": [
+      "Administrators can search user accounts, create new accounts, suspend accounts that break rules, and restore suspended accounts.",
+      "Every user management action requires a reason and is recorded in the activity log."
+    ],
+    "verification": "Automated test (@Req(\"FR-87\")) + Sprint Review check (S1-16)"
   },
   "FR-88": {
     "text": "Allow administrators to manage property submissions: approve, reject, suspend, restore or request corrections.",
     "module": "admin",
-    "story": "S1-15"
+    "story": "S1-15",
+    "acceptance": [
+      "Administrators can review submitted listings and Approve, Reject, Request Corrections, Suspend, or Restore them.",
+      "Every listing decision saves a status history record, logs the administrator's reason, and notifies the property owner."
+    ],
+    "verification": "Automated test (@Req(\"FR-88\")) + Sprint Review check (S1-15)"
   },
   "FR-92": {
     "text": "Allow administrators to manage platform settings.",
     "module": "admin",
-    "story": "S1-16"
+    "story": "S1-16",
+    "acceptance": [
+      "Administrators can view and update platform settings and feature on/off switches from a settings screen without needing code changes.",
+      "Only administrators can view internal switches or save setting changes."
+    ],
+    "verification": "Automated test (@Req(\"FR-92\")) + Sprint Review check (S1-16)"
   },
   "NFR-01": {
     "text": "Simple, intuitive, user-friendly interface requiring minimal training.",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "Screens are clean and uncluttered, guiding owners and admins through each task step by step.",
+      "New pilot owners can register, submit verification documents, and create a listing without needing a manual."
+    ],
+    "verification": "Automated test (@Req(\"NFR-01\")) + Sprint Review check (S1-03)"
   },
   "NFR-02": {
     "text": "Clear labels, consistent navigation and understandable instructions.",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "Menus, buttons, and form fields use plain, consistent labels across all pages.",
+      "Input fields include helpful examples (such as phone format +233 or prices in GHS) so users know what to enter."
+    ],
+    "verification": "Automated test (@Req(\"NFR-02\")) + Sprint Review check (S1-03)"
   },
   "NFR-03": {
     "text": "Visible status messages and feedback for user actions.",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "Every button click or form submission shows a clear loading indicator followed by a visible confirmation or error message.",
+      "If a form has an error, the message explains clearly how to fix it right next to the field."
+    ],
+    "verification": "Automated test (@Req(\"NFR-03\")) + Sprint Review check (S1-03)"
   },
   "NFR-04": {
     "text": "Accessible form controls.",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "All forms, buttons, menus, and popups work with a keyboard (Tab, Enter, Escape) and screen readers.",
+      "Every input field has a properly connected label and clear focus outline."
+    ],
+    "verification": "Automated test (@Req(\"NFR-04\")) + Sprint Review check (S1-03)"
   },
   "NFR-05": {
     "text": "Icon-based navigation.",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "Main navigation links, property types, amenities, and status badges pair a clear icon with a text label.",
+      "Icons never appear alone without a readable label."
+    ],
+    "verification": "Automated test (@Req(\"NFR-05\")) + Sprint Review check (S1-03)"
   },
   "NFR-07": {
     "text": "Interface accommodates users with low literacy or colour-vision difficulties.",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "Status badges (Approved, Pending, Needs Correction, Rejected) use icons and text labels—never colour alone—so people with colour-vision differences can read them easily.",
+      "Text and button colours have strong contrast against the background."
+    ],
+    "verification": "Automated test (@Req(\"NFR-07\")) + Sprint Review check (S1-03)"
   },
   "NFR-09": {
     "text": "Responsive interface for mobile phones, tablets and desktop devices.",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "All Owner and Admin screens adjust smoothly to fit small mobile phones (360px wide), tablets, and desktop screens.",
+      "Buttons and tap targets on mobile are large enough to tap comfortably without mis-clicking."
+    ],
+    "verification": "Automated test (@Req(\"NFR-09\")) + Sprint Review check (S1-03)"
   },
   "NFR-10": {
     "text": "Supports modern web browsers (Chrome, Edge, Firefox, Safari).",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "The website works properly in current versions of Chrome, Edge, Firefox, and Safari on both phone and desktop.",
+      "Pages open without visual glitches or broken buttons across all four browsers."
+    ],
+    "verification": "Automated test (@Req(\"NFR-10\")) + Sprint Review check (S1-03)"
   },
   "NFR-12": {
     "text": "No unnecessary horizontal scrolling on mobile devices.",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "On mobile phones (360px width), pages fit the screen width cleanly without sideways scrolling.",
+      "Tables or wide lists either stack neatly into mobile cards or scroll inside their own container."
+    ],
+    "verification": "Automated test (@Req(\"NFR-12\")) + Sprint Review check (S1-03)"
   },
   "NFR-17": {
     "text": "Property photographs optimised to reduce loading time and mobile data consumption (WebP format).",
     "module": "platform",
-    "story": "S1-09"
+    "story": "S1-09",
+    "acceptance": [
+      "Uploaded listing photos are automatically compressed and converted into lightweight WebP images so pages load fast and use less mobile data.",
+      "Oversized files (over 5 MB) or non-image files are blocked before upload with a friendly message."
+    ],
+    "verification": "Automated test (@Req(\"NFR-17\")) + Sprint Review check (S1-09)"
   },
   "NFR-19": {
     "text": "Authenticate users before granting access to protected resources.",
     "module": "platform",
-    "story": "S1-04"
+    "story": "S1-04",
+    "acceptance": [
+      "All private screens and server routes require a valid sign-in session before returning any data.",
+      "Unsigned visitors cannot view or change any owner, staff, or admin records."
+    ],
+    "verification": "Automated test (@Req(\"NFR-19\")) + Sprint Review check (S1-04)"
   },
   "NFR-20": {
     "text": "Enforce role-based authorisation (RBAC).",
     "module": "platform",
-    "story": "S1-06"
+    "story": "S1-06",
+    "acceptance": [
+      "The server checks the signed-in user's role and permissions on every single request, not just in the browser UI.",
+      "A user cannot bypass screen buttons by calling server URLs directly."
+    ],
+    "verification": "Automated test (@Req(\"NFR-20\")) + Sprint Review check (S1-06)"
   },
   "NFR-21": {
     "text": "Protect sensitive information during transmission (HTTPS/TLS) and storage (encryption at rest).",
     "module": "platform",
-    "story": "S1-06"
+    "story": "S1-06",
+    "acceptance": [
+      "All traffic between the browser, server, and database is encrypted using HTTPS/TLS, and sensitive ID numbers are encrypted before being saved in the database.",
+      "Private identity numbers are never shown in plain text in logs or public responses."
+    ],
+    "verification": "Automated test (@Req(\"NFR-21\")) + Sprint Review check (S1-06)"
   },
   "NFR-22": {
     "text": "Secure password hashing managed by Supabase Auth; FindStay never stores or hashes passwords.",
     "module": "platform",
-    "story": "S1-04"
+    "story": "S1-04",
+    "acceptance": [
+      "Passwords are handled and protected entirely by Supabase Auth; FindStay never stores or sees user passwords in its own database tables.",
+      "Even administrators and developers cannot view a user's password."
+    ],
+    "verification": "Automated test (@Req(\"NFR-22\")) + Sprint Review check (S1-04)"
   },
   "NFR-23": {
     "text": "Validate user input; protect against SQL injection and cross-site scripting (XSS).",
     "module": "platform",
-    "story": "S1-06"
+    "story": "S1-06",
+    "acceptance": [
+      "All user inputs are checked for valid format and length on both the form and the server, blocking harmful code or database injection attempts.",
+      "Special characters in titles, descriptions, or reasons are displayed safely without breaking the page."
+    ],
+    "verification": "Automated test (@Req(\"NFR-23\")) + Sprint Review check (S1-06)"
   },
   "NFR-24": {
     "text": "Prevent unauthorised direct access to protected records.",
     "module": "platform",
-    "story": "S1-06"
+    "story": "S1-06",
+    "acceptance": [
+      "When someone requests a property, unit, document, or verification case by its ID, the server verifies they own it or are authorised to review it.",
+      "Private verification documents use temporary signed links that expire automatically after a short time."
+    ],
+    "verification": "Automated test (@Req(\"NFR-24\")) + Sprint Review check (S1-06)"
   },
   "NFR-27": {
     "text": "Protect confidential application credentials and secret keys (environment variables, not source code).",
     "module": "platform",
-    "story": "S1-02"
+    "story": "S1-02",
+    "acceptance": [
+      "Database passwords, API keys, and encryption keys are stored only in secure server environment settings—never inside the code repository.",
+      "An automatic check scans the code on every save to make sure no secret key is ever committed."
+    ],
+    "verification": "Automated test (@Req(\"NFR-27\")) + Sprint Review check (S1-02)"
   },
   "NFR-28": {
     "text": "Protect sensitive identity information including Ghana Card details.",
     "module": "platform",
-    "story": "S1-12"
+    "story": "S1-12",
+    "acceptance": [
+      "Ghana Card numbers submitted during owner verification are encrypted with AES-256 before being stored in the database.",
+      "Normal screens show only a masked version of the Ghana Card number (such as GHA-*******-X)."
+    ],
+    "verification": "Automated test (@Req(\"NFR-28\")) + Sprint Review check (S1-12)"
   },
   "NFR-31": {
     "text": "Protect users' personal and financial information.",
     "module": "platform",
-    "story": "S1-11"
+    "story": "S1-11",
+    "acceptance": [
+      "Personal contact details and verification records are kept private and never exposed on public listing responses.",
+      "The server returns only the fields needed for each screen."
+    ],
+    "verification": "Automated test (@Req(\"NFR-31\")) + Sprint Review check (S1-11)"
   },
   "NFR-32": {
     "text": "Comply with Ghana's Data Protection Act, 2012 (Act 843).",
     "module": "platform",
-    "story": "S1-11"
+    "story": "S1-11",
+    "acceptance": [
+      "Sign-up and owner verification screens show a clear privacy notice referencing the Data Protection Commission (DPC) under Ghana's Data Protection Act, 2012 (Act 843).",
+      "The system records when each user agreed to the privacy notice and which version they accepted."
+    ],
+    "verification": "Automated test (@Req(\"NFR-32\")) + Sprint Review check (S1-11)"
   },
   "NFR-34": {
     "text": "Follow relevant tourism business verification and regulatory requirements.",
     "module": "platform",
-    "story": "S1-12"
+    "story": "S1-12",
+    "acceptance": [
+      "Owner verification collects and checks the required regulatory documents: Ghana Card, proof of property ownership/authorisation, and Ghana Tourism Authority (GTA) licence where applicable.",
+      "Administrators can inspect each uploaded document before approving an owner."
+    ],
+    "verification": "Automated test (@Req(\"NFR-34\")) + Sprint Review check (S1-12)"
   },
   "NFR-35": {
     "text": "Restrict personal and financial information to authorised users only.",
     "module": "platform",
-    "story": "S1-11"
+    "story": "S1-11",
+    "acceptance": [
+      "Only the property owner and authorised administrators can view an owner's verification documents and personal details.",
+      "Other owners, guests, and unauthorised staff are blocked from viewing those records."
+    ],
+    "verification": "Automated test (@Req(\"NFR-35\")) + Sprint Review check (S1-11)"
   },
   "NFR-36": {
     "text": "Collect only necessary personal information; obtain user consent for data collection.",
     "module": "platform",
-    "story": "S1-11"
+    "story": "S1-11",
+    "acceptance": [
+      "Forms ask only for personal details that are genuinely needed to run the account and verify properties.",
+      "A user must tick the data-protection consent box before their registration is accepted."
+    ],
+    "verification": "Automated test (@Req(\"NFR-36\")) + Sprint Review check (S1-11)"
   },
   "NFR-42": {
     "text": "Provide automatic database backups (daily) and a documented restoration procedure.",
     "module": "platform",
-    "story": "S1-02"
+    "story": "S1-02",
+    "acceptance": [
+      "The production database is backed up automatically every day, and a written recovery guide explains how to restore it.",
+      "The team practises restoring a backup into a test database during Sprint 1 and records how long it takes."
+    ],
+    "verification": "Automated test (@Req(\"NFR-42\")) + Sprint Review check (S1-02)"
   },
   "NFR-43": {
     "text": "Provide error logging and monitoring.",
     "module": "platform",
-    "story": "S1-02"
+    "story": "S1-02",
+    "acceptance": [
+      "Server errors and health problems are logged automatically and reported to the monitoring dashboard so the team can fix issues quickly.",
+      "A health-check address (/actuator/health) lets the uptime monitor verify the server and database are running."
+    ],
+    "verification": "Automated test (@Req(\"NFR-43\")) + Sprint Review check (S1-02)"
   },
   "NFR-45": {
     "text": "Support growth in properties, accommodation units, users and participating owners.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "Database tables and lists use indexing and page-by-page loading so the system stays fast as more owners, properties, and rooms are added.",
+      "There is no hard limit on how many properties an owner can add or how many rooms a property can have."
+    ],
+    "verification": "Automated test (@Req(\"NFR-45\")) + Sprint Review check (S1-01)"
   },
   "NFR-46": {
     "text": "Support addition of new accommodation types without core system redesign.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "Accommodation types (Hotel, Budget Hotel, Guesthouse, Serviced Apartment, Student Hostel) and billing periods (Nightly, Monthly, Term, Academic Year) are stored as table rows so new types can be switched on later without rebuilding the app.",
+      "Sprint 1 enables short-stay types and nightly pricing while keeping future types ready in the database."
+    ],
+    "verification": "Automated test (@Req(\"NFR-46\")) + Sprint Review check (S1-01)"
   },
   "NFR-47": {
     "text": "Cloud-based architecture that scales as users, cities and listings grow.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "The website, backend server, database, and photo storage run on cloud services that can scale up without losing user sessions.",
+      "Photos and static files are served through a content delivery network (CDN) for fast loading across Ghana."
+    ],
+    "verification": "Automated test (@Req(\"NFR-47\")) + Sprint Review check (S1-01)"
   },
   "NFR-48": {
     "text": "Modular structure accommodating future integrations.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "The backend code is organised into separate, self-contained modules (Identity, Organisation, Verification, Listings, Availability, Notifications, Audit, Admin).",
+      "An automatic check fails the build if one module tries to reach into another module's private tables or code."
+    ],
+    "verification": "Automated test (@Req(\"NFR-48\")) + Sprint Review check (S1-01)"
   },
   "NFR-52": {
     "text": "Maintain accurate booking dates and times in Ghana local time (GMT).",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "All dates and times are saved consistently in UTC and displayed in Ghana local time (Africa/Accra, GMT+0).",
+      "Calendar blocks and activity log timestamps always match Ghana time."
+    ],
+    "verification": "Automated test (@Req(\"NFR-52\")) + Sprint Review check (S1-01)"
   },
   "NFR-54": {
     "text": "Modular, documented architecture enabling easy updates and integration.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "Each module has clear boundaries, clean interfaces, and an automatically generated API guide showing every available route.",
+      "The system design, database diagram, and project rules are kept in the project docs folder."
+    ],
+    "verification": "Automated test (@Req(\"NFR-54\")) + Sprint Review check (S1-01)"
   },
   "NFR-55": {
     "text": "Provide technical and operational documentation.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "Clear written guides cover the system architecture, database tables, API endpoints, setup steps, and backup/recovery instructions.",
+      "Any new team member can follow the setup guide to run the project."
+    ],
+    "verification": "Automated test (@Req(\"NFR-55\")) + Sprint Review check (S1-01)"
   },
   "NFR-56": {
     "text": "Support automated testing.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "Every requirement in Sprint 1 has an automated test labelled with its requirement ID that runs automatically whenever code is saved.",
+      "If any automated test fails, the broken change is blocked from going live."
+    ],
+    "verification": "Automated test (@Req(\"NFR-56\")) + Sprint Review check (S1-01)"
   },
   "NFR-57": {
     "text": "Maintain version-controlled source code.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "All website code, backend code, database migrations, and documentation are tracked in Git with tagged releases.",
+      "Temporary build files and secret keys are excluded from Git."
+    ],
+    "verification": "Automated test (@Req(\"NFR-57\")) + Sprint Review check (S1-01)"
   },
   "NFR-58": {
     "text": "Support future maintenance and enhancements without major architectural redesign.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "Sprint 1 sets up clean extension points (shared calendar blocks, listing lookup, billing periods, message templates, activity log, roles, and settings) so Sprint 2 can add bookings and payments without rewriting Sprint 1.",
+      "Every database change only adds new tables or columns—never breaking existing ones."
+    ],
+    "verification": "Automated test (@Req(\"NFR-58\")) + Sprint Review check (S1-01)"
   },
   "NFR-60": {
     "text": "Communication-service integrations: email and SMS providers.",
     "module": "platform",
-    "story": "S1-10"
+    "story": "S1-10",
+    "acceptance": [
+      "Email and SMS services are connected through clean plug-in adapters so the team can switch providers by changing settings rather than rewriting features.",
+      "Message delivery is tested automatically using safe test adapters."
+    ],
+    "verification": "Automated test (@Req(\"NFR-60\")) + Sprint Review check (S1-10)"
   },
   "NFR-63": {
     "text": "Provide REST API-based integration capabilities.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "The website and backend communicate through clean, consistent JSON web addresses (/api/v1/...) with clear error messages.",
+      "An automatic check ensures new updates do not break existing web addresses."
+    ],
+    "verification": "Automated test (@Req(\"NFR-63\")) + Sprint Review check (S1-01)"
   },
   "NFR-66": {
     "text": "Audit records shall identify the action, user and date/time.",
     "module": "audit",
-    "story": "S1-08"
+    "story": "S1-08",
+    "acceptance": [
+      "Every activity log entry records who performed the action, what action was taken, which record was affected, and the exact date and time.",
+      "Log entries missing any of these details are rejected by the database."
+    ],
+    "verification": "Automated test (@Req(\"NFR-66\")) + Sprint Review check (S1-08)"
   },
   "BR-02": {
     "text": "The platform shall initially focus on Takoradi as its proposed local pilot context.",
     "module": "platform",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "The location list is pre-loaded with Takoradi neighbourhoods and landmarks (such as Beach Road, Anaji, Airport Ridge, Chapel Hill, Effia-Kuma, Fijai, Tanokrom, Apollo, Market Circle, and TTU Campus).",
+      "Owners creating a listing in Release R1 can easily pick their Takoradi area and nearby landmark."
+    ],
+    "verification": "Automated test (@Req(\"BR-02\")) + Sprint Review check (S1-13)"
   },
   "BR-03": {
     "text": "The platform shall support hotels, budget hotels, guesthouses, student hostels and serviced/short-stay apartments.",
     "module": "catalog",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "The system supports Hotels, Budget Hotels, Guesthouses, Serviced Apartments, and Student Hostels.",
+      "In Sprint 1, owners can list Hotels, Budget Hotels, Guesthouses, and Serviced Apartments, while Student Hostels are prepared in the database for Phase 2."
+    ],
+    "verification": "Automated test (@Req(\"BR-03\")) + Sprint Review check (S1-13)"
   },
   "BR-10": {
     "text": "The platform shall provide an accessible solution suitable for small and medium-sized accommodation providers.",
     "module": "platform",
-    "story": "S1-03"
+    "story": "S1-03",
+    "acceptance": [
+      "The Owner Portal is lightweight, mobile-friendly, and easy to use on an everyday smartphone over a normal mobile data connection.",
+      "Small guesthouse and apartment owners can manage their listings and calendars without needing a computer."
+    ],
+    "verification": "Automated test (@Req(\"BR-10\")) + Sprint Review check (S1-03)"
   },
   "BR-11": {
     "text": "The platform shall support accountability through verification, audit records and administrative controls.",
     "module": "audit",
-    "story": "S1-08"
+    "story": "S1-08",
+    "acceptance": [
+      "Every listing must pass owner verification and administrator approval before going live, and every decision is permanently logged.",
+      "Administrators can suspend any listing or account that violates platform standards, with a recorded reason."
+    ],
+    "verification": "Automated test (@Req(\"BR-11\")) + Sprint Review check (S1-08)"
   },
   "BRL-01": {
     "text": "Users must authenticate before accessing protected account, booking, financial, messaging, review or administrative functions.",
     "module": "identity",
-    "story": "S1-04"
+    "story": "S1-04",
+    "acceptance": [
+      "No one can access account settings, owner tools, verification uploads, listing editors, or admin screens without signing in first.",
+      "All protected routes verify the user's sign-in pass automatically."
+    ],
+    "verification": "Automated test (@Req(\"BRL-01\")) + Sprint Review check (S1-04)"
   },
   "BRL-02": {
     "text": "Each account shall have one primary role.",
     "module": "identity",
-    "story": "S1-06"
+    "story": "S1-06",
+    "acceptance": [
+      "Each user account has a primary profile and clear role memberships (Guest, Owner/Manager, Property Staff, or Administrator) per settled decision P-04.",
+      "The system always knows which role and company permissions apply to the signed-in user."
+    ],
+    "verification": "Automated test (@Req(\"BRL-02\")) + Sprint Review check (S1-06)"
   },
   "BRL-04": {
     "text": "Additional property-staff access must be explicitly granted by an authorised owner/manager or administrator.",
     "module": "organization",
-    "story": "S1-07"
+    "story": "S1-07",
+    "acceptance": [
+      "A staff member gets access to a property only when an authorised owner, manager, or administrator explicitly invites them and grants permission.",
+      "No one can grant themselves staff access to a property."
+    ],
+    "verification": "Automated test (@Req(\"BRL-04\")) + Sprint Review check (S1-07)"
   },
   "BRL-05": {
     "text": "Owners/managers and staff may access only properties and financial records they are authorised for.",
     "module": "organization",
-    "story": "S1-07"
+    "story": "S1-07",
+    "acceptance": [
+      "Owners, managers, and staff can view and change only the properties and records they have been given permission to access.",
+      "The system blocks any attempt to view or change another company's properties."
+    ],
+    "verification": "Automated test (@Req(\"BRL-05\")) + Sprint Review check (S1-07)"
   },
   "BRL-06": {
     "text": "Listings must contain the minimum required information before submission for approval.",
     "module": "catalog",
-    "story": "S1-13"
+    "story": "S1-13",
+    "acceptance": [
+      "A listing cannot be submitted for admin approval until all required details (title, description, Takoradi area, accommodation type, at least 1 unit, nightly price, at least 3 photos, amenities, and house rules) are filled in.",
+      "Incomplete listings stay saved as drafts until completed."
+    ],
+    "verification": "Automated test (@Req(\"BRL-06\")) + Sprint Review check (S1-13)"
   },
   "BRL-19": {
     "text": "Suspension and restoration decisions must be recorded in audit logs.",
     "module": "audit",
-    "story": "S1-08"
+    "story": "S1-08",
+    "acceptance": [
+      "Whenever an administrator suspends or restores a user account or property listing, they must enter a reason, and the decision is saved in the permanent activity log.",
+      "Both the suspension and restoration history remain visible in the audit log."
+    ],
+    "verification": "Automated test (@Req(\"BRL-19\")) + Sprint Review check (S1-08)"
   },
   "TA-01": {
     "text": "Web-based application with three-layer architecture: Presentation · Application/Business Logic · Data and Services.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "The system is divided into three clear parts: the Website screens (React), the Backend Server (Spring Boot), and the Database/Auth/Storage services (Supabase).",
+      "The website never edits business database tables directly—all business rules go through the Backend Server."
+    ],
+    "verification": "Automated test (@Req(\"TA-01\")) + Sprint Review check (S1-01)"
   },
   "TA-02": {
     "text": "Frontend communicates with backend through REST API requests.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "The website talks to the backend server through standard, secure web requests (/api/v1/...) carrying the user's sign-in token.",
+      "Errors from the server are returned in a consistent format that the website can display clearly to the user."
+    ],
+    "verification": "Automated test (@Req(\"TA-02\")) + Sprint Review check (S1-01)"
   },
   "TA-07": {
     "text": "Password hashing is managed by Supabase Auth; application code never stores or hashes passwords.",
     "module": "identity",
-    "story": "S1-04"
+    "story": "S1-04",
+    "acceptance": [
+      "Supabase Auth handles all password storage and security; FindStay's own database and server code never store or see user passwords.",
+      "Sign-up, sign-in, and password resets happen directly through Supabase Auth."
+    ],
+    "verification": "Automated test (@Req(\"TA-07\")) + Sprint Review check (S1-04)"
   },
   "TA-08": {
     "text": "Supabase JWT-based authentication with one-hour access tokens and managed refresh-token rotation; Spring validates JWTs through JWKS.",
     "module": "identity",
-    "story": "S1-04"
+    "story": "S1-04",
+    "acceptance": [
+      "When a user signs in, Supabase issues a 1-hour sign-in pass (JWT) that renews automatically while they use the app.",
+      "The backend server verifies every sign-in pass using Supabase's public verification keys and checks that the account is active on sensitive actions."
+    ],
+    "verification": "Automated test (@Req(\"TA-08\")) + Sprint Review check (S1-04)"
   },
   "TA-09": {
     "text": "Encryption of sensitive identification information at rest.",
     "module": "platform",
-    "story": "S1-12"
+    "story": "S1-12",
+    "acceptance": [
+      "Sensitive identity numbers (such as Ghana Card numbers) are encrypted before they are saved in the database.",
+      "Even if someone looks at the raw database table, the identity number is unreadable ciphertext."
+    ],
+    "verification": "Automated test (@Req(\"TA-09\")) + Sprint Review check (S1-12)"
   },
   "TA-11": {
     "text": "Secure storage of database passwords and payment-provider secret keys (environment variables).",
     "module": "platform",
-    "story": "S1-02"
+    "story": "S1-02",
+    "acceptance": [
+      "All database passwords, encryption keys, and service secrets are stored in secure cloud environment settings—never written in the code files.",
+      "A template file (.env.example) lists the setting names without any real passwords."
+    ],
+    "verification": "Automated test (@Req(\"TA-11\")) + Sprint Review check (S1-02)"
   },
   "TA-12": {
     "text": "Property photographs stored using Supabase Storage.",
     "module": "media",
-    "story": "S1-09"
+    "story": "S1-09",
+    "acceptance": [
+      "Property photos are stored in a public photo bucket on Supabase Storage, while private verification documents are stored in a locked private bucket.",
+      "Each user can upload only to their own authorised folder."
+    ],
+    "verification": "Automated test (@Req(\"TA-12\")) + Sprint Review check (S1-09)"
   },
   "TA-13": {
     "text": "Images compressed, optimised and served in modern lightweight formats (WebP).",
     "module": "media",
-    "story": "S1-09"
+    "story": "S1-09",
+    "acceptance": [
+      "Property photos are compressed and converted into fast-loading WebP images so pages load quickly on mobile networks.",
+      "Images are delivered with caching headers so repeat visits load instantly."
+    ],
+    "verification": "Automated test (@Req(\"TA-13\")) + Sprint Review check (S1-09)"
   },
   "PD-01": {
     "text": "Documented requirements analysis and system design.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "Before feature coding starts, the team has clear written designs for the acceptance criteria, database tables (ERD), server API routes, and screen layouts.",
+      "Every Sprint 1 story links directly to its requirements and design."
+    ],
+    "verification": "Automated test (@Req(\"PD-01\")) + Sprint Review check (S1-01)"
   },
   "PD-02": {
     "text": "Database design and implementation.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "All Sprint 1 database tables, relationships, and overlap rules are created through numbered migration scripts (V1_01 to V1_19).",
+      "The database scripts run cleanly from scratch and are tested automatically."
+    ],
+    "verification": "Automated test (@Req(\"PD-02\")) + Sprint Review check (S1-01)"
   },
   "PD-06": {
     "text": "Deployment to cloud infrastructure (frontend via Cloudflare Workers Static Assets/CDN; Spring Boot on Render; database and storage on Supabase).",
     "module": "platform",
-    "story": "S1-02"
+    "story": "S1-02",
+    "acceptance": [
+      "The website is hosted on Cloudflare Workers Static Assets, the backend server is hosted on Render, and the database, sign-in, and file storage run on Supabase.",
+      "All three live services are connected over HTTPS and reachable online."
+    ],
+    "verification": "Automated test (@Req(\"PD-06\")) + Sprint Review check (S1-02)"
   },
   "PD-07": {
     "text": "Module-level, workflow/integration and user-acceptance testing.",
     "module": "platform",
-    "story": "S1-01"
+    "story": "S1-01",
+    "acceptance": [
+      "Every story is checked at three levels: automatic unit tests, automatic database/API integration tests, and a real end-to-end walkthrough of the 7-step demo.",
+      "Every requirement ID is linked to an automated test."
+    ],
+    "verification": "Automated test (@Req(\"PD-07\")) + Sprint Review check (S1-01)"
   },
   "PD-10": {
     "text": "Backend application-health monitoring.",
     "module": "platform",
-    "story": "S1-02"
+    "story": "S1-02",
+    "acceptance": [
+      "The backend server provides a live health-check address (/actuator/health) that checks both the server and database connection.",
+      "An uptime monitor checks the health address every few minutes and alerts the team if anything goes wrong."
+    ],
+    "verification": "Automated test (@Req(\"PD-10\")) + Sprint Review check (S1-02)"
   },
   "PD-11": {
     "text": "Daily automated database backups.",
     "module": "platform",
-    "story": "S1-02"
+    "story": "S1-02",
+    "acceptance": [
+      "Supabase takes an automatic backup of the database every day.",
+      "During Sprint 1, the team restores a backup into a separate test database and records the time taken to prove recovery works."
+    ],
+    "verification": "Automated test (@Req(\"PD-11\")) + Sprint Review check (S1-02)"
   },
   "PD-12": {
     "text": "Confidential credentials stored in secure environment settings, not source code.",
     "module": "platform",
-    "story": "S1-02"
+    "story": "S1-02",
+    "acceptance": [
+      "All live passwords and API keys are stored in Cloudflare, Render, and GitHub secret settings—never in source code.",
+      "Automatic checks verify that no secrets are ever pushed to GitHub."
+    ],
+    "verification": "Automated test (@Req(\"PD-12\")) + Sprint Review check (S1-02)"
   }
 }
