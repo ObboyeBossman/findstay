@@ -439,36 +439,44 @@ h3{margin:6px 0;font-size:18px;font-family:var(--serif);font-weight:500}
   display:flex;flex-direction:column;overflow:hidden;
   background:var(--bg);border:1px solid var(--line);border-radius:22px;box-shadow:0 40px 90px -24px rgba(0,0,0,.45);
 }
-.req-modal-head{flex:none;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;padding:22px 36px 18px;border-bottom:1px solid var(--line)}
+.req-modal-head{flex:none;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;padding:20px 28px 18px;border-bottom:1px solid var(--line);background:var(--bg)}
 .req-head-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.gate-btn{
+.gate-badge{
   --gp:0;--gc:var(--acc);
-  display:inline-flex;align-items:center;gap:9px;
-  padding:7px 14px 7px 9px;border-radius:999px;
-  border:1px solid var(--line2);background:var(--card);color:var(--ink);
-  font:600 12px/1 var(--sans);cursor:pointer;transition:.2s;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 13px 6px 8px;border-radius:999px;
+  border:1px solid var(--line);background:var(--bg2);color:var(--mut);
+  font:600 12px/1 var(--sans);cursor:default;user-select:none;
 }
-.gate-btn.done-gate{--gc:var(--sageDeep)}
-.gate-btn:hover{border-color:var(--gc);background:var(--bg);transform:translateY(-1px)}
-.gate-btn.active{border-color:var(--gc);background:color-mix(in srgb,var(--gc) 11%,var(--card));box-shadow:0 3px 10px -3px color-mix(in srgb,var(--gc) 35%,transparent)}
-.gate-btn.complete{border-color:var(--sageDeep);background:color-mix(in srgb,var(--sage) 14%,var(--card))}
+.gate-badge.done-gate{--gc:var(--sageDeep)}
+.gate-badge.complete{border-color:color-mix(in srgb,var(--sageDeep) 45%,var(--line));background:color-mix(in srgb,var(--sage) 14%,var(--card));color:var(--ink)}
 .gate-ring{
-  width:18px;height:18px;border-radius:50%;flex:none;position:relative;
+  width:16px;height:16px;border-radius:50%;flex:none;position:relative;
   background:conic-gradient(var(--gc) calc(var(--gp)*360deg),var(--line2) 0);
   display:grid;place-items:center;
 }
-.gate-ring::before{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--card)}
-.gate-pct{font-variant-numeric:tabular-nums;color:var(--gc);font-weight:700}
-.chk-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
-.chk-tabs{display:flex;gap:8px;flex-wrap:wrap}
-.chk-summary{
-  display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
-  padding:22px 26px;border-radius:18px;background:var(--card);border:1px solid var(--line);margin-bottom:22px;
+.gate-ring::before{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--bg2)}
+.gate-badge.complete .gate-ring::before{background:color-mix(in srgb,var(--sage) 14%,var(--card))}
+.gate-pct{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:700}
+.status-stats-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:20px 0 26px;
 }
-.chk-summary .rg{width:104px;height:104px;margin:0}
-.chk-summary .rg b{font-size:24px}
-.chk-filter-note{margin:0 0 12px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
-.chk-list{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:6px 20px}
+.status-stat-card{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:18px 20px;border-radius:16px;background:var(--card);border:1px solid var(--line);
+}
+.status-stat-card h4{margin:4px 0 4px;font-family:var(--serif);font-size:21px;font-weight:500;color:var(--ink)}
+.status-stat-card p{margin:0;font-size:13px;color:var(--mut);line-height:1.45}
+.status-stat-card .rg{width:68px;height:68px;margin:0;flex:none}
+.status-stat-card .rg::before{inset:8px}
+.status-stat-card .rg b{font-size:18px}
+.status-group-head{
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  margin:28px 0 10px;
+}
+.status-group-head h4{margin:0;font-size:15px;font-weight:600;color:var(--ink)}
+.status-group-head span{font-size:12px;color:var(--mut);font-weight:500}
+.chk-list{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:4px 18px}
 .chk-list .ck:last-child{border-bottom:none}
 .chk-badge{
   margin-left:auto;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;
@@ -476,63 +484,92 @@ h3{margin:6px 0;font-size:18px;font-family:var(--serif);font-weight:500}
 }
 .chk-badge.todo{background:var(--bg2);color:var(--mut);border:1px solid var(--line)}
 .chk-badge.ok{background:color-mix(in srgb,var(--sage) 18%,var(--card));color:var(--sageDeep);border:1px solid color-mix(in srgb,var(--sage) 40%,transparent)}
-.gate-link-btn{
-  display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:99px;
-  border:1px solid var(--line2);background:var(--card);color:var(--ink);
-  font:600 12px/1.2 var(--sans);cursor:pointer;transition:.18s;
-}
-.gate-link-btn:hover{border-color:var(--acc);color:var(--acc)}
-@media(max-width:640px){.chk-summary{grid-template-columns:1fr;justify-items:start}}
-.req-kicker{margin:0 0 8px;color:var(--acc);font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
-.req-modal h2{font-size:clamp(26px,2.8vw,36px);line-height:1.1;margin:0}
-.req-close{width:40px;height:40px;display:grid;place-items:center;flex:none;border:1px solid var(--line2);border-radius:50%;background:var(--card);color:var(--ink);cursor:pointer;font:300 30px/1 var(--sans);transition:.2s}
+@media(max-width:640px){.status-stats-grid{grid-template-columns:1fr}}
+.req-kicker{margin:0 0 6px;color:var(--acc);font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600}
+.req-modal h2{font-size:clamp(22px,2.4vw,30px);line-height:1.15;margin:0}
+.req-close{width:36px;height:36px;display:grid;place-items:center;flex:none;border:1px solid var(--line2);border-radius:50%;background:var(--card);color:var(--ink);cursor:pointer;font:300 26px/1 var(--sans);transition:.2s}
 .req-close:hover{background:var(--acc);border-color:var(--acc);color:#fff}
-.story-shell{flex:1;min-height:0;display:flex;flex-direction:column}
+.story-shell{flex:1;min-height:0;display:grid;grid-template-columns:232px 1fr}
 .story-nav{
-  flex:none;display:flex;flex-direction:row;align-items:center;gap:10px;
-  padding:14px 36px;overflow-x:auto;overflow-y:hidden;
-  border-bottom:1px solid var(--line);background:var(--bg2);
+  display:flex;flex-direction:column;gap:4px;
+  padding:20px 14px;border-right:1px solid var(--line);background:var(--bg);
+  overflow-y:auto;
 }
 .story-nav button{
-  flex:none;width:auto;white-space:nowrap;
-  display:inline-flex;align-items:center;gap:10px;
-  padding:6px 16px 6px 6px;border:1px solid var(--line2);border-radius:999px;
-  background:var(--card);color:var(--ink);
-  font:500 13px/1 var(--sans);cursor:pointer;transition:.18s;
+  width:100%;text-align:left;
+  display:flex;align-items:center;gap:11px;
+  padding:10px 12px;border:none;border-radius:10px;
+  background:transparent;color:var(--mut);
+  font:500 14px/1.25 var(--sans);cursor:pointer;transition:background .15s,color .15s;
 }
-.story-nav button:hover{border-color:var(--acc);background:var(--bg)}
+.story-nav button:hover{background:var(--bg2);color:var(--ink)}
 .story-nav button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .story-nav button.on{
-  border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--card));
-  font-weight:600;box-shadow:0 3px 10px -3px rgba(184,100,63,.28);
+  background:var(--bg2);color:var(--ink);font-weight:600;
 }
-.story-nav .tag{
-  flex:none;min-width:36px;height:26px;padding:0 9px;border-radius:999px;
-  display:inline-grid;place-items:center;
-  border:1px solid var(--line2);background:var(--bg);color:var(--mut);
-  font-size:10px;font-weight:700;letter-spacing:.05em;
+.story-nav .nav-ic{
+  flex:none;width:18px;height:18px;display:grid;place-items:center;color:currentColor;
 }
-.story-nav .tag svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
-.story-nav button.on .tag{background:var(--acc);border-color:var(--acc);color:#fff}
-.story-nav .nav-text{display:inline-flex;align-items:center}
-.story-nav .nav-text small{display:none}
+.story-nav .nav-ic svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.story-nav button.on .nav-ic{color:var(--acc)}
+.story-nav .nav-text{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.story-nav .nav-count{
+  font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;
+  background:var(--card);border:1px solid var(--line);color:var(--mut);
+  font-variant-numeric:tabular-nums;
+}
+.story-nav button.on .nav-count{border-color:color-mix(in srgb,var(--acc) 35%,var(--line));color:var(--acc)}
 .story-content{
   flex:1;min-height:0;overflow-y:auto;
-  padding:34px 40px 48px 36px;margin-right:6px;
+  padding:28px 36px 44px;margin-right:4px;
 }
 .story-content:focus-visible{outline:none}
-.story-content h3{font-family:var(--serif);font-size:clamp(26px,2.8vw,34px);line-height:1.24;margin:0;color:var(--ink)}
-.set-rows{margin-top:26px;border-top:1px solid var(--line)}
-.set-row{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding:15px 0;border-bottom:1px solid var(--line);font-size:14px}
+.story-content h3{font-family:var(--serif);font-size:clamp(22px,2.4vw,28px);line-height:1.25;margin:0;color:var(--ink)}
+.story-sec-lead{margin:6px 0 0;color:var(--mut);font-size:14px;line-height:1.6}
+.set-rows{margin-top:20px;border-top:1px solid var(--line)}
+.set-row{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}
 .set-row span:first-child{color:var(--mut);flex:none}
 .set-row span:last-child{text-align:right;font-weight:500;color:var(--ink)}
-.req-wording{margin-top:28px;padding:20px 24px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
-.req-wording b{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
-.req-wording p{margin:8px 0 0;color:var(--mut);font-size:14px;line-height:1.7}
-.story-content .req-why{margin-top:28px;padding:20px 24px}
-.story-content .story-section-label{margin:32px 0 14px}
-.story-content .acceptance-list{gap:12px}
-.req-hint{margin:28px 0 0;font-size:13px;color:var(--mut)}
+.req-list-stack{display:flex;flex-direction:column;gap:14px;margin-top:20px}
+.req-item-card{
+  padding:18px 20px;border-radius:14px;background:var(--card);border:1px solid var(--line);
+}
+.req-item-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.req-item-badges{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.req-id-pill{
+  display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;
+  background:color-mix(in srgb,var(--acc) 12%,var(--card));color:var(--acc);
+  font-size:11px;font-weight:700;letter-spacing:.05em;
+}
+.req-kind-pill{
+  display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;
+  background:var(--bg2);color:var(--mut);border:1px solid var(--line);
+  font-size:11px;font-weight:600;
+}
+.req-ver-pill{
+  font-size:11px;color:var(--mut);font-weight:500;
+}
+.req-item-card h4{
+  margin:0 0 8px;font-family:var(--serif);font-size:20px;font-weight:500;line-height:1.3;color:var(--ink);
+}
+.req-item-why{margin:0 0 10px;font-size:13.5px;color:var(--mut);line-height:1.55}
+.req-item-exact{
+  margin:0;padding:10px 13px;border-radius:10px;background:var(--bg);border:1px solid var(--line);
+  font-size:12.5px;color:var(--mut);line-height:1.55;
+}
+.req-item-exact b{color:var(--ink);font-weight:600}
+.ac-group-card{
+  padding:20px 22px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin-top:18px;
+}
+.ac-group-card h4{
+  margin:0 0 12px;font-family:var(--serif);font-size:20px;font-weight:500;color:var(--ink);
+}
+.ac-req-list{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.ac-req-box{
+  padding:16px 18px;border-radius:14px;background:var(--card);border:1px solid var(--line);
+}
+.ac-req-box-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.ac-req-box-head strong{font-size:14.5px;font-weight:600;color:var(--ink)}
 /* Clean, inset pill scrollbars without arrow buttons */
 .story-nav::-webkit-scrollbar{height:6px}
 .story-nav::-webkit-scrollbar-track{background:transparent;margin:0 36px}
@@ -638,11 +675,12 @@ body.overlay-open{overflow:hidden}
 @media(max-width:720px){
   .req-overlay{padding:12px}
   .req-modal{width:100%;height:calc(100dvh - 24px);border-radius:18px}
-  .req-modal-head{padding:18px 20px 16px}
-  .req-close{width:34px;height:34px;font-size:26px}
-  .story-nav{gap:8px;padding:12px 20px}
-  .story-nav::-webkit-scrollbar-track{margin:0 20px}
-  .story-content{padding:24px 18px 36px 20px;margin-right:4px}
+  .req-modal-head{padding:16px 18px 14px}
+  .req-close{width:34px;height:34px;font-size:24px}
+  .story-shell{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .story-nav{flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:10px 14px;border-right:none;border-bottom:1px solid var(--line);gap:6px}
+  .story-nav button{width:auto;flex:none;white-space:nowrap;padding:8px 12px}
+  .story-content{padding:22px 18px 36px;margin-right:2px}
 }
 
 footer{
@@ -816,21 +854,21 @@ footer .meta{
     <div class="req-modal-head">
       <div><p class="req-kicker" id="storyKicker">Story</p><h2 class="s" id="storyTitle">Loading story</h2></div>
       <div class="req-head-actions">
-        <button class="gate-btn" id="readyGateBtn" type="button" title="View and tick Ready checklist">
+        <div class="gate-badge" id="readyGateBadge" role="status" aria-label="Ready status (read-only)">
           <span class="gate-ring" id="readyGateRing"></span>
           <span>Ready</span>
           <span class="gate-pct" id="readyGatePct">0%</span>
-        </button>
-        <button class="gate-btn done-gate" id="doneGateBtn" type="button" title="View and tick Completed checklist">
+        </div>
+        <div class="gate-badge done-gate" id="doneGateBadge" role="status" aria-label="Completed status (read-only)">
           <span class="gate-ring" id="doneGateRing"></span>
           <span>Completed</span>
           <span class="gate-pct" id="doneGatePct">0%</span>
-        </button>
+        </div>
         <button class="req-close" type="button" aria-label="Close story" data-close-story>&times;</button>
       </div>
     </div>
     <div class="story-shell">
-      <nav class="story-nav" id="storyNav" role="tablist" aria-label="Story overview and requirements" aria-orientation="horizontal"></nav>
+      <nav class="story-nav" id="storyNav" role="tablist" aria-label="Story sections" aria-orientation="vertical"></nav>
       <div class="story-content" id="storyContent" role="tabpanel" tabindex="0" aria-live="polite"></div>
     </div>
   </div>
@@ -896,6 +934,9 @@ function requirementWhy(id){
 }
 const kindShort={UR:'User need',FR:'Feature',NFR:'Quality',BR:'Promise',BRL:'Team rule',TA:'Behind the scenes',PD:'Delivery work'};
 const overviewIcon='<svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>';
+const reqsIcon='<svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M5 6h.01M5 12h.01M5 18h.01"/></svg>';
+const acIcon='<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+const statusIcon='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>';
 const L={
   Ready:[
     'Requirement IDs and success criteria are listed',
@@ -935,19 +976,19 @@ function getGateStats(storyId,gate){
   const total=items.length,pct=Math.round((checked/total)*100);
   return{checked,total,pct,ratio:checked/total};
 }
-let currentStory=null,activeGateView=null;
+let currentStory=null;
 function updateStoryHeaderGates(s){
   if(!s)return;
   const r=getGateStats(s[0],'Ready'),d=getGateStats(s[0],'Done');
-  const rb=$('#readyGateBtn'),db=$('#doneGateBtn');
+  const rb=$('#readyGateBadge'),db=$('#doneGateBadge');
   rb.style.setProperty('--gp',r.ratio);
   db.style.setProperty('--gp',d.ratio);
   $('#readyGatePct').textContent=r.pct+'%';
   $('#doneGatePct').textContent=d.pct+'%';
   rb.classList.toggle('complete',r.pct===100);
   db.classList.toggle('complete',d.pct===100);
-  rb.classList.toggle('active',activeGateView==='Ready');
-  db.classList.toggle('active',activeGateView==='Done');
+  const sc=$('#statusNavCount');
+  if(sc)sc.textContent=(r.checked+d.checked)+'/'+(r.total+d.total);
 }
 let storyReturnFocus=null,storyRenderToken=0;
 function closeStory(){const overlay=$('#storyOverlay');overlay.hidden=true;overlay.setAttribute('aria-hidden','true');document.body.classList.remove('overlay-open');if(storyReturnFocus&&storyReturnFocus.focus)storyReturnFocus.focus()}
@@ -955,64 +996,13 @@ function storyIds(s){return s[8].split(' ').filter(Boolean)}
 function acceptanceList(s){const list=E('ul','acceptance-list');(storyAcceptance['S1-'+s[0]]||[s[6]]).forEach(check=>{const li=E('li','');li.textContent=check;list.append(li)});return list}
 function requirementAcceptanceList(s,item){const list=E('ul','acceptance-list');const checks=(item&&Array.isArray(item.acceptance)&&item.acceptance.length)?item.acceptance:(storyAcceptance['S1-'+s[0]]||[s[6]]);checks.forEach(check=>{const li=E('li','');li.textContent=check;list.append(li)});return list}
 function setRow(label,value){const row=E('div','set-row');const a=E('span','');a.textContent=label;const b=E('span','');b.textContent=value;row.append(a,b);return row}
-function setActionRow(label,btnText,onClick){
-  const row=E('div','set-row');
-  const a=E('span','');a.textContent=label;
-  const b=E('button','gate-link-btn');b.type='button';b.textContent=btnText;b.onclick=onClick;
-  row.append(a,b);return row;
-}
-function renderStoryChecklist(s,gate){
-  storyRenderToken++;activeGateView=gate;
-  $$('#storyNav button').forEach(b=>{b.classList.remove('on');b.setAttribute('aria-selected','false')});
-  updateStoryHeaderGates(s);
-  const c=$('#storyContent');c.innerHTML='';
-  const stats=getGateStats(s[0],gate),items=L[gate],state=getStoryGateState(s[0],gate);
-  const head=E('div','chk-head');
-  const tabs=E('div','chk-tabs');
-  const rStats=getGateStats(s[0],'Ready'),dStats=getGateStats(s[0],'Done');
-  const rTab=E('button','pill'+(gate==='Ready'?' on':''),'Ready to start · '+rStats.pct+'% ('+rStats.checked+'/'+rStats.total+')');
-  rTab.type='button';rTab.onclick=()=>renderStoryChecklist(s,'Ready');
-  const dTab=E('button','pill'+(gate==='Done'?' on':''),'Completed to ship · '+dStats.pct+'% ('+dStats.checked+'/'+dStats.total+')');
-  dTab.type='button';dTab.onclick=()=>renderStoryChecklist(s,'Done');
-  tabs.append(rTab,dTab);
-  head.append(tabs);
-  const sum=E('div','chk-summary');
-  const left=E('div','');
-  const kicker=E('p','req-kicker',gate==='Ready'?'Definition of Ready · S1-'+s[0]:'Definition of Done · S1-'+s[0]);
-  const title=E('h3','',gate==='Ready'?'Is this story ready to start?':'Is this story completed and ready to ship?');
-  const rem=stats.total-stats.checked;
-  const desc=E('p','mut');
-  desc.style.marginTop='8px';
-  desc.textContent=rem===0?(gate==='Ready'?'All 5 checks are ticked — this story is 100% Ready to pull into the sprint.':'All 10 checks are ticked — this story is 100% Completed and ready for Sprint Review.'):rem+' of '+stats.total+' items still unchecked ('+stats.pct+'% complete). Tick each item below as the team verifies it.';
-  left.append(kicker,title,desc);
-  const rg=E('div','rg','<b class="s">'+stats.pct+'%</b>');
-  rg.style.setProperty('--p',stats.ratio);
-  sum.append(left,rg);
-  const note=E('p','chk-filter-note',stats.checked+' checked · '+rem+' not yet checked');
-  const list=E('div','chk-list');
-  items.forEach((text,idx)=>{
-    const on=!!state[idx];
-    const btn=E('button','ck'+(on?' on':''),'<span></span><div style="flex:1"></div><i class="chk-badge '+(on?'ok':'todo')+'" style="font-style:normal">'+(on?'Checked':'Pending')+'</i>');
-    btn.type='button';
-    $('div',btn).textContent=text;
-    btn.onclick=()=>{
-      const st=$('#storyContent').scrollTop;
-      state[idx]=!state[idx];
-      saveStoryChecks();
-      layoutTimeline();
-      renderStoryChecklist(s,gate);
-      $('#storyContent').scrollTop=st;
-    };
-    list.append(btn);
-  });
-  c.append(head,sum,note,list);
-}
 function renderStoryOverview(s){
-  storyRenderToken++;activeGateView=null;updateStoryHeaderGates(s);
+  storyRenderToken++;updateStoryHeaderGates(s);
   const c=$('#storyContent');c.innerHTML='';const ids=storyIds(s);
   const d=storyDesign['S1-'+s[0]]||{};
-  const summary=E('p','story-summary');summary.textContent=s[6];
   const rStats=getGateStats(s[0],'Ready'),dStats=getGateStats(s[0],'Done');
+  const head=E('h3','','Story Overview');
+  const summary=E('p','story-sec-lead');summary.textContent=s[6];
   const rows=E('div','set-rows');
   if(d.who)rows.append(setRow('Who this helps',d.who));
   rows.append(
@@ -1020,55 +1010,160 @@ function renderStoryOverview(s){
     setRow('Priority',s[2]=='M'?'Must have':'Should have'),
     setRow('Track',s[3]=='A'?'Track A · backend & platform':'Track B · screens & workflows'),
     setRow('Timeline','Day '+s[4]+' to Day '+s[5]+' ('+(s[5]-s[4]+1)+' days)'),
-    setRow('Requirements',ids.length?ids.length+' linked':'Release check')
+    setRow('Requirements',ids.length?ids.length+' linked requirements':'Final release verification')
   );
   if(d.screens)rows.append(setRow('Screens involved',d.screens));
   if(d.tables)rows.append(setRow('Database tables',d.tables));
   if(d.api)rows.append(setRow('System actions',d.api));
   rows.append(
-    setActionRow('Ready status',rStats.pct+'% ('+rStats.checked+'/'+rStats.total+' checked) · Inspect checklist →',()=>renderStoryChecklist(s,'Ready')),
-    setActionRow('Completed status',dStats.pct+'% ('+dStats.checked+'/'+dStats.total+' checked) · Inspect checklist →',()=>renderStoryChecklist(s,'Done'))
+    setRow('Ready status (read-only)',rStats.pct+'% ('+rStats.checked+' of '+rStats.total+' checked)'),
+    setRow('Completed status (read-only)',dStats.pct+'% ('+dStats.checked+' of '+dStats.total+' checked)')
   );
-  c.append(E('p','req-kicker','Overview · S1-'+s[0]),summary,rows,E('p','story-section-label','What proves this story is finished'),acceptanceList(s));
-  if(ids.length)c.append(E('p','req-hint','Select any requirement pill above to read its plain-English details and acceptance criteria, or click Ready / Completed in the header to tick the story checklists.'));
+  c.append(E('p','req-kicker','Overview · S1-'+s[0]),head,summary,rows);
 }
-async function renderStoryRequirement(s,id){
-  const token=++storyRenderToken;const c=$('#storyContent');c.innerHTML='';
-  const title=E('h3','','Loading requirement…');c.append(E('p','req-kicker','Requirement · '+id),title);
+async function renderStoryRequirements(s){
+  const token=++storyRenderToken;updateStoryHeaderGates(s);
+  const c=$('#storyContent');c.innerHTML='';const ids=storyIds(s);
+  const head=E('h3','',ids.length?'Requirements ('+ids.length+')':'Requirements');
+  const lead=E('p','story-sec-lead');
+  lead.textContent=ids.length?'All '+ids.length+' requirements for Story S1-'+s[0]+' listed together on one page in plain English.':'Story S1-'+s[0]+' is the final release check that tests all 108 Sprint 1 requirements end-to-end with two pilot property owners.';
+  c.append(E('p','req-kicker','Requirements · S1-'+s[0]),head,lead);
+  if(!ids.length)return;
   await requirementReady;if(token!==storyRenderToken)return;
-  const item=requirementData[id],kind=requirementPrefix(id);
-  title.textContent=item?friendlyRequirement(id,item):'Requirement details are not available right now.';
-  const rows=E('div','set-rows');
-  rows.append(setRow('Type',requirementKinds[kind]||kind));
-  if(item&&item.module)rows.append(setRow('Area',item.module.charAt(0).toUpperCase()+item.module.slice(1)));
-  rows.append(setRow('Delivered by','S1-'+s[0]+' · '+s[1]));
-  if(item&&item.verification)rows.append(setRow('Verification',item.verification));
-  const why=E('div','req-why','<b>Why this requirement matters</b><p></p>');$('p',why).textContent=requirementWhy(id);
-  c.append(rows,why,E('p','story-section-label','Acceptance criteria · '+id),requirementAcceptanceList(s,item));
-  if(item){const w=E('div','req-wording','<b>Exact requirement wording</b><p></p>');$('p',w).textContent=item.text;c.append(w)}
+  const stack=E('div','req-list-stack');
+  ids.forEach(id=>{
+    const item=requirementData[id],kind=requirementPrefix(id);
+    const card=E('article','req-item-card');
+    const top=E('div','req-item-badges');
+    const idPill=E('span','req-id-pill',id);
+    const kindPill=E('span','req-kind-pill',(kindShort[kind]||kind)+(item&&item.module?' · '+item.module.charAt(0).toUpperCase()+item.module.slice(1):''));
+    top.append(idPill,kindPill);
+    const topRow=E('div','req-item-top');
+    topRow.append(top);
+    if(item&&item.verification){
+      const cleanVer=item.verification.replace(/\s*\(@Req\([^)]+\)\)/g,'').replace(/Automated test/i,'Automatic test');
+      const ver=E('span','req-ver-pill','Checked by: '+cleanVer);
+      topRow.append(ver);
+    }
+    const title=E('h4','');
+    title.textContent=item?friendlyRequirement(id,item):'Requirement '+id;
+    const why=E('p','req-item-why');
+    why.textContent=requirementWhy(id);
+    card.append(topRow,title,why);
+    if(item&&item.text){
+      const exact=E('p','req-item-exact','<b>Requirement detail:</b> <span></span>');
+      $('span',exact).textContent=item.text;
+      card.append(exact);
+    }
+    stack.append(card);
+  });
+  c.append(stack);
+}
+async function renderStoryAcceptance(s){
+  const token=++storyRenderToken;updateStoryHeaderGates(s);
+  const c=$('#storyContent');c.innerHTML='';const ids=storyIds(s);
+  const head=E('h3','','Acceptance Criteria');
+  const lead=E('p','story-sec-lead','Everything that must be true for the Product Owner to accept Story S1-'+s[0]+' at Sprint Review.');
+  const storyBox=E('div','ac-group-card');
+  const storyBoxTitle=E('h4','','Story-level acceptance criteria');
+  storyBox.append(storyBoxTitle,acceptanceList(s));
+  c.append(E('p','req-kicker','Acceptance Criteria · S1-'+s[0]),head,lead,storyBox);
+  if(!ids.length)return;
+  await requirementReady;if(token!==storyRenderToken)return;
+  const reqSecLabel=E('p','story-section-label','Acceptance criteria by requirement ('+ids.length+')');
+  const reqList=E('div','ac-req-list');
+  ids.forEach(id=>{
+    const item=requirementData[id];
+    const box=E('div','ac-req-box');
+    const bHead=E('div','ac-req-box-head');
+    const pill=E('span','req-id-pill',id);
+    const bTitle=E('strong','');
+    bTitle.textContent=item?friendlyRequirement(id,item):id;
+    bHead.append(pill,bTitle);
+    box.append(bHead,requirementAcceptanceList(s,item));
+    reqList.append(box);
+  });
+  c.append(reqSecLabel,reqList);
+}
+function renderStoryStatus(s){
+  storyRenderToken++;updateStoryHeaderGates(s);
+  const c=$('#storyContent');c.innerHTML='';
+  const rStats=getGateStats(s[0],'Ready'),dStats=getGateStats(s[0],'Done');
+  const head=E('h3','','Status & Checklists');
+  const lead=E('p','story-sec-lead','Tick the Ready and Completed items below as your team finishes them. The read-only Ready and Completed badges in the top bar update automatically.');
+  const grid=E('div','status-stats-grid');
+  const rCard=E('div','status-stat-card');
+  const rLeft=E('div','');
+  rLeft.append(
+    E('p','req-kicker','Ready Status'),
+    E('h4','',rStats.checked+' of '+rStats.total+' checked'),
+    E('p','',rStats.pct===100?'Ready to start work in the sprint.':'Tick all 5 checks before starting coding.')
+  );
+  const rRg=E('div','rg','<b class="s">'+rStats.pct+'%</b>');
+  rRg.style.setProperty('--p',rStats.ratio);
+  rCard.append(rLeft,rRg);
+  const dCard=E('div','status-stat-card');
+  const dLeft=E('div','');
+  dLeft.append(
+    E('p','req-kicker','Completed Status'),
+    E('h4','',dStats.checked+' of '+dStats.total+' checked'),
+    E('p','',dStats.pct===100?'Completed and ready for Sprint Review.':'Tick all 10 checks before marking Done.')
+  );
+  const dRg=E('div','rg','<b class="s">'+dStats.pct+'%</b>');
+  dRg.style.setProperty('--p',dStats.ratio);
+  dCard.append(dLeft,dRg);
+  grid.append(rCard,dCard);
+  c.append(E('p','req-kicker','Status · S1-'+s[0]),head,lead,grid);
+  [['Ready','Ready checklist (before starting work)'],['Done','Completed checklist (before marking Done)']].forEach(([gate,label])=>{
+    const gStats=getGateStats(s[0],gate),items=L[gate],state=getStoryGateState(s[0],gate);
+    const gHead=E('div','status-group-head');
+    const gTitle=E('h4','',label);
+    const gMeta=E('span','',gStats.checked+'/'+gStats.total+' checked ('+gStats.pct+'%)');
+    gHead.append(gTitle,gMeta);
+    const list=E('div','chk-list');
+    items.forEach((text,idx)=>{
+      const on=!!state[idx];
+      const btn=E('button','ck'+(on?' on':''),'<span></span><div style="flex:1"></div><i class="chk-badge '+(on?'ok':'todo')+'" style="font-style:normal">'+(on?'Checked':'Pending')+'</i>');
+      btn.type='button';
+      $('div',btn).textContent=text;
+      btn.onclick=()=>{
+        const st=$('#storyContent').scrollTop;
+        state[idx]=!state[idx];
+        saveStoryChecks();
+        layoutTimeline();
+        renderStoryStatus(s);
+        $('#storyContent').scrollTop=st;
+      };
+      list.append(btn);
+    });
+    c.append(gHead,list);
+  });
 }
 function selectStoryTab(button,render){
-  activeGateView=null;if(currentStory)updateStoryHeaderGates(currentStory);
+  if(currentStory)updateStoryHeaderGates(currentStory);
   $$('#storyNav button').forEach(b=>{const on=b===button;b.classList.toggle('on',on);b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});
   button.scrollIntoView({block:'nearest',inline:'nearest'});$('#storyContent').scrollTop=0;render();
 }
-function storyNavButton(tag,label,sub,render){
-  const b=E('button','','<span class="tag">'+tag+'</span><span class="nav-text"><span></span>'+(sub?'<small></small>':'')+'</span>');
-  b.type='button';b.setAttribute('role','tab');$('.nav-text span',b).textContent=label;if(sub)$('small',b).textContent=sub;
+function storyNavButton(iconSvg,label,countText,countId,render){
+  const b=E('button','','<span class="nav-ic">'+iconSvg+'</span><span class="nav-text"><span></span>'+(countText!=null?'<i class="nav-count" style="font-style:normal"'+(countId?' id="'+countId+'"':'')+'></i>':'')+'</span>');
+  b.type='button';b.setAttribute('role','tab');$('.nav-text span',b).textContent=label;
+  if(countText!=null)$('.nav-count',b).textContent=countText;
   b.onclick=()=>selectStoryTab(b,render);return b;
 }
 function showStory(s){
-  currentStory=s;activeGateView=null;
+  currentStory=s;
   storyReturnFocus=document.activeElement;
   const overlay=$('#storyOverlay');overlay.hidden=false;overlay.setAttribute('aria-hidden','false');document.body.classList.add('overlay-open');
   $('#storyKicker').textContent='Story S1-'+s[0]+' · Days '+s[4]+'–'+s[5];$('#storyTitle').textContent=s[1];
   const nav=$('#storyNav');nav.innerHTML='';const ids=storyIds(s);
-  const overview=storyNavButton(overviewIcon,'Overview','',()=>renderStoryOverview(s));nav.append(overview);
-  ids.forEach(id=>{const kind=requirementPrefix(id);nav.append(storyNavButton(kind,id,'',()=>renderStoryRequirement(s,id)))});
-  $('#readyGateBtn').onclick=()=>renderStoryChecklist(s,'Ready');
-  $('#doneGateBtn').onclick=()=>renderStoryChecklist(s,'Done');
-  selectStoryTab(overview,()=>renderStoryOverview(s));
-  nav.scrollLeft=0;
+  const rStats=getGateStats(s[0],'Ready'),dStats=getGateStats(s[0],'Done');
+  const overviewBtn=storyNavButton(overviewIcon,'Overview',null,'',()=>renderStoryOverview(s));
+  const reqsBtn=storyNavButton(reqsIcon,'Requirements',ids.length?String(ids.length):null,'',()=>renderStoryRequirements(s));
+  const acBtn=storyNavButton(acIcon,'Acceptance Criteria',null,'',()=>renderStoryAcceptance(s));
+  const statusBtn=storyNavButton(statusIcon,'Status',(rStats.checked+dStats.checked)+'/'+(rStats.total+dStats.total),'statusNavCount',()=>renderStoryStatus(s));
+  nav.append(overviewBtn,reqsBtn,acBtn,statusBtn);
+  selectStoryTab(overviewBtn,()=>renderStoryOverview(s));
+  nav.scrollTop=0;nav.scrollLeft=0;
   $('.req-close').focus();
 }
 $('#storyNav').addEventListener('wheel',e=>{
@@ -1218,106 +1313,106 @@ const storyAcceptance={
 };
 const storyDesign={
   'S1-01':{
-    who:'Development team (so all 11 members can build without conflicts)',
-    screens:'Starter shell routes for Owner Portal (/owner), Admin Portal (/admin), and Guest Portal (/)',
-    tables:'Starter Flyway migration setup (V1_01), shared settings & lookup tables',
-    api:'Health check (/actuator/health), shared Ghana Cedi/pesewa money helper, Ghana GMT time helper, and module boundary check'
+    who:'Development team (so all 11 members can build without stepping on each other’s work)',
+    screens:'Starter home pages for the Owner Portal, Admin Portal, and Guest Portal',
+    tables:'Starter database setup, shared platform settings, and Takoradi area list',
+    api:'Server health check, Ghana Cedi/pesewa money helper, and Ghana time (GMT) helper'
   },
   'S1-02':{
-    who:'Property owners & administrators (relying on a dependable, backed-up live system)',
-    screens:'Live cloud URLs for Owner and Admin portals behind Cloudflare security',
-    tables:'Daily automated Supabase PostgreSQL backups + Day 4 scratch restore verification',
-    api:'Cloudflare Workers Static Assets + Render Spring Boot API + Sentry error alerts + uptime monitor'
+    who:'Property owners and administrators relying on a safe, backed-up live website',
+    screens:'Live web addresses for the Owner and Admin portals protected by Cloudflare',
+    tables:'Daily automatic database backups plus a practice backup restore test on Day 4',
+    api:'Live cloud website and server hosting, automatic error alerts, and uptime checks'
   },
   'S1-03':{
-    who:'Small property owners, staff, and administrators on mobile phones and desktops',
-    screens:'Owner Portal layout, Admin Portal layout, mobile navigation bar/drawer, toast alerts, and empty/loading states',
-    tables:'None (UI layout and design components)',
-    api:'Consistent error and status message display across all screens'
+    who:'Small property owners, staff, and administrators on mobile phones and computers',
+    screens:'Shared Owner and Admin page layouts, mobile menu bar, pop-up alerts, and loading screens',
+    tables:'No new database tables (this story builds the shared screen layouts)',
+    api:'Clear, friendly status and error messages across all screens'
   },
   'S1-04':{
-    who:'Guests, Property Owners, Property Staff, and Administrators signing up and signing in',
-    screens:'Sign Up (/auth/register), Confirm Email/OTP (/auth/verify), and Sign In (/auth/login)',
-    tables:'identity.user_profile, identity.role (seeded with Guest, Owner, Property Staff, Administrator)',
-    api:'Supabase Auth sign-up/login/logout + Spring Boot JWT verification via JWKS + GET /api/v1/me'
+    who:'Guests, Property Owners, Property Staff, and Administrators creating accounts and signing in',
+    screens:'Sign Up page, Email / Phone Code Confirmation page, and Sign In page',
+    tables:'User profiles table and user roles table (Guest, Owner, Property Staff, Administrator)',
+    api:'Create account, confirm email or phone code, sign in, sign out, and load signed-in user details'
   },
   'S1-05':{
-    who:'Any signed-in user updating their details or recovering a forgotten password',
-    screens:'Forgot Password (/auth/forgot-password), Reset Password (/auth/reset-password), and My Profile (/profile)',
-    tables:'identity.user_profile (name, phone, avatar_url, preferred_language)',
-    api:'Supabase password reset flow + GET /api/v1/me and PATCH /api/v1/me'
+    who:'Any signed-in user updating their contact details or recovering a forgotten password',
+    screens:'Forgot Password page, Reset Password page, and My Profile page',
+    tables:'User profile fields (full name, phone number, profile photo, and language)',
+    api:'Send password reset email, save new password, and view or update profile details'
   },
   'S1-06':{
-    who:'All users (protecting private owner records and admin-only controls)',
-    screens:'Access-denied states and role-aware menus in Owner and Admin portals',
-    tables:'identity.role, identity.permission, identity.role_permission',
-    api:'@RequiresPermission security guard on every API route + input validation + HTTPS enforcement'
+    who:'All users (keeping private owner records and administrator tools locked to the right people)',
+    screens:'Role-aware menus and “Access Denied” screens in the Owner and Admin portals',
+    tables:'Roles, permissions, and role-permission rules',
+    api:'Automatic permission check on every server action and form input safety check'
   },
   'S1-07':{
-    who:'Property owners managing a business and inviting staff for specific properties',
-    screens:'Company & Staff Management (/owner/staff) and Staff Invite Acceptance (/owner/invitations)',
-    tables:'organization.organization, organization.membership, organization.membership_permission',
-    api:'POST /api/v1/owner/staff/invite, PUT /api/v1/owner/staff/:id/permissions + automatic OrgScope data isolation'
+    who:'Property owners running a business and inviting staff for specific properties',
+    screens:'Company & Staff Management page and Staff Invitation Acceptance page',
+    tables:'Owner companies table, staff memberships table, and per-property staff permissions table',
+    api:'Invite staff member, set or remove staff permissions for a property, and keep each owner’s data separate'
   },
   'S1-08':{
-    who:'Administrators auditing platform activity and investigating disputes or changes',
-    screens:'Admin Activity Log viewer (/admin/audit) with user, action, and date filters',
-    tables:'audit.audit_log (append-only table—UPDATE and DELETE blocked at database level)',
-    api:'Shared AuditRecorder service + GET /api/v1/admin/audit-logs'
+    who:'Administrators reviewing platform history and checking who made important changes',
+    screens:'Admin Activity Log page with filters for user, action type, and date range',
+    tables:'Permanent activity log table (entries can only be added, never edited or deleted)',
+    api:'Record every important action automatically and let administrators search the log'
   },
   'S1-09':{
-    who:'Property owners uploading listing photos and private verification documents',
-    screens:'Photo Uploader component and Document Uploader component in the Owner Portal',
-    tables:'media.media_asset, media.document (linking files to properties or verification cases)',
-    api:'POST /api/v1/media/upload-url, WebP image optimisation, and temporary signed URLs for private files'
+    who:'Property owners uploading property photos and private verification documents',
+    screens:'Property Photo Uploader and Private Document Uploader in the Owner Portal',
+    tables:'Property photos table and private verification documents table',
+    api:'Shrink property photos to fast-loading WebP format and lock private ID documents behind temporary links'
   },
   'S1-10':{
-    who:'Owners, staff, and users receiving updates about their account, verification, or listings',
-    screens:'In-app Notification Bell & Inbox (/notifications) + formatted Email and SMS messages',
-    tables:'notification.notification, notification.notification_template, notification.notification_delivery',
-    api:'NotificationSender service + Email & Ghana SMS adapters + GET /api/v1/notifications'
+    who:'Owners, staff, and users receiving alerts about their account, verification, or listings',
+    screens:'In-app Notification Bell & Inbox plus formatted Email and SMS messages',
+    tables:'Notifications table, message templates table, and delivery status log',
+    api:'Send email, SMS, and in-app notifications automatically and retry failed messages'
   },
   'S1-11':{
-    who:'All users (protecting personal data under Ghana’s Data Protection Act, 2012 — Act 843)',
-    screens:'Privacy Notice modal/page and mandatory Act 843 consent checkbox on Sign Up & Onboarding',
-    tables:'identity.consent_record (user_id, policy_version, consented_at, ip_address)',
-    api:'POST /api/v1/me/consents + strict field filtering so private data is never exposed publicly'
+    who:'All users (protecting personal information under Ghana’s Data Protection Act, Act 843)',
+    screens:'Privacy Notice window and required consent checkbox during Sign Up and Onboarding',
+    tables:'User privacy consent records table (who agreed, which privacy version, and when)',
+    api:'Save user privacy consent and hide private personal details from public pages'
   },
   'S1-12':{
-    who:'Property owners proving their identity and property ownership before listing',
-    screens:'Owner Verification Wizard (/owner/verification) and Verification Status Tracker',
-    tables:'verification.verification_case (with AES-256 encrypted Ghana Card number), verification.verification_document',
-    api:'POST /api/v1/owner/verification-cases, POST /api/v1/owner/verification-cases/:id/resubmit, GET /api/v1/owner/verification-cases/mine'
+    who:'Property owners proving their identity and property ownership before publishing listings',
+    screens:'Owner Verification form and Verification Status Tracker in the Owner Portal',
+    tables:'Verification cases table (with encrypted Ghana Card number) and uploaded verification files table',
+    api:'Submit Ghana Card and property documents, check review progress, and upload corrected documents'
   },
   'S1-13':{
     who:'Verified property owners creating and managing hotels, guesthouses, and apartments in Takoradi',
-    screens:'Owner Listings List (/owner/listings), Property & Units Editor (/owner/listings/:id/edit), and Listing Preview',
-    tables:'catalog.property, catalog.unit, catalog.listing, catalog.rate_plan (in integer pesewas), catalog.amenity, catalog.area (Takoradi areas)',
-    api:'CRUD /api/v1/owner/properties & /listings, POST /api/v1/owner/listings/:id/submit,POST /pause, and public CatalogQuery seam'
+    screens:'Owner Listings page, Property & Rooms Editor, and Listing Preview page',
+    tables:'Properties, rooms/units, listings, nightly GHS prices, amenities, house rules, and Takoradi areas',
+    api:'Create, edit, submit, and pause property listings and check that all required details are complete'
   },
   'S1-14':{
-    who:'Owners and property staff managing when each room or unit is available',
-    screens:'Unit Availability Calendar (/owner/listings/:id/calendar) with date-range block/unblock controls',
-    tables:'availability.availability_block (with PostgreSQL btree_gist overlap exclusion constraint per unit_id)',
-    api:'GET /api/v1/owner/units/:unitId/calendar, POST /api/v1/owner/units/:unitId/blocks, DELETE /api/v1/owner/units/:unitId/blocks/:blockId'
+    who:'Property owners and authorised staff managing when each room is available',
+    screens:'Room Availability Calendar with controls to block or unblock date ranges',
+    tables:'Room availability blocks table (with a database rule that stops overlapping date blocks)',
+    api:'View room calendar, block unavailable dates, unblock dates, and prevent double-blocking'
   },
   'S1-15':{
-    who:'Administrators reviewing owner verifications and property listings before they go live',
-    screens:'Admin Verification & Listing Approval Queue (/admin/approvals) and Detailed Review Drawer/Screen',
-    tables:'catalog.listing_status_history, verification.review_decision',
-    api:'POST /api/v1/admin/listings/:id/{approve|reject|request-corrections|suspend|restore} with mandatory reason & audit log'
+    who:'Administrators checking owner documents and property listings before they go live',
+    screens:'Admin Approval Queue and Detailed Listing & Verification Review screen',
+    tables:'Listing status history table and admin review decisions table',
+    api:'Approve, reject, suspend, restore, or ask for corrections on a listing (always with a written reason)'
   },
   'S1-16':{
-    who:'Administrators monitoring platform activity, managing user accounts, and toggling settings',
-    screens:'Admin Dashboard (/admin), User Management (/admin/users), and Platform Settings (/admin/settings)',
-    tables:'admin.platform_setting (key-value settings and feature flags)',
-    api:'GET /api/v1/admin/dashboard, POST /api/v1/admin/users/:id/{suspend|restore}, GET/PUT /api/v1/admin/settings'
+    who:'Administrators monitoring platform counts, managing user accounts, and updating settings',
+    screens:'Admin Summary Dashboard, User Accounts page, and Platform Settings page',
+    tables:'Platform settings and feature switches table',
+    api:'Load dashboard counts, create/suspend/restore user accounts, and save platform settings'
   },
   'S1-17':{
     who:'Pilot property owners, administrators, and the Product Owner reviewing Release R1',
-    screens:'All Release R1 screens tested end to end across the 7-step Sprint Review demo script',
-    tables:'Full V1_01–V1_19 schema verified on staging and production + backup restore check',
-    api:'All Sprint 1 endpoints verified by the R1 automated regression suite'
+    screens:'All Release R1 screens tested from start to finish in the 7-step Sprint Review demo',
+    tables:'All Sprint 1 database tables verified on the live system plus a backup restore test',
+    api:'All Sprint 1 features tested end-to-end with two real pilot property owners'
   }
 };
 const tlContainer=$('#timeline');
