@@ -10,7 +10,7 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| S1-01-T7 | Set up the empty server app with the shared pieces ready | 1 | Todo | [#31](https://github.com/ObboyeBossman/findstay/issues/31) |
+| [`S1-01-T7`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T7.md) | Set up the empty server app with the shared pieces ready | 1 | Todo | [#31](https://github.com/ObboyeBossman/findstay/issues/31) |
 
 ## Impact & Completed Work
 

@@ -10,9 +10,9 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| S1-01-T6 | Draw the backend map & data-flow diagram, agree the API contracts | 1 | Todo | [#30](https://github.com/ObboyeBossman/findstay/issues/30) |
-| S1-01-T10 | Set up the code repo, branch rules, secrets & staging site | 1 | Todo | [#19](https://github.com/ObboyeBossman/findstay/issues/19) |
-| S1-01-T11 | Build the automatic checker — tests & publishes every change | 1 | Todo | [#20](https://github.com/ObboyeBossman/findstay/issues/20) |
+| [`S1-01-T6`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T6.md) | Draw the backend map & data-flow diagram, agree the API contracts | 1 | Todo | [#30](https://github.com/ObboyeBossman/findstay/issues/30) |
+| [`S1-01-T10`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T10.md) | Set up the code repo, branch rules, secrets & staging site | 1 | Todo | [#19](https://github.com/ObboyeBossman/findstay/issues/19) |
+| [`S1-01-T11`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T11.md) | Build the automatic checker — tests & publishes every change | 1 | Todo | [#20](https://github.com/ObboyeBossman/findstay/issues/20) |
 
 ## Impact & Completed Work
 

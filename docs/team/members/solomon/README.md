@@ -10,8 +10,8 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| S1-01-T8 | Draw the database diagram (ERD) — every table & how it connects | 1 | Todo | [#32](https://github.com/ObboyeBossman/findstay/issues/32) |
-| S1-01-T13 | Write the acceptance walkthrough & repeat-test plan | 1 | Todo | [#22](https://github.com/ObboyeBossman/findstay/issues/22) |
+| [`S1-01-T8`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T8.md) | Draw the database diagram (ERD) — every table & how it connects | 1 | Todo | [#32](https://github.com/ObboyeBossman/findstay/issues/32) |
+| [`S1-01-T13`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T13.md) | Write the acceptance walkthrough & repeat-test plan | 1 | Todo | [#22](https://github.com/ObboyeBossman/findstay/issues/22) |
 
 ## Impact & Completed Work
 

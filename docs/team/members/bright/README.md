@@ -10,7 +10,7 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| S1-01-T1 | Confirm the Sprint 1 work list — what we build first, agreed by everyone | 1 | Todo | [#18](https://github.com/ObboyeBossman/findstay/issues/18) |
+| [`S1-01-T1`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T1.md) | Confirm the Sprint 1 work list — what we build first, agreed by everyone | 1 | Todo | [#18](https://github.com/ObboyeBossman/findstay/issues/18) |
 
 ## Impact & Completed Work
 

@@ -10,7 +10,7 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| S1-01-T15 | Fill the starter reference lists (room types, billing periods, settings) | 1 | Todo | [#24](https://github.com/ObboyeBossman/findstay/issues/24) |
+| [`S1-01-T15`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T15.md) | Fill the starter reference lists (room types, billing periods, settings) | 1 | Todo | [#24](https://github.com/ObboyeBossman/findstay/issues/24) |
 
 ## Impact & Completed Work
 

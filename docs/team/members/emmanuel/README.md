@@ -10,7 +10,7 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| S1-01-T9 | Build the real database from the ERD with numbered scripts | 1 | Todo | [#33](https://github.com/ObboyeBossman/findstay/issues/33) |
+| [`S1-01-T9`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T9.md) | Build the real database from the ERD with numbered scripts | 1 | Todo | [#33](https://github.com/ObboyeBossman/findstay/issues/33) |
 
 ## Impact & Completed Work
 

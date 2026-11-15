@@ -10,9 +10,9 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| S1-01-T2 | Pick FindStay's colors, fonts & spacing (one style file, swappable) | 1 | Todo | [#26](https://github.com/ObboyeBossman/findstay/issues/26) |
-| S1-01-T4 | Sketch every Sprint 1 screen (wireframes, phone-first) | 1 | Todo | [#28](https://github.com/ObboyeBossman/findstay/issues/28) |
-| S1-01-T5 | Build the empty starter website — guest, owner & admin areas wired | 1 | Todo | [#29](https://github.com/ObboyeBossman/findstay/issues/29) |
+| [`S1-01-T2`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T2.md) | Pick FindStay's colors, fonts & spacing (one style file, swappable) | 1 | Todo | [#26](https://github.com/ObboyeBossman/findstay/issues/26) |
+| [`S1-01-T4`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T4.md) | Sketch every Sprint 1 screen (wireframes, phone-first) | 1 | Todo | [#28](https://github.com/ObboyeBossman/findstay/issues/28) |
+| [`S1-01-T5`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T5.md) | Build the empty starter website — guest, owner & admin areas wired | 1 | Todo | [#29](https://github.com/ObboyeBossman/findstay/issues/29) |
 
 ## Impact & Completed Work
 

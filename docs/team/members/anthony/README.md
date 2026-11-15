@@ -10,8 +10,8 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| S1-01-T3 | Draw the user flow diagrams — every screen-to-screen path | 1 | Todo | [#27](https://github.com/ObboyeBossman/findstay/issues/27) |
-| S1-01-T14 | Run the kickoff — hand out tasks, set the checkpoints | 1 | Todo | [#23](https://github.com/ObboyeBossman/findstay/issues/23) |
+| [`S1-01-T3`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T3.md) | Draw the user flow diagrams — every screen-to-screen path | 1 | Todo | [#27](https://github.com/ObboyeBossman/findstay/issues/27) |
+| [`S1-01-T14`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T14.md) | Run the kickoff — hand out tasks, set the checkpoints | 1 | Todo | [#23](https://github.com/ObboyeBossman/findstay/issues/23) |
 
 ## Impact & Completed Work
 

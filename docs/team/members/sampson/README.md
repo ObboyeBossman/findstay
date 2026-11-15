@@ -10,8 +10,8 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| S1-01-T12 | Set up tests that run on a real throwaway database | 1 | Todo | [#21](https://github.com/ObboyeBossman/findstay/issues/21) |
-| S1-01-T16 | Prove staging is alive — server healthy, website reaches the server | 1 | Todo | [#25](https://github.com/ObboyeBossman/findstay/issues/25) |
+| [`S1-01-T12`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T12.md) | Set up tests that run on a real throwaway database | 1 | Todo | [#21](https://github.com/ObboyeBossman/findstay/issues/21) |
+| [`S1-01-T16`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T16.md) | Prove staging is alive — server healthy, website reaches the server | 1 | Todo | [#25](https://github.com/ObboyeBossman/findstay/issues/25) |
 
 ## Impact & Completed Work
 
