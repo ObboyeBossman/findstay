@@ -7,7 +7,7 @@
 - All Sprint 1 system designs (UI/UX wireframes, backend architecture & OpenAPI, database ERD) are documented and reviewed.
 - The empty starter app builds, passes tests (including module-boundary checks), and deploys to staging from CI.
 
-## What this story is about (plain English)
+## What this story is about
 
 Before any feature is built, the team designs the system on paper and sets the project up. By the end of this story every important part of FindStay exists as a drawing — the user flow diagrams (screen-to-screen paths), the screen sketches (wireframes), the backend map with its data-flow diagram, and the database diagram (ERD) — and the shared look (colors, fonts, spacing) is decided in one swappable style file. On the setup side, an empty but working website, server and database are live on staging, with an automatic checker that tests and publishes every change.
 
@@ -34,7 +34,7 @@ Nobody owns this story alone. Its 16 tasks are shared completely across the nine
 | [`S1-01-T15`](./tasks/S1-01-T15.md) | Fill the starter reference lists (room types, billing periods, settings) | `database` | [`S1-01-T9`](./tasks/S1-01-T9.md) | Database & Data | @Ankomah959Julius | Todo |
 | [`S1-01-T16`](./tasks/S1-01-T16.md) | Prove staging is alive — server healthy, website reaches the server | `testing` | [`S1-01-T5`](./tasks/S1-01-T5.md), [`S1-01-T7`](./tasks/S1-01-T7.md), [`S1-01-T11`](./tasks/S1-01-T11.md), [`S1-01-T15`](./tasks/S1-01-T15.md) | QA & Testing | @badu12-png | Todo |
 
-## Who is doing what (plain English)
+## Who is doing what
 
 | Teammate | GitHub | Tasks | What they will have at the end |
 | :--- | :--- | :--- | :--- |
@@ -52,7 +52,7 @@ Nobody owns this story alone. Its 16 tasks are shared completely across the nine
 
 ## The aim of each task — what you will have at the end
 
-Every task ends in a concrete thing you can point at. Open your task file for the full plain-English explanation and checklist.
+Every task ends in a concrete thing you can point at. Open your task file for the full explanation and checklist.
 
 - **[T1](./tasks/S1-01-T1.md)** — the agreed Sprint 1 work list, plus open decisions with proposed answers.
 - **[T2](./tasks/S1-01-T2.md)** — the one style file of colors, fonts and spacing that every screen copies from; swap a color once, the whole app updates.

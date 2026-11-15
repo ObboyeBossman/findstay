@@ -7,7 +7,7 @@ This guide lists every duty and standard task for each role on FindStay. If you 
 ---
 
 ## 1. Product & Requirements
-- **Story Clarity:** Write or refine user stories in plain English so everyone understands what is being built and why.
+- **Story Clarity:** Write or refine user stories in clear language so everyone understands what is being built and why.
 - **Acceptance Criteria:** Write clear `Given / When / Then` or pass/fail acceptance criteria for every story before work begins.
 - **Requirement Traceability:** List all linked requirement IDs (`FR-*`, `NFR-*`, `SEC-*`, `BRL-*`, `CON-*`, `UI-*`) and their priority (`Must`, `Should`, `Could`).
 - **Stakeholder Decisions:** Confirm open decisions (`J-*`, `P-*`) or document an agreed fallback before the story enters the sprint.
