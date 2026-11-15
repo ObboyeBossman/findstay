@@ -9,7 +9,7 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| _None yet_ | | | | |
+| S1-08 | Permanent activity log | 1 | Todo | [#8](https://github.com/ObboyeBossman/findstay/issues/8) |
 
 ## Impact & Completed Work
 
@@ -21,4 +21,4 @@ _No upcoming items assigned yet._
 
 ## Activity Log
 
-_Updates will be recorded here automatically when backlog status or evidence changes._
+- **2026-11-15** — Assigned story **S1-08 (Permanent activity log)** as their single Sprint 1 starter task, tracked as GitHub issue #8. Source: board assignment by the Scrum steward, approved by the Product Owner (issue created from the approved Sprint 1 plan).

@@ -9,7 +9,7 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| _None yet_ | | | | |
+| S1-07 | Owner companies & staff access | 1 | Todo | [#7](https://github.com/ObboyeBossman/findstay/issues/7) |
 
 ## Impact & Completed Work
 
@@ -21,4 +21,4 @@ _No upcoming items assigned yet._
 
 ## Activity Log
 
-_Updates will be recorded here automatically when backlog status or evidence changes._
+- **2026-11-15** — Assigned story **S1-07 (Owner companies & staff access)** as their single Sprint 1 starter task, tracked as GitHub issue #7. Source: board assignment by the Scrum steward, approved by the Product Owner (issue created from the approved Sprint 1 plan).
