@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITS/24/152
 - **Preferred Stack:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @seiduafeadzi
+- **WhatsApp Name:** `CONFIDENCE`
 - **Primary Track:** Track A (Organisation & RBAC)
 
 ## Assigned Stories & Backlog

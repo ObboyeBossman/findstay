@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITS/24/265
 - **Preferred Stack:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @maskkuratahiru-wq
+- **WhatsApp Name:** `Pretty Mash` (`@Mashkura11`)
 - **Primary Track:** Track B (Owner Portal, Verification & Listings)
 
 ## Assigned Stories & Backlog

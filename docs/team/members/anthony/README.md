@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITS/24/155
 - **Preferred Stack:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @dztrb
+- **WhatsApp Name:** `Anthony Maclean`
 - **Primary Track:** Track B (Availability Calendar & Overlap Locks)
 
 ## Assigned Stories & Backlog

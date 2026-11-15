@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITS/24/196
 - **Preferred Stack:** Database *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** _TBD_
+- **WhatsApp Name:** `Ũm_Bèċky💜🎀`
 - **Primary Track:** _TBD_
 
 ## Assigned Stories & Backlog

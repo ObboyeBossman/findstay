@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITD/24/014
 - **Preferred Stack:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @fummey
+- **WhatsApp Name:** `.`
 - **Primary Track:** Track A/B (@Req Tests, UAT & Regression R1)
 
 ## Assigned Stories & Backlog

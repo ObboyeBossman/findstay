@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITS/24/168
 - **Preferred Stack:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @joseibonsu206-gif
+- **WhatsApp Name:** `Big Joe`
 - **Primary Track:** Track A (Backend & Identity)
 
 ## Assigned Stories & Backlog

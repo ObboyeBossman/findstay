@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITS/24/164
 - **Preferred Stack:** Database *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @Ankomah959Julius
+- **WhatsApp Name:** `Mêllø` (`@okyere.julius`)
 - **Primary Track:** Track B (Design System, Wireframes & Mobile 360px)
 
 ## Assigned Stories & Backlog

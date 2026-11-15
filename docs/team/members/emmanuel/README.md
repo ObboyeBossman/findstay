@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITN/24/153
 - **Preferred Stack:** Database *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @surnuel
+- **WhatsApp Name:** `Rockson`
 - **Primary Track:** Track A/B (ERD, Schemas & Flyway V1_01..V1_19)
 
 ## Assigned Stories & Backlog

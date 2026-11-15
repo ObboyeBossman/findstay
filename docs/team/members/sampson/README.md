@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITS/24/161
 - **Preferred Stack:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @badu12-png
+- **WhatsApp Name:** `Big Sam`
 - **Primary Track:** Track A (Notifications & Integrations)
 
 ## Assigned Stories & Backlog

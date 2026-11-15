@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITS/24/197
 - **Preferred Stack:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @ObboyeBossman
+- **WhatsApp Name:** _Not recorded yet_
 - **Primary Track:** Track A (Platform, Cloud, R2, Security & Audit)
 
 ## Assigned Stories & Backlog

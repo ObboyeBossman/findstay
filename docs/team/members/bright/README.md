@@ -3,6 +3,7 @@
 - **Index Number:** BC/ITS/24/156
 - **Preferred Stack:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @kwesipaa643-sys
+- **WhatsApp Name:** `K.Genius😊👌` (`@K.Genius1`)
 - **Primary Track:** Track A/B (Requirements, Privacy & Admin)
 
 ## Assigned Stories & Backlog
