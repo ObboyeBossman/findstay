@@ -44,3 +44,8 @@ npm run sync:project           # authenticated GitHub board refresh; deliberate,
 ```
 
 Do not edit generated `dist/` output or commit secrets. When configuration changes, update the appropriate checked-in `.env.example` without values. Keep a change focused; update requirements, decision, or evidence documents only when the behaviour or delivery record changes.
+
+## Git workflow & identity
+
+- Work on `dev`; never push directly to protected branches (`main`, `staging`).
+- Ensure the local Git commit identity is set to `ObboyeBossman` (`obboyebossman@gmail.com`) before committing.

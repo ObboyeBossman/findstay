@@ -18,7 +18,7 @@ Before editing:
 3. Use the existing `dev` branch. This mode commits directly to `dev` by design. Never push directly to `main`, `staging`, or any other protected or release branch unless the user explicitly names and authorizes it. Moving work from `dev` into `staging` or `main` happens only via PR or when the user explicitly asks.
 4. Confirm that the branch tracks its remote and is neither ahead nor diverged. Do not pull, merge, rebase, create a branch, or rewrite history without direction.
 5. Perform a non-mutating authentication check. If it fails, request credentials through the platform's secure mechanism and do not begin edits.
-6. Verify the existing commit identity with `git config user.name` and `git config user.email`. If either is missing, stop and ask the user to configure it. Never invent, replace, or persist an identity on the user's behalf unless explicitly instructed.
+6. Ensure the commit identity (`git config user.name` and `git config user.email`) is set to `ObboyeBossman` and `obboyebossman@gmail.com` before committing.
 7. State the active branch and that strict file-checkpoint mode is enabled.
 
 ## Mandatory per-file cycle
