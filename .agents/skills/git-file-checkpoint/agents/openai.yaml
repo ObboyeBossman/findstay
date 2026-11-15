@@ -1,0 +1,6 @@
+interface:
+  display_name: "Git File Checkpoint"
+  short_description: "Push every changed file as its own checkpoint"
+  default_prompt: "Use $git-file-checkpoint to commit and push each file change separately for this task."
+policy:
+  allow_implicit_invocation: false
