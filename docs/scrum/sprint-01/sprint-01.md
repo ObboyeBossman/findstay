@@ -5,7 +5,7 @@
 | **Weeks** | Weeks 1–2 |
 | **Release** | Phase 1, Release `R1` (Owner and administrator pilot release) |
 | **Requirement Items** | 108 |
-| **Related Docs** | [Acceptance Criteria](./acceptance-criteria/acceptance-criteria.md) · [Settled Decisions](./decisions/settled-decisions.md) · [Scrum Rules](../scrum-rules.md) |
+| **Related Docs** | [Acceptance Criteria Index](./acceptance-criteria/acceptance-criteria.md) · [Settled Decisions](./decisions/settled-decisions.md) · [Scrum Rules](../scrum-rules.md) |
 
 ---
 
@@ -27,23 +27,23 @@ A verified property owner can register, get their company space, invite staff, s
 
 | Story | Title | Priority | Track | Days | Link |
 |-------|-------|:--------:|:-----:|:----:|------|
-| `S1-01` | Project setup & system design | Must | A | D1–D3 | [S1-01-project-setup-and-design.md](./stories/S1-01-project-setup-and-design.md) |
-| `S1-02` | Live hosting & daily backups | Must | A | D2–D4 | [S1-02-live-hosting-and-backups.md](./stories/S1-02-live-hosting-and-backups.md) |
-| `S1-03` | Mobile & desktop page layouts | Must | B | D2–D5 | [S1-03-responsive-page-layouts.md](./stories/S1-03-responsive-page-layouts.md) |
-| `S1-04` | Sign-up, confirmation & sign-in | Must | A | D2–D5 | [S1-04-auth-and-sign-in.md](./stories/S1-04-auth-and-sign-in.md) |
-| `S1-05` | Password reset & user profile | Must | A | D5–D6 | [S1-05-password-reset-and-profile.md](./stories/S1-05-password-reset-and-profile.md) |
-| `S1-06` | Role permissions & safe access | Must | A | D4–D6 | [S1-06-rbac-and-security.md](./stories/S1-06-rbac-and-security.md) |
-| `S1-07` | Owner companies & staff access | Must | A | D4–D7 | [S1-07-organisations-and-staff-access.md](./stories/S1-07-organisations-and-staff-access.md) |
-| `S1-08` | Permanent activity log | Should | A | D5–D7 | [S1-08-audit-trail.md](./stories/S1-08-audit-trail.md) |
-| `S1-09` | Photo & document uploads | Must | B | D4–D6 | [S1-09-photo-and-document-uploads.md](./stories/S1-09-photo-and-document-uploads.md) |
-| `S1-10` | Email, SMS & in-app alerts | Must | A | D5–D7 | [S1-10-notifications-and-alerts.md](./stories/S1-10-notifications-and-alerts.md) |
-| `S1-11` | Privacy notice & user consent | Should | A | D6–D7 | [S1-11-privacy-and-consent.md](./stories/S1-11-privacy-and-consent.md) |
-| `S1-12` | Owner ID & property verification | Must | B | D6–D8 | [S1-12-owner-verification.md](./stories/S1-12-owner-verification.md) |
-| `S1-13` | Create properties, rooms & prices | Must | B | D4–D8 | [S1-13-properties-units-and-rates.md](./stories/S1-13-properties-units-and-rates.md) |
-| `S1-14` | Availability calendar & owner blocks | Must | B | D7–D8 | [S1-14-availability-calendar.md](./stories/S1-14-availability-calendar.md) |
-| `S1-15` | Approval queue & publishing | Must | B | D7–D8 | [S1-15-approval-queue-and-publishing.md](./stories/S1-15-approval-queue-and-publishing.md) |
-| `S1-16` | User management, settings & dashboard | Should | B | D6–D8 | [S1-16-user-management-and-settings.md](./stories/S1-16-user-management-and-settings.md) |
-| `S1-17` | Stabilise, regression & release `R1` | Must | A | D9–D10 | [S1-17-stabilise-and-release-r1.md](./stories/S1-17-stabilise-and-release-r1.md) |
+| `S1-01` | Project setup & system design | Must | A | D1–D3 | [S1-01](./stories/S1-01/README.md) |
+| `S1-02` | Live hosting & daily backups | Must | A | D2–D4 | [S1-02](./stories/S1-02/README.md) |
+| `S1-03` | Mobile & desktop page layouts | Must | B | D2–D5 | [S1-03](./stories/S1-03/README.md) |
+| `S1-04` | Sign-up, confirmation & sign-in | Must | A | D2–D5 | [S1-04](./stories/S1-04/README.md) |
+| `S1-05` | Password reset & user profile | Must | A | D5–D6 | [S1-05](./stories/S1-05/README.md) |
+| `S1-06` | Role permissions & safe access | Must | A | D4–D6 | [S1-06](./stories/S1-06/README.md) |
+| `S1-07` | Owner companies & staff access | Must | A | D4–D7 | [S1-07](./stories/S1-07/README.md) |
+| `S1-08` | Permanent activity log | Should | A | D5–D7 | [S1-08](./stories/S1-08/README.md) |
+| `S1-09` | Photo & document uploads | Must | B | D4–D6 | [S1-09](./stories/S1-09/README.md) |
+| `S1-10` | Email, SMS & in-app alerts | Must | A | D5–D7 | [S1-10](./stories/S1-10/README.md) |
+| `S1-11` | Privacy notice & user consent | Should | A | D6–D7 | [S1-11](./stories/S1-11/README.md) |
+| `S1-12` | Owner ID & property verification | Must | B | D6–D8 | [S1-12](./stories/S1-12/README.md) |
+| `S1-13` | Create properties, rooms & prices | Must | B | D4–D8 | [S1-13](./stories/S1-13/README.md) |
+| `S1-14` | Room availability calendar | Must | B | D7–D8 | [S1-14](./stories/S1-14/README.md) |
+| `S1-15` | Admin review & listing approval | Must | B | D7–D8 | [S1-15](./stories/S1-15/README.md) |
+| `S1-16` | Admin dashboard, users & settings | Should | B | D6–D8 | [S1-16](./stories/S1-16/README.md) |
+| `S1-17` | Final testing & Release `R1` | Must | A | D9–D10 | [S1-17](./stories/S1-17/README.md) |
 
 ---
 
@@ -59,6 +59,6 @@ A verified property owner can register, get their company space, invite staff, s
 ---
 
 ## 5. Key Risks
-- **Foundation Delay:** If the walking skeleton (`S1-01`) is not live by Day 3, pause feature work until it is.
+- **Foundation Delay:** If project setup & system design (`S1-01`) is not live by Day 3, pause feature work until it is.
 - **SMS Approval:** If Ghana SMS sender-ID approval takes past Day 2, launch `R1` with email-only OTP fallback (`P-08`).
 - **Hosting Limits:** Verify Cloudflare R2 buckets and Render non-sleeping hosting on Day 2.
