@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FindStay Sprint 1 — Foundation &amp; Verified Owner Listings</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap">
+<style>
+:root{
+  --bg:#ffffff; --bg2:#f6f6f7; --ink:#18181b; --mut:#52525b; --mut2:#71717a;
+  --card:#fafafa; --card2:#f1f1f3; --line:#e4e4e7; --line2:#d4d4d8;
+  --acc:#b8643f; --acc2:#d4835c; --accDeep:#8e4a2c;
+  --sage:#5e7050; --sageDeep:#4d5d41; --sagePale:#d3dccb;
+  --sand:#f1ede6; --dusk:#d4a296; --gold:#c89a4f;
+  --nav:#ffffff; --shadow:0 24px 48px -24px rgba(24,24,27,.10);
+  --hero-bg:radial-gradient(ellipse 60% 45% at 50% 40%,rgba(184,100,63,.16),transparent 70%),linear-gradient(180deg,#ffffff 0%,#f7f5f0 55%,#ece8e0 100%);
+  --hero-mtn-back:#dcd6cb; --hero-mtn-front:#c8c0b3; --hero-fig:#b8643f;
+  box-sizing:border-box;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  color-scheme:dark;
+  --bg:#141414; --bg2:#18181b; --ink:#ececee; --mut:#9b9ba1; --mut2:#71717a;
+  --card:#1f1f23; --card2:#26262b; --line:#27272a; --line2:#36363b;
+  --acc:#d4835c; --acc2:#e89a73; --accDeep:#b8643f;
+  --sage:#9bb086; --sageDeep:#869c70; --sagePale:#3f4d36;
+  --sand:#232327; --dusk:#7a5a52; --gold:#c89a4f;
+  --nav:#141414; --shadow:0 30px 60px -30px rgba(0,0,0,.65);
+  --hero-bg:radial-gradient(ellipse 60% 45% at 50% 40%,rgba(184,100,63,.26),transparent 70%),linear-gradient(180deg,#141414 0%,#1f1f24 55%,#141414 100%);
+  --hero-mtn-back:#2a2a30; --hero-mtn-front:#18181c; --hero-fig:#eadfca;
+}}
+:root[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#141414; --bg2:#18181b; --ink:#ececee; --mut:#9b9ba1; --mut2:#71717a;
+  --card:#1f1f23; --card2:#26262b; --line:#27272a; --line2:#36363b;
+  --acc:#d4835c; --acc2:#e89a73; --accDeep:#b8643f;
+  --sage:#9bb086; --sageDeep:#869c70; --sagePale:#3f4d36;
+  --sand:#232327; --dusk:#7a5a52; --gold:#c89a4f;
+  --nav:#141414; --shadow:0 30px 60px -30px rgba(0,0,0,.65);
+  --hero-bg:radial-gradient(ellipse 60% 45% at 50% 40%,rgba(184,100,63,.26),transparent 70%),linear-gradient(180deg,#141414 0%,#1f1f24 55%,#141414 100%);
+  --hero-mtn-back:#2a2a30; --hero-mtn-front:#18181c; --hero-fig:#eadfca;
+}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:400 16px/1.65 var(--sans);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+main,header,footer{position:relative;z-index:1}
+.s{font-family:var(--serif);font-weight:500}
+em{font-style:italic}
+
+header{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb,var(--nav) 90%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px max(20px,4vw);
+  border-bottom:1px solid var(--line);
+  transition:padding .3s;
+}
+header.scrolled{padding:10px max(20px,4vw)}
+.logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:.02em;
+  color:inherit;text-decoration:none;
+}
+.logo-icon{width:28px;height:28px;flex:none}
+.logo-icon path{transition:stroke .3s}
+nav{display:flex;gap:clamp(14px,2.4vw,28px)}
+nav a{
+  color:var(--ink);text-decoration:none;opacity:.7;
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  transition:opacity .25s,color .25s;position:relative;
+}
+nav a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--acc);transition:width .3s}
+nav a:hover{opacity:1;color:var(--acc)}
+nav a:hover::after{width:100%}
+.pill{
+  border:1px solid var(--line2);background:none;color:inherit;
+  border-radius:99px;padding:9px 16px;cursor:pointer;
+  font-family:inherit;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  transition:.25s;display:inline-flex;align-items:center;gap:6px;
+}
+.pill:hover,.pill.on{background:var(--acc);border-color:var(--acc);color:#fff}
+@media(max-width:820px){nav{display:none}}
+
+.hero{
+  position:relative;overflow:hidden;
+  min-height:92vh;display:grid;place-items:center;
+  text-align:center;color:var(--ink);
+  padding:70px 20px 150px;
+  background:var(--hero-bg);
+}
+.hero-svg{position:absolute;inset:auto 0 0;width:100%;height:42%}
+.hc{position:relative;max-width:820px}
+.eb{
+  display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;
+  letter-spacing:.3em;font-size:11.5px;text-transform:uppercase;color:var(--mut);margin-bottom:10px;
+}
+.eb u{width:42px;border-top:1px solid var(--line2);text-decoration:none}
+.hero h1{
+  font-family:var(--serif);font-size:clamp(70px,15vw,170px);
+  line-height:1;margin:.12em 0 .1em;font-weight:400;letter-spacing:-.01em;color:var(--ink);
+}
+.tg{
+  font-style:italic;font-size:clamp(20px,2.7vw,29px);
+  line-height:1.4;max-width:620px;margin:0 auto 30px;color:var(--mut);
+  font-family:var(--serif);font-weight:400;
+}
+.cta{
+  display:inline-block;padding:18px 36px;
+  border:1px solid var(--line2);border-radius:99px;
+  background:color-mix(in srgb,var(--card) 85%,transparent);color:var(--ink);text-decoration:none;transition:.25s;
+  font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+}
+.cta:hover{background:var(--acc);border-color:var(--acc);color:#fff}
+.stats{
+  display:flex;justify-content:center;gap:clamp(18px,5vw,56px);
+  margin-top:40px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);
+}
+.stats b{
+  display:block;font-size:44px;letter-spacing:0;line-height:1;color:var(--acc);
+  font-family:var(--serif);font-weight:500;
+}
+.br{
+  position:absolute;left:22px;bottom:20px;
+  display:flex;gap:10px;align-items:center;
+  font-size:12px;text-align:left;font-style:italic;opacity:.8;
+}
+.br i{
+  width:30px;height:30px;border-radius:50%;background:var(--acc);
+  animation:breathe-dot 5s ease-in-out infinite;
+}
+@keyframes breathe-dot{50%{transform:scale(1.5);opacity:.5}}
+
+section{
+  max-width:1180px;margin:0 auto;
+  padding:clamp(70px,10vw,120px) 20px;
+  position:relative;
+}
+.js section{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.js section.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.js section{opacity:1;transform:none}}
+
+.k{
+  color:var(--acc);margin:0 0 14px;
+  font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.k::before{content:"";width:24px;height:1px;background:var(--acc)}
+h2{
+  font-family:var(--serif);font-size:clamp(34px,5vw,60px);
+  line-height:1.04;margin:0 0 18px;font-weight:500;letter-spacing:-.01em;
+}
+h2 em{color:var(--acc);font-weight:400}
+h3{margin:6px 0;font-size:18px;font-family:var(--serif);font-weight:500}
+.lead{color:var(--mut);max-width:640px;margin:0 0 8px;font-size:17px;line-height:1.7}
+.mut{color:var(--mut);font-size:13px}
+
+.plain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:30px}
+.plain-card{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;
+  border-top:3px solid var(--acc);
+}
+.plain-card:nth-child(2){border-top-color:var(--sage)}
+.plain-card:nth-child(3){border-top-color:var(--gold)}
+.plain-card h3{margin:0 0 8px;font-size:21px}
+.plain-card p{margin:0;color:var(--mut);font-size:14px;line-height:1.7}
+.plain-card strong{color:var(--ink)}
+.vision-card{
+  margin-top:18px;padding:28px 30px;border-radius:20px;
+  background:var(--bg2);border:1px solid var(--line);border-left:4px solid var(--acc);
+}
+.vision-card h3{margin:0 0 10px;font-size:27px}
+.vision-card p{margin:0;max-width:940px;color:var(--mut);font-size:15px;line-height:1.8}
+.vision-card strong{color:var(--ink);font-weight:600}
+.rhythm{margin-top:30px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.rhythm-step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 12px;min-width:0}
+.rhythm-step b{display:block;color:var(--acc);font-family:var(--serif);font-size:21px;font-weight:500;line-height:1.1}
+.rhythm-step span{display:block;margin-top:7px;color:var(--mut);font-size:12px;line-height:1.5}
+@media(max-width:760px){.rhythm{grid-template-columns:repeat(2,1fr)}}
+.release-note{
+  margin-top:34px;padding:26px 28px;border-radius:20px;background:var(--bg2);
+  border:1px solid var(--line);border-left:4px solid var(--sage);
+}
+.release-note h3{font-size:26px;margin:0 0 8px}
+.release-note p{margin:0;color:var(--mut);max-width:760px;font-size:14px}
+.proof-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:18px}
+.proof-list span{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.55;color:var(--ink)}
+.proof-list i{display:grid;place-items:center;width:21px;height:21px;flex:none;border-radius:50%;background:var(--sage);color:#fff;font-style:normal;font-size:12px}
+
+.journey{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:24px;padding:36px 24px;
+  margin-top:36px;position:relative;overflow:hidden;
+}
+.journey::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--acc),var(--gold),var(--sage));
+}
+.jr{display:flex;overflow-x:auto;margin:0;padding:0;scroll-snap-type:x mandatory;gap:8px}
+.jr::-webkit-scrollbar{height:6px}
+.jr::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
+.nd{
+  flex:1;min-width:130px;background:none;border:0;color:inherit;cursor:pointer;
+  position:relative;font:500 13px/1.3 var(--sans);padding:8px 4px 0;
+  scroll-snap-align:start;
+}
+.nd .ic{
+  width:56px;height:56px;border-radius:50%;
+  border:1.5px solid var(--line2);
+  display:grid;place-items:center;margin:0 auto 12px;
+  background:var(--bg);position:relative;z-index:2;
+  transition:.35s cubic-bezier(.22,1,.36,1);
+}
+.nd .ic svg{width:26px;height:26px;stroke:var(--mut);fill:none;stroke-width:1.5;transition:.35s}
+.nd:not(:last-child)::after{
+  content:"";position:absolute;top:36px;left:calc(50% + 30px);right:calc(-50% + 30px);
+  height:1.5px;background:var(--line2);transition:.35s;
+}
+.nd.p::after{background:var(--acc)}
+.nd.p .ic{border-color:var(--acc)}
+.nd.p .ic svg{stroke:var(--acc)}
+.nd.on .ic{
+  background:var(--acc);border-color:var(--acc);transform:scale(1.1);
+  box-shadow:0 12px 24px -8px var(--acc);
+}
+.nd.on .ic svg{stroke:#fff}
+.nd span.lbl{display:block;color:var(--ink);font-size:12px}
+.nd.on span.lbl{color:var(--acc);font-weight:600}
+.jd{
+  margin-top:28px;padding:24px;
+  background:var(--bg);border-radius:16px;
+  border:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;
+}
+.jd b{font-family:var(--serif);font-size:24px;font-weight:500}
+.jd p{margin:6px 0 0;max-width:600px;color:var(--mut);line-height:1.65;font-size:14px}
+
+.arch{
+  margin-top:36px;background:var(--card);
+  border:1px solid var(--line);border-radius:24px;
+  padding:24px;position:relative;overflow:hidden;
+}
+.arch svg{width:100%;height:auto;display:block}
+.arch-legend{
+  display:flex;gap:20px;flex-wrap:wrap;
+  margin-top:20px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:11px;color:var(--mut);letter-spacing:.05em;
+}
+.arch-legend span{display:inline-flex;align-items:center;gap:8px}
+.arch-legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+
+.f{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 12px}
+.tl-wrap{
+  margin-top:36px;background:var(--card);
+  border:1px solid var(--line);border-radius:24px;padding:44px 36px 36px;
+}
+.vtl{
+  position:relative;max-width:960px;margin:0 auto;padding:18px 0;
+}
+.vtl::before{
+  content:"";position:absolute;top:0;bottom:0;left:50%;
+  width:2px;transform:translateX(-50%);
+  background:var(--line2);
+}
+.vtl-item{
+  --c:var(--acc);
+  position:relative;display:grid;grid-template-columns:1fr 1fr;
+  margin-bottom:12px;
+}
+.vtl-item+.vtl-item{margin-top:-28px}
+.vtl-item:last-child{margin-bottom:0}
+.vtl-item.track-b{--c:var(--sage)}
+.vtl-item.should{--c:var(--gold)}
+.vtl-axis{
+  position:absolute;left:50%;top:30px;transform:translate(-50%,-50%);
+  width:52px;height:52px;border-radius:50%;
+  background:transparent;border:2.5px solid var(--c);
+  display:grid;place-items:center;z-index:2;
+  transition:transform .25s;
+}
+.vtl-axis::after{
+  content:"";width:20px;height:20px;border-radius:50%;background:var(--c);
+}
+.vtl-card{
+  position:relative;display:flex;flex-direction:column;
+  background:none;border:0;padding:0;color:inherit;font:inherit;
+  cursor:pointer;text-align:left;transition:transform .25s;
+}
+.vtl-card:focus-visible{outline:2px solid var(--c);outline-offset:8px;border-radius:12px}
+.vtl-item.right .vtl-card{
+  grid-column:2;padding-left:25px;align-items:flex-end;text-align:right;
+}
+.vtl-item.left .vtl-card{
+  grid-column:1;padding-right:25px;align-items:flex-start;text-align:left;
+}
+.vtl-arm-row{
+  width:100%;min-height:60px;display:flex;align-items:center;gap:0;
+}
+.vtl-item.left .vtl-arm-row{flex-direction:row-reverse}
+.vtl-line{
+  flex:1;height:2.5px;background:var(--c);min-width:36px;
+}
+.vtl-dot{
+  flex:none;width:18px;height:18px;border-radius:50%;background:var(--c);
+  margin-left:-1px;margin-right:16px;
+}
+.vtl-item.left .vtl-dot{
+  margin-left:16px;margin-right:-1px;
+}
+.vtl-num-wrap{
+  flex:none;display:flex;flex-direction:column;line-height:1;
+}
+.vtl-item.right .vtl-num-wrap{align-items:flex-end}
+.vtl-item.left .vtl-num-wrap{align-items:flex-start}
+.vtl-num{
+  font:500 clamp(40px,4.5vw,52px)/.9 var(--sans);color:var(--c);letter-spacing:-.03em;
+}
+.vtl-days{
+  margin-top:4px;font-size:10px;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--mut);
+}
+.vtl-banner{
+  margin-top:10px;padding:8px 18px;border-radius:3px;
+  background:var(--c);color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:8px;max-width:100%;
+  box-shadow:0 6px 16px -6px color-mix(in srgb,var(--c) 55%,transparent);
+  transition:transform .2s,box-shadow .2s;
+}
+.vtl-banner svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.8;flex:none}
+.vtl-body{
+  margin-top:14px;max-width:380px;display:flex;flex-direction:column;gap:8px;
+}
+.vtl-summary{
+  margin:0;font-size:14px;font-weight:500;color:var(--ink);line-height:1.55;
+}
+.vtl-points{
+  margin:2px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;
+  font-size:13px;color:var(--mut);line-height:1.55;
+}
+.vtl-points li::before{content:"- "}
+.vtl-meta{
+  margin-top:6px;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--c);
+}
+.vtl-item.right .vtl-meta{justify-content:flex-end}
+.vtl-item.left .vtl-meta{justify-content:flex-start}
+.vtl-item:hover .vtl-axis{transform:translate(-50%,-50%) scale(1.08)}
+.vtl-card:hover .vtl-banner{transform:translateY(-2px);box-shadow:0 10px 22px -6px color-mix(in srgb,var(--c) 70%,transparent)}
+.tl-legend{
+  display:flex;justify-content:center;gap:24px;flex-wrap:wrap;
+  margin-top:34px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--mut);
+}
+.tl-legend span{display:inline-flex;align-items:center;gap:8px}
+.tl-legend i{display:inline-block;width:12px;height:12px;border-radius:50%}
+@media(max-width:760px){
+  .tl-wrap{padding:28px 18px 24px}
+  .vtl::before{left:22px;transform:none}
+  .vtl-item,.vtl-item+.vtl-item{grid-template-columns:1fr;margin-top:0;margin-bottom:32px}
+  .vtl-axis{left:22px;top:26px;width:40px;height:40px}
+  .vtl-axis::after{width:15px;height:15px}
+  .vtl-item.right .vtl-card,.vtl-item.left .vtl-card{
+    grid-column:1;padding-left:41px;padding-right:0;align-items:flex-start;text-align:left;
+  }
+  .vtl-item.right .vtl-arm-row,.vtl-item.left .vtl-arm-row{flex-direction:row;min-height:52px}
+  .vtl-line{flex:none;width:28px;min-width:28px}
+  .vtl-dot,.vtl-item.left .vtl-dot{width:15px;height:15px;margin-left:-1px;margin-right:12px}
+  .vtl-item.right .vtl-num-wrap,.vtl-item.left .vtl-num-wrap{align-items:flex-start}
+  .vtl-item.right .vtl-meta,.vtl-item.left .vtl-meta{justify-content:flex-start}
+  .vtl-body{max-width:100%}
+  .vtl-item:hover .vtl-axis{transform:translate(-50%,-50%) scale(1.05)}
+}
+
+.ck{
+  display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;
+  background:none;border:none;border-bottom:1px solid var(--line);
+  padding:14px 4px;color:inherit;font:inherit;font-size:14px;cursor:pointer;
+  transition:.2s;
+}
+.ck:hover{color:var(--acc)}
+.ck span{
+  flex:none;width:22px;height:22px;border-radius:7px;
+  border:2px solid var(--line2);margin-top:1px;
+  display:grid;place-items:center;transition:.25s;color:#fff;font-size:13px;
+}
+.ck.on span{background:var(--acc);border-color:var(--acc)}
+.ck.on span::after{content:"✓"}
+.ck.on{color:var(--mut)}
+.ck.on>div{text-decoration:line-through;text-decoration-color:var(--acc)}
+.rg{
+  --p:0;width:140px;height:140px;border-radius:50%;
+  background:conic-gradient(var(--acc) calc(var(--p)*360deg),var(--line) 0);
+  display:grid;place-items:center;margin:0 auto 10px;position:relative;
+  transition:background .5s;
+}
+.rg::before{content:"";position:absolute;inset:11px;border-radius:50%;background:var(--card)}
+.rg b{position:relative;font-family:var(--serif);font-size:32px;font-weight:500}
+
+.demo-path{
+  margin-top:36px;position:relative;
+  background:var(--card);border:1px solid var(--line);border-radius:24px;
+  padding:30px 20px;overflow:hidden;
+}
+.demo-svg{width:100%;height:auto;display:block}
+.demo-list{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:12px;margin-top:24px;
+}
+.st{
+  display:flex;gap:12px;align-items:center;width:100%;text-align:left;
+  background:var(--bg);border:1px solid var(--line);border-radius:14px;
+  padding:14px 16px;color:inherit;font:inherit;font-size:13px;cursor:pointer;
+  transition:.25s;
+}
+.st:hover{border-color:var(--acc)}
+.st span{
+  flex:none;width:34px;height:34px;border-radius:50%;
+  border:1.5px solid var(--acc);display:grid;place-items:center;
+  font:500 16px var(--serif);color:var(--acc);background:var(--card);
+}
+.st.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,var(--bg))}
+.st.on span{background:var(--acc);color:#fff}
+.bar{height:6px;border-radius:6px;background:var(--line);margin-top:20px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--gold));transition:width .5s}
+
+.req-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px}
+.req-overlay[hidden]{display:none}
+.req-backdrop{position:absolute;inset:0;background:rgba(25,20,16,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.req-modal{
+  position:relative;width:min(1020px,calc(100vw - 48px));height:min(800px,calc(100vh - 48px));
+  display:flex;flex-direction:column;overflow:hidden;
+  background:var(--bg);border:1px solid var(--line);border-radius:22px;box-shadow:0 40px 90px -24px rgba(0,0,0,.45);
+}
+.req-modal-head{flex:none;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;padding:20px 28px 18px;border-bottom:1px solid var(--line);background:var(--bg)}
+.req-head-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.gate-badge{
+  --gp:0;--gc:var(--acc);
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 13px 6px 8px;border-radius:999px;
+  border:1px solid var(--line);background:var(--bg2);color:var(--mut);
+  font:600 12px/1 var(--sans);cursor:default;user-select:none;
+}
+.gate-badge.done-gate{--gc:var(--sageDeep)}
+.gate-badge.complete{border-color:color-mix(in srgb,var(--sageDeep) 45%,var(--line));background:color-mix(in srgb,var(--sage) 14%,var(--card));color:var(--ink)}
+.gate-ring{
+  width:16px;height:16px;border-radius:50%;flex:none;position:relative;
+  background:conic-gradient(var(--gc) calc(var(--gp)*360deg),var(--line2) 0);
+  display:grid;place-items:center;
+}
+.gate-ring::before{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--bg2)}
+.gate-badge.complete .gate-ring::before{background:color-mix(in srgb,var(--sage) 14%,var(--card))}
+.gate-pct{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:700}
+.status-stats-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:20px 0 26px;
+}
+.status-stat-card{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:18px 20px;border-radius:16px;background:var(--card);border:1px solid var(--line);
+}
+.status-stat-card h4{margin:4px 0 4px;font-family:var(--serif);font-size:21px;font-weight:500;color:var(--ink)}
+.status-stat-card p{margin:0;font-size:13px;color:var(--mut);line-height:1.45}
+.status-stat-card .rg{width:68px;height:68px;margin:0;flex:none}
+.status-stat-card .rg::before{inset:8px}
+.status-stat-card .rg b{font-size:18px}
+.status-group-head{
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  margin:28px 0 10px;
+}
+.status-group-head h4{margin:0;font-size:15px;font-weight:600;color:var(--ink)}
+.status-group-head span{font-size:12px;color:var(--mut);font-weight:500}
+.chk-list{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:4px 18px}
+.chk-list .ck:last-child{border-bottom:none}
+.chk-badge{
+  margin-left:auto;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;flex:none;
+}
+.chk-badge.todo{background:var(--bg2);color:var(--mut);border:1px solid var(--line)}
+.chk-badge.ok{background:color-mix(in srgb,var(--sage) 18%,var(--card));color:var(--sageDeep);border:1px solid color-mix(in srgb,var(--sage) 40%,transparent)}
+@media(max-width:640px){.status-stats-grid{grid-template-columns:1fr}}
+.req-kicker{margin:0 0 6px;color:var(--acc);font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600}
+.req-modal h2{font-size:clamp(22px,2.4vw,30px);line-height:1.15;margin:0}
+.req-close{width:36px;height:36px;display:grid;place-items:center;flex:none;border:1px solid var(--line2);border-radius:50%;background:var(--card);color:var(--ink);cursor:pointer;font:300 26px/1 var(--sans);transition:.2s}
+.req-close:hover{background:var(--acc);border-color:var(--acc);color:#fff}
+.story-shell{flex:1;min-height:0;display:grid;grid-template-columns:232px 1fr}
+.story-nav{
+  display:flex;flex-direction:column;gap:4px;
+  padding:20px 14px;border-right:1px solid var(--line);background:var(--bg);
+  overflow-y:auto;
+}
+.story-nav button{
+  width:100%;text-align:left;
+  display:flex;align-items:center;gap:11px;
+  padding:10px 12px;border:none;border-radius:10px;
+  background:transparent;color:var(--mut);
+  font:500 14px/1.25 var(--sans);cursor:pointer;transition:background .15s,color .15s;
+}
+.story-nav button:hover{background:var(--bg2);color:var(--ink)}
+.story-nav button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.story-nav button.on{
+  background:var(--bg2);color:var(--ink);font-weight:600;
+}
+.story-nav .nav-ic{
+  flex:none;width:18px;height:18px;display:grid;place-items:center;color:currentColor;
+}
+.story-nav .nav-ic svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.story-nav button.on .nav-ic{color:var(--acc)}
+.story-nav .nav-text{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.story-nav .nav-count{
+  font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;
+  background:var(--card);border:1px solid var(--line);color:var(--mut);
+  font-variant-numeric:tabular-nums;
+}
+.story-nav button.on .nav-count{border-color:color-mix(in srgb,var(--acc) 35%,var(--line));color:var(--acc)}
+.story-content{
+  flex:1;min-height:0;overflow-y:auto;
+  padding:28px 36px 44px;margin-right:4px;
+}
+.story-content:focus-visible{outline:none}
+.story-content h3{font-family:var(--serif);font-size:clamp(22px,2.4vw,28px);line-height:1.25;margin:0;color:var(--ink)}
+.story-sec-lead{margin:6px 0 0;color:var(--mut);font-size:14px;line-height:1.6}
+.set-rows{margin-top:20px;border-top:1px solid var(--line)}
+.set-row{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}
+.set-row span:first-child{color:var(--mut);flex:none}
+.set-row span:last-child{text-align:right;font-weight:500;color:var(--ink)}
+.req-sec-group{margin-top:24px}
+.req-sec-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid var(--line);
+}
+.req-sec-head h4{
+  margin:0;font-family:var(--sans);font-size:12px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--acc);
+}
+.req-sec-head span{font-size:12px;color:var(--mut);font-weight:500}
+.req-num-list{
+  margin:0;padding:0;list-style:none;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  overflow:hidden;
+}
+.req-num-item{
+  display:flex;align-items:baseline;gap:12px;
+  padding:13px 18px;border-bottom:1px solid var(--line);
+  font-size:14.5px;line-height:1.55;color:var(--ink);
+}
+.req-num-item:last-child{border-bottom:none}
+.req-num-idx{
+  flex:none;min-width:22px;font-weight:700;color:var(--acc);
+  font-variant-numeric:tabular-nums;
+}
+.req-num-text{flex:1;color:var(--ink)}
+.req-id-pill{
+  flex:none;display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;
+  background:var(--bg2);color:var(--mut);border:1px solid var(--line);
+  font-size:11px;font-weight:600;letter-spacing:.04em;
+}
+.ac-group-card{
+  padding:20px 22px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin-top:18px;
+}
+.ac-group-card h4{
+  margin:0 0 12px;font-family:var(--serif);font-size:20px;font-weight:500;color:var(--ink);
+}
+.ac-req-list{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.ac-req-box{
+  padding:16px 18px;border-radius:14px;background:var(--card);border:1px solid var(--line);
+}
+.ac-req-box-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.ac-req-box-head strong{font-size:14.5px;font-weight:600;color:var(--ink)}
+/* Clean, inset pill scrollbars without arrow buttons */
+.story-nav::-webkit-scrollbar{height:6px}
+.story-nav::-webkit-scrollbar-track{background:transparent;margin:0 36px}
+.story-nav::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 16%,transparent);border-radius:999px}
+.story-nav::-webkit-scrollbar-thumb:hover{background:color-mix(in srgb,var(--ink) 30%,transparent)}
+.story-nav::-webkit-scrollbar-button{display:none;width:0;height:0}
+.story-content::-webkit-scrollbar{width:8px}
+.story-content::-webkit-scrollbar-track{background:transparent;margin:14px 0}
+.story-content::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 20%,transparent);border-radius:999px;border:2px solid transparent;background-clip:padding-box}
+.story-content::-webkit-scrollbar-thumb:hover{background-color:color-mix(in srgb,var(--ink) 36%,transparent)}
+.story-content::-webkit-scrollbar-button{display:none;width:0;height:0}
+@supports not selector(::-webkit-scrollbar){.story-nav,.story-content{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--ink) 20%,transparent) transparent}}
+.req-why{padding:18px 20px;border-radius:14px;background:var(--bg2);border-left:3px solid var(--sage)}
+.req-why b{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--sageDeep)}
+.req-why p{margin:6px 0 0;color:var(--mut);font-size:14px;line-height:1.65}
+.story-summary{font-family:var(--serif);font-size:clamp(24px,2.8vw,32px);line-height:1.3;margin:0;color:var(--ink)}
+.story-section-label{margin:28px 0 10px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mut)}
+.acceptance-list{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:9px}
+.acceptance-list li{position:relative;padding-left:26px;color:var(--mut);font-size:14px;line-height:1.6}
+.acceptance-list li::before{content:"✓";position:absolute;left:0;top:0;color:var(--sageDeep);font-weight:700}
+.sec-head{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:18px;
+}
+.sec-head h2{margin-bottom:0}
+.roles-trigger{
+  flex:none;width:48px;height:48px;border-radius:14px;
+  border:1px solid var(--line2);background:var(--card);color:var(--acc);
+  display:grid;place-items:center;cursor:pointer;
+  box-shadow:0 10px 24px -10px rgba(42,36,32,.18);
+  transition:transform .2s,background .2s,border-color .2s,color .2s,box-shadow .2s;
+}
+.roles-trigger svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.roles-trigger:hover{
+  background:var(--acc);border-color:var(--acc);color:#fff;
+  transform:translateY(-2px);box-shadow:0 14px 28px -10px rgba(184,100,63,.5);
+}
+.roles-trigger:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.roles-overlay{
+  position:fixed;inset:0;z-index:110;pointer-events:none;
+  visibility:hidden;transition:visibility .3s;
+}
+.roles-overlay.open{pointer-events:auto;visibility:visible}
+.roles-backdrop{
+  position:absolute;inset:0;background:rgba(25,20,16,.55);
+  backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+  opacity:0;transition:opacity .3s ease;
+}
+.roles-overlay.open .roles-backdrop{opacity:1}
+.roles-panel{
+  position:absolute;top:0;right:0;bottom:0;width:min(460px,100vw);
+  background:var(--bg);border-left:1px solid var(--line);
+  box-shadow:-28px 0 70px -20px rgba(0,0,0,.4);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateX(100%);transition:transform .32s cubic-bezier(.22,1,.36,1);
+}
+.roles-overlay.open .roles-panel{transform:translateX(0)}
+.sheet-grabber{display:none;width:42px;height:4px;border-radius:99px;background:var(--line2);margin:10px auto 0;flex:none}
+.roles-head{
+  flex:none;display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:24px 28px 18px;border-bottom:1px solid var(--line);
+}
+.roles-head h2{font-size:clamp(24px,2.5vw,30px);line-height:1.1;margin:0}
+.roles-body{
+  flex:1;min-height:0;overflow-y:auto;padding:24px 24px 36px 28px;margin-right:4px;
+  display:flex;flex-direction:column;gap:16px;
+}
+.roles-body::-webkit-scrollbar{width:8px}
+.roles-body::-webkit-scrollbar-track{background:transparent;margin:12px 0}
+.roles-body::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 20%,transparent);border-radius:999px;border:2px solid transparent;background-clip:padding-box}
+.roles-body::-webkit-scrollbar-button{display:none;width:0;height:0}
+.role-item{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:18px;border-radius:16px;background:var(--card);border:1px solid var(--line);
+}
+.role-item .ic-box{
+  flex:none;width:44px;height:44px;border-radius:12px;background:var(--bg);
+  border:1px solid var(--line);display:grid;place-items:center;
+}
+.role-item .ic-box svg{width:21px;height:21px;stroke:var(--acc);fill:none;stroke-width:1.6}
+.role-item .s{font-size:21px;display:block;line-height:1.15;margin-bottom:5px;color:var(--ink)}
+.role-item p{margin:0;color:var(--mut);font-size:13.5px;line-height:1.6}
+.roles-rules{
+  margin-top:6px;padding:18px 20px;border-radius:16px;background:var(--bg2);border:1px solid var(--line);
+}
+.roles-rules h3{
+  margin:0 0 12px;font-family:var(--sans);font-size:11px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--acc);
+}
+.roles-rules ul{margin:0;padding-left:18px;color:var(--mut);font-size:13px;line-height:1.65;display:grid;gap:7px}
+@media(max-width:760px){
+  .roles-panel{
+    top:auto;left:0;right:0;bottom:0;width:100%;max-height:86dvh;
+    border-left:0;border-top:1px solid var(--line);border-radius:24px 24px 0 0;
+    box-shadow:0 -24px 60px -16px rgba(0,0,0,.45);
+    transform:translateY(100%);
+  }
+  .roles-overlay.open .roles-panel{transform:translateY(0)}
+  .sheet-grabber{display:block}
+  .roles-head{padding:14px 20px 16px}
+  .roles-body{padding:18px 16px 32px 20px}
+}
+body.overlay-open{overflow:hidden}
+@media(max-width:720px){
+  .req-overlay{padding:12px}
+  .req-modal{width:100%;height:calc(100dvh - 24px);border-radius:18px}
+  .req-modal-head{padding:16px 18px 14px}
+  .req-close{width:34px;height:34px;font-size:24px}
+  .story-shell{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .story-nav{flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:10px 14px;border-right:none;border-bottom:1px solid var(--line);gap:6px}
+  .story-nav button{width:auto;flex:none;white-space:nowrap;padding:8px 12px}
+  .story-content{padding:22px 18px 36px;margin-right:2px}
+}
+
+footer{
+  text-align:center;padding:90px 20px 60px;
+  background:linear-gradient(180deg,transparent,var(--bg2));
+  border-top:1px solid var(--line);position:relative;
+}
+footer::before{
+  content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:60px;height:3px;background:var(--acc);border-radius:0 0 3px 3px;
+}
+footer h2{max-width:680px;margin:0 auto 24px}
+footer .cta{border-color:var(--line2);color:var(--ink);background:var(--card)}
+footer .cta:hover{background:var(--acc);border-color:var(--acc);color:#fff}
+footer .meta{
+  margin-top:30px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--mut);display:flex;justify-content:center;gap:30px;flex-wrap:wrap;
+}
+</style>
+</head>
+<body>
+<header id="hdr">
+  <a class="logo" href="#top">
+    <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 21 L24 7 L42 21" stroke="var(--acc)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M11 30 L11 39 Q11 42 14 42 L34 42 Q37 42 37 39 L37 30" stroke="var(--acc)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    FindStay
+  </a>
+  <nav>
+    <a href="#goal">Goal</a>
+    <a href="#arch">Architecture</a>
+    <a href="#days">Stories</a>
+    <a href="#demo">Demo</a>
+  </nav>
+  <button class="pill" id="th">Theme · Auto</button>
+</header>
+
+<main>
+
+<div class="hero" id="top">
+  <svg class="hero-svg" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice">
+    <path d="M0 300V190l120-50 90 40 130-90 110 70 150-60 140 80 120-40 160 60 180-50v250z" fill="var(--hero-mtn-back)"/>
+    <circle cx="214" cy="140" r="7" fill="var(--hero-fig)"/>
+    <path d="M203 149h22l9 34h-40z" fill="var(--hero-fig)"/>
+    <path d="M0 300V245l160-40 140 30 200-50 180 40 190-30 140 30 190-20v140z" fill="var(--hero-mtn-front)"/>
+  </svg>
+  <div class="hc">
+    <p class="eb">Sprint 1 <u></u> Weeks 1–2 <u></u> Release R1</p>
+    <h1 class="s">FindStay</h1>
+    <p class="tg">Ten days to take an owner from sign-up to a published listing, with backups and monitoring switched on from the start.</p>
+    <a class="cta" href="#goal">See the plan →</a>
+    <div class="stats">
+      <div><b class="s">108</b>requirements</div>
+      <div><b class="s">17</b>stories</div>
+      <div><b class="s">10</b>days</div>
+      <div><b class="s">1</b>live release</div>
+    </div>
+  </div>
+  <div class="br"><i></i><span>Release whole,<br>or not at all</span></div>
+</div>
+
+<section id="goal">
+  <p class="k">The goal</p>
+  <h2 class="s">One owner. One listing. <em>Live.</em></h2>
+  <p class="lead">By the end of Sprint 1, a verified owner can sign up, build an organisation, submit documents, create a listing with photos and a calendar — and an administrator can approve it on the live system. Tap each step to see what happens.</p>
+  <div class="plain-grid">
+    <article class="plain-card"><h3 class="s">Who this is for</h3><p><strong>R1 is for invited property owners and the FindStay admin team.</strong> It gives them a safe first way to add and approve places to stay. Guests will not use this release to book yet.</p></article>
+    <article class="plain-card"><h3 class="s">What we are proving</h3><p>We are proving the full owner journey works: join, show who you are, add a place, add rooms and photos, choose available dates, and get approved.</p></article>
+    <article class="plain-card"><h3 class="s">What can wait</h3><p>Taking bookings and payments, monthly or school-term stays, calendar links, AI help, and text-to-speech are all later work. Keeping them out helps us finish this first release well.</p></article>
+  </div>
+  <aside class="vision-card" aria-labelledby="product-vision-title">
+    <p class="k">Product vision</p>
+    <h3 class="s" id="product-vision-title">A marketplace that keeps property operations <em>together.</em></h3>
+    <p>For <strong>small and medium accommodation owners and managers</strong>, <strong>FindStay</strong> is a Ghana-focused accommodation marketplace and property-management system that helps them attract verified guests, prevent double-bookings, accept Mobile Money and card payments, and manage occupancy and records in one mobile-friendly platform. Unlike agents, global booking platforms, and standalone PMS software, FindStay brings local verification, Mobile Money workflows, protected bookings, and owner tools together in one service.</p>
+  </aside>
+  <div class="journey">
+    <div class="jr" id="jr"></div>
+    <div class="jd" id="jd"></div>
+  </div>
+</section>
+
+<section id="arch">
+  <p class="k">The Architecture</p>
+  <h2 class="s">Every tool <em>earns</em> its place</h2>
+  <p class="lead">Nothing decorative. Each layer has one job and gets out of the way when the work needs to breathe. The screens never touch business tables directly; Supabase Auth owns sign-in; Spring Modulith keeps every part in its own boundary.</p>
+  <div class="arch">
+    <svg viewBox="0 0 1000 580" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="gFront" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--sage)" stop-opacity=".15"/><stop offset="1" stop-color="var(--sage)" stop-opacity=".05"/></linearGradient>
+        <linearGradient id="gShield" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--acc)" stop-opacity=".18"/><stop offset="1" stop-color="var(--acc)" stop-opacity=".08"/></linearGradient>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--acc)"/></marker>
+      </defs>
+      <g opacity=".08" stroke="var(--ink)" stroke-width=".5"><line x1="0" y1="100" x2="1000" y2="100"/><line x1="0" y1="220" x2="1000" y2="220"/><line x1="0" y1="340" x2="1000" y2="340"/><line x1="0" y1="460" x2="1000" y2="460"/></g>
+      <g font-family="Inter" font-size="10" fill="var(--mut)" letter-spacing="2"><text x="14" y="60">SCREENS</text><text x="14" y="180">EDGE</text><text x="14" y="300">DATA · AUTH · FILES</text><text x="14" y="420">CORE SYSTEM</text><text x="14" y="540">EXTERNAL</text></g>
+      <g><rect x="240" y="30" width="520" height="70" rx="12" fill="url(#gFront)" stroke="var(--sage)" stroke-width="1.5"/><text x="500" y="58" text-anchor="middle" font-family="Cormorant Garamond" font-size="20" font-weight="500" fill="var(--ink)">React · TypeScript · Vite</text><text x="500" y="80" text-anchor="middle" font-family="Inter" font-size="11" fill="var(--mut)">Tailwind · shadcn/ui · React Hook Form · Zod · TanStack Query</text><g transform="translate(280,55)" stroke="var(--sage)" stroke-width="1.5" fill="none"><rect x="-12" y="-9" width="24" height="18" rx="2"/><line x1="-12" y1="-3" x2="12" y2="-3"/><circle cx="-8" cy="6" r="1.5" fill="var(--sage)"/></g></g>
+      <line x1="500" y1="100" x2="500" y2="150" stroke="var(--acc)" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4 4"/>
+      <g><rect x="200" y="150" width="600" height="60" rx="12" fill="url(#gShield)" stroke="var(--acc)" stroke-width="1.5"/><text x="500" y="175" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" font-weight="500" fill="var(--ink)">Cloudflare</text><text x="500" y="195" text-anchor="middle" font-family="Inter" font-size="10" fill="var(--mut)">Workers Static Assets · DNS · CDN · WAF · Turnstile</text><g transform="translate(230,180)" stroke="var(--acc)" stroke-width="1.5" fill="none"><path d="M0,-12 L10,-8 L10,2 Q10,12 0,16 Q-10,12 -10,2 L-10,-8 Z"/></g></g>
+      <line x1="350" y1="210" x2="350" y2="260" stroke="var(--acc)" stroke-width="1.5" marker-end="url(#arrow)"/><line x1="500" y1="210" x2="500" y2="260" stroke="var(--acc)" stroke-width="1.5" marker-end="url(#arrow)"/><line x1="650" y1="210" x2="650" y2="260" stroke="var(--acc)" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <g><rect x="280" y="260" width="140" height="70" rx="10" fill="var(--card)" stroke="var(--gold)" stroke-width="1.5"/><text x="350" y="288" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-weight="500" fill="var(--ink)">Supabase Auth</text><text x="350" y="308" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">JWT · JWKS · email · OTP</text><rect x="430" y="260" width="140" height="70" rx="10" fill="var(--card)" stroke="var(--gold)" stroke-width="1.5"/><text x="500" y="288" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-weight="500" fill="var(--ink)">PostgreSQL</text><text x="500" y="308" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">Flyway · btree_gist</text><rect x="580" y="260" width="140" height="70" rx="10" fill="var(--card)" stroke="var(--gold)" stroke-width="1.5"/><text x="650" y="288" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-weight="500" fill="var(--ink)">Storage</text><text x="650" y="308" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">WebP · signed URLs</text></g>
+      <line x1="500" y1="330" x2="500" y2="380" stroke="var(--acc)" stroke-width="2" marker-end="url(#arrow)"/>
+      <g><rect x="220" y="380" width="560" height="70" rx="12" fill="var(--acc)" fill-opacity=".12" stroke="var(--acc)" stroke-width="2"/><text x="500" y="408" text-anchor="middle" font-family="Cormorant Garamond" font-size="20" font-weight="500" fill="var(--ink)">Spring Boot 3 · Java 21 · Render</text><text x="500" y="430" text-anchor="middle" font-family="Inter" font-size="11" fill="var(--mut)">Spring Modulith · Spring Security OAuth2 · Flyway · JPA · HikariCP</text><g transform="translate(255,415)" stroke="var(--acc)" stroke-width="1.5" fill="none"><circle cx="0" cy="0" r="8"/><circle cx="0" cy="0" r="3" fill="var(--acc)"/><line x1="0" y1="-10" x2="0" y2="-12"/><line x1="0" y1="10" x2="0" y2="12"/><line x1="-10" y1="0" x2="-12" y2="0"/><line x1="10" y1="0" x2="12" y2="0"/></g></g>
+      <line x1="350" y1="450" x2="280" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/><line x1="500" y1="450" x2="500" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/><line x1="650" y1="450" x2="720" y2="510" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 4"/>
+      <g><rect x="200" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="280" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">Paystack</text><text x="280" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">payments</text><rect x="420" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="500" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">Sentry</text><text x="500" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">errors · health</text><rect x="640" y="510" width="160" height="50" rx="8" fill="var(--card)" stroke="var(--line2)" stroke-width="1"/><text x="720" y="535" text-anchor="middle" font-family="Cormorant Garamond" font-size="14" font-weight="500" fill="var(--ink)">GitHub Actions</text><text x="720" y="551" text-anchor="middle" font-family="Inter" font-size="9" fill="var(--mut)">build · test</text></g>
+      <g font-family="Inter" font-size="9" fill="var(--sageDeep)" font-style="italic"><text x="830" y="65">no direct access to business tables</text><text x="830" y="195">blocks attacks · stops bots</text><text x="830" y="410">verify() fails the build</text><text x="830" y="540">hosted checkout · PCI-safe</text></g>
+    </svg>
+    <div class="arch-legend"><span><i style="background:var(--sage)"></i>Screens</span><span><i style="background:var(--acc)"></i>Edge / Core</span><span><i style="background:var(--gold)"></i>Data layer</span><span><i style="background:var(--line2)"></i>External services</span></div>
+  </div>
+</section>
+
+<section id="days">
+  <div class="sec-head">
+    <div>
+      <p class="k">Stories</p>
+      <h2 class="s">Who builds what, <em>and when</em></h2>
+    </div>
+    <button class="roles-trigger" id="rolesBtn" type="button" aria-label="View Scrum roles and priority rules" title="Roles &amp; priorities" aria-haspopup="dialog" aria-expanded="false">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6"/><circle cx="17.5" cy="8.5" r="2.5"/><path d="M15.5 14.2c2.8.4 5 2.4 5 5.3"/></svg>
+    </button>
+  </div>
+  <p class="lead">Follow the ten-day sprint down the central spine. Each story node shows the days it spans, its title banner and the checks that prove it is finished. Select any story to inspect its requirements in detail.</p>
+  <div class="rhythm" aria-label="Simple ten-day sprint rhythm">
+    <div class="rhythm-step"><b>D1</b><span>Agree the goal, decide open questions, and choose the work.</span></div>
+    <div class="rhythm-step"><b>D1–D8</b><span>Build in small pieces, test as we go, and raise blockers early.</span></div>
+    <div class="rhythm-step"><b>D5</b><span>Pause and check: are the important things still on track?</span></div>
+    <div class="rhythm-step"><b>D8</b><span>Stop adding new features. From here, fix and polish only.</span></div>
+    <div class="rhythm-step"><b>D9</b><span>Do the final check, practise recovery, and release if it is safe.</span></div>
+    <div class="rhythm-step"><b>D10</b><span>Show the result, learn what to improve, then prepare the next sprint.</span></div>
+  </div>
+  <div class="f" id="dayFilters"></div>
+  <div class="tl-wrap">
+    <div class="vtl" id="timeline" role="list" aria-label="Sprint 1 stories timeline"></div>
+    <div class="tl-legend"><span><i style="background:var(--acc)"></i>Track A · Must have</span><span><i style="background:var(--sage)"></i>Track B · Must have</span><span><i style="background:var(--gold)"></i>Should have</span></div>
+  </div>
+</section>
+
+<section id="demo">
+  <p class="k">Demo day</p>
+  <h2 class="s">Seven steps to <em>"accepted"</em></h2>
+  <p class="lead">The Sprint Review script. Tap each card to mark it as it lands.</p>
+  <div class="demo-path">
+    <svg class="demo-svg" viewBox="0 0 1000 240" xmlns="http://www.w3.org/2000/svg"><path d="M60 120 Q 200 30, 340 120 T 620 120 T 900 120" stroke="var(--line2)" stroke-width="2" stroke-dasharray="6 6" fill="none"/><g id="demoStops"><g class="stop" data-i="0" transform="translate(60,120)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">1</text></g><g class="stop" data-i="1" transform="translate(220,55)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">2</text></g><g class="stop" data-i="2" transform="translate(380,120)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">3</text></g><g class="stop" data-i="3" transform="translate(540,55)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">4</text></g><g class="stop" data-i="4" transform="translate(700,120)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">5</text></g><g class="stop" data-i="5" transform="translate(820,55)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">6</text></g><g class="stop" data-i="6" transform="translate(940,120)"><circle r="22" fill="var(--card)" stroke="var(--acc)" stroke-width="2"/><text text-anchor="middle" dy="6" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="var(--acc)">7</text></g></g></svg>
+    <div class="demo-list" id="demoList"></div>
+    <div class="bar"><i id="pb"></i></div>
+  </div>
+  <div class="release-note">
+    <h3 class="s">Before we call it live</h3>
+    <p>Looking complete is not enough. We need simple proof that real people can use it safely, that owners stay separate, and that we can recover if something goes wrong.</p>
+    <div class="proof-list">
+      <span><i>✓</i>Two pilot owners have tried the main journey.</span>
+      <span><i>✓</i>An owner cannot see or change another owner’s information.</span>
+      <span><i>✓</i>The team has practised restoring yesterday’s saved copy.</span>
+      <span><i>✓</i>The team has checked the live version after release.</span>
+      <span><i>✓</i>The Product Owner has seen the demo and accepted the finished stories.</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="k">FindStay · Sprint 1</p>
+  <h2 class="s">Foundations laid <em>well</em> are foundations laid <em>once</em>.</h2>
+  <a class="cta" href="#top">Back to the top ↑</a>
+  <div class="meta"><span>Phase 1 · Release R1</span><span>108 requirements · 17 stories</span><span>10 working days</span></div>
+</footer>
+
+</main>
+
+<div class="req-overlay" id="storyOverlay" hidden aria-hidden="true">
+  <div class="req-backdrop" data-close-story></div>
+  <div class="req-modal" role="dialog" aria-modal="true" aria-labelledby="storyTitle">
+    <div class="req-modal-head">
+      <div><p class="req-kicker" id="storyKicker">Story</p><h2 class="s" id="storyTitle">Loading story</h2></div>
+      <div class="req-head-actions">
+        <div class="gate-badge" id="readyGateBadge" role="status" aria-label="Ready status (read-only)">
+          <span class="gate-ring" id="readyGateRing"></span>
+          <span>Ready</span>
+          <span class="gate-pct" id="readyGatePct">0%</span>
+        </div>
+        <div class="gate-badge done-gate" id="doneGateBadge" role="status" aria-label="Completed status (read-only)">
+          <span class="gate-ring" id="doneGateRing"></span>
+          <span>Completed</span>
+          <span class="gate-pct" id="doneGatePct">0%</span>
+        </div>
+        <button class="req-close" type="button" aria-label="Close story" data-close-story>&times;</button>
+      </div>
+    </div>
+    <div class="story-shell">
+      <nav class="story-nav" id="storyNav" role="tablist" aria-label="Story sections" aria-orientation="vertical"></nav>
+      <div class="story-content" id="storyContent" role="tabpanel" tabindex="0" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<div class="roles-overlay" id="rolesOverlay" aria-hidden="true">
+  <div class="roles-backdrop" data-close-roles></div>
+  <aside class="roles-panel" role="dialog" aria-modal="true" aria-labelledby="rolesTitle">
+    <div class="sheet-grabber" aria-hidden="true"></div>
+    <div class="roles-head">
+      <div>
+        <p class="req-kicker">Scrum Team</p>
+        <h2 class="s" id="rolesTitle">Roles &amp; Priorities</h2>
+      </div>
+      <button class="req-close" id="rolesClose" type="button" aria-label="Close roles panel" data-close-roles>&times;</button>
+    </div>
+    <div class="roles-body">
+      <div class="role-item">
+        <div class="ic-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg></div>
+        <div><span class="s">Product Owner</span><p>Sets the order of work, makes open decisions, accepts or rejects each story at Sprint Review.</p></div>
+      </div>
+      <div class="role-item">
+        <div class="ic-box"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+        <div><span class="s">Scrum Master</span><p>A team member, part-time is fine. Protects the schedule, removes blockers, leads the retrospective.</p></div>
+      </div>
+      <div class="role-item">
+        <div class="ic-box"><svg viewBox="0 0 24 24"><path d="M8 6l-4 6 4 6M16 6l4 6-4 6"/></svg></div>
+        <div><span class="s">Developers</span><p>Plan and build the sprint, own quality, release, and demonstrate. Two tracks: A (platform) and B (screens).</p></div>
+      </div>
+      <div class="roles-rules">
+        <h3>Priorities &amp; the unfinished-work rule</h3>
+        <ul>
+          <li>Every story is Must, Should or Could. Work follows that order each day.</li>
+          <li>A story ships whole or not at all. Unfinished work stays hidden behind its on/off switch.</li>
+          <li>A requirement counts as delivered only when its story is Done at Sprint Review.</li>
+          <li>An unfinished Must story in Sprints 1 to 3 blocks dependent stories; the Product Owner decides at the Day 5 check.</li>
+          <li>Should and Could stories may slide to a later sprint. Moving anything past week 10 needs a formal change request.</li>
+          <li>Reserve 10% of every sprint for fixing the previous release, and 15% in Sprint 4.</li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+document.documentElement.classList.add('js');
+const $=(q,e=document)=>e.querySelector(q),$$=(q,e=document)=>[...e.querySelectorAll(q)],E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+let requirementData={};
+const requirementReady=fetch('sprint-1-requirements.json').then(r=>{if(!r.ok)throw Error('Could not load requirements');return r.json()}).then(data=>requirementData=data).catch(()=>requirementData={});
+const requirementKinds={UR:'What a person using or running FindStay needs',FR:'Something the system must do',NFR:'A quality we must protect',BR:'A promise FindStay makes',BRL:'A rule the team must follow',TA:'A behind-the-scenes promise',PD:'Work needed to deliver the release'};
+const plainRequirements={
+  'FR-01':'Let guests, property owners, property staff, and administrators create or receive accounts for their role.',
+  'FR-02':'Check that a user is signed in before opening any private page or running any private server action.',
+  'FR-03':'Let users sign in with their email and password and sign out from any device.',
+  'FR-04':'Let users reset a forgotten password through a single-use link sent to their confirmed email.',
+  'FR-05':'Send a confirmation code or link by email (or phone OTP) to verify new accounts.',
+  'FR-06':'Let signed-in users view and update their own profile details (full name, phone number, photo, and language).',
+  'FR-07':'Check the signed-in user’s role and permissions before showing any screen or allowing any server action.',
+  'FR-08':'Let property owners submit their Ghana Card, property ownership proof, and tourism licence for admin review, and resubmit if corrections are needed.',
+  'FR-09':'Let property owners and administrators grant or remove specific property permissions for staff members.',
+  'FR-11':'Let verified property owners create a new property listing in draft mode.',
+  'FR-12':'Let owners and authorised staff edit an existing listing’s details, rooms, photos, prices, amenities, and rules.',
+  'FR-13':'Let owners pause or deactivate a published listing whenever they want to hide it from search.',
+  'FR-14':'Let owners upload property and room photos, reorder them, and pick a main cover photo.',
+  'FR-15':'Let owners set the property type and add individual rooms/units with guest capacity, bedrooms, and bathrooms.',
+  'FR-16':'Let owners tick available amenities (Wi-Fi, AC, generator, parking, etc.) and write house rules.',
+  'FR-17':'Let owners set the nightly price in Ghana Cedis (GHS) for each room or unit.',
+  'FR-18':'Let owners and authorised staff block or unblock unavailable date ranges on any room’s calendar.',
+  'FR-21':'Publish a listing only after both the owner is verified and an administrator approves the listing.',
+  'FR-22':'Check that all required fields and photos are complete before allowing a listing to be submitted for approval.',
+  'FR-39':'Show a live availability calendar for each room and block overlapping unavailable dates.',
+  'FR-68':'Send an automatic alert to the property owner whenever their verification or listing status changes.',
+  'FR-69':'Send formatted email notifications for account, verification, and listing updates.',
+  'FR-70':'Support sending SMS alerts to Ghana phone numbers (+233), falling back to email when SMS is switched off.',
+  'FR-71':'Notify users in the app and by email when they receive a staff invite, permission change, or account update.',
+  'FR-86':'Give administrators a summary dashboard showing counts of pending verifications, pending listings, live listings, and users.',
+  'FR-87':'Let administrators search user accounts, create new accounts, suspend accounts, and restore suspended accounts.',
+  'FR-88':'Let administrators Approve, Reject, Request Corrections, Suspend, or Restore any submitted listing.',
+  'FR-92':'Let administrators view and update platform settings and feature on/off switches from a settings screen.',
+  'UR-A01':'Block suspended users from signing in immediately, and log every account creation, suspension, or restoration.',
+  'UR-A02':'Require a written reason whenever an admin rejects, suspends, or asks for corrections on a listing, and send it to the owner.',
+  'UR-A07':'Give administrators a screen to search and filter the activity log by user, action, or date.',
+  'UR-A08':'Log the old value, new value, admin name, and time whenever a platform setting is changed.',
+  'UR-AN01':'Lock all administrator screens and actions so only signed-in administrators can open them.',
+  'UR-AN02':'Make activity log records permanent so no one can edit or delete past entries.',
+  'UR-G01':'Provide a complete sign-up, confirmation, sign-in, and sign-out flow for all users.',
+  'UR-O01':'Give property owners a step-by-step verification form and a live status tracker (Pending, Needs Correction, Approved, Rejected).',
+  'UR-O02':'Let verified owners manage all parts of their listings and room availability from the Owner Portal.',
+  'UR-O03':'Provide a simple calendar screen for each room where owners or staff can click to block or open dates.',
+  'UR-O15':'Let property owners invite staff members to their company and manage what each staff member can do.',
+  'UR-ON01':'Keep screens clean and simple so small guesthouse and hotel owners can use FindStay without training.',
+  'UR-ON02':'Show each property owner only their own company’s properties, documents, and records.',
+  'UR-ON05':'Keep the live website running reliably with daily backups so property owners never lose their records.',
+  'UR-PM03':'Let owners assign specific tasks (such as editing a listing or blocking calendar dates) to each staff member.',
+  'UR-PS01':'Show property staff only the specific properties and tools they have been given permission to use.',
+  'UR-PSN01':'Hide sensitive owner identity documents (such as Ghana Card details) from property staff accounts.',
+  'BR-02':'Pre-load Takoradi neighbourhoods and landmarks so owners can pick their local Takoradi area.',
+  'BR-03':'Support Hotels, Budget Hotels, Guesthouses, and Serviced Apartments in Sprint 1 (with Student Hostels ready in the database for Phase 2).',
+  'BR-10':'Make the Owner Portal lightweight and easy to use on an ordinary smartphone over mobile data.',
+  'BR-11':'Log every verification check, listing approval/rejection, and account decision for accountability.',
+  'BRL-01':'Redirect anyone who is not signed in to the Sign In page when they try to open a protected page.',
+  'BRL-02':'Give each user account one primary profile and clear role assignments (Guest, Owner, Staff, Admin).',
+  'BRL-04':'Require an owner or administrator to explicitly invite and authorise a staff member before they get access.',
+  'BRL-05':'Block owners and staff from viewing or editing any property that belongs to another owner’s company.',
+  'BRL-06':'Block incomplete listings from being submitted for admin approval until every required detail is filled in.',
+  'BRL-19':'Record every user or listing suspension and restoration in the activity log with the written reason.',
+  'TA-01':'Keep three separate folders: one for the website screens (frontend), one for the backend server, and one for the database.',
+  'TA-02':'Connect the website screens to the backend server using standard /api/v1/... web requests.',
+  'TA-07':'Let Supabase Auth store and check passwords so FindStay’s own database never stores passwords.',
+  'TA-08':'Issue a 1-hour sign-in pass on login that renews automatically, and verify it on the backend server.',
+  'TA-09':'Encrypt sensitive ID numbers (such as the Ghana Card number) before saving them in the database.',
+  'TA-11':'Store database passwords and secret API keys in cloud environment settings—never inside project files.',
+  'TA-12':'Save property photos in a public storage folder and owner verification documents in a locked private folder.',
+  'TA-13':'Compress uploaded property photos and convert them into fast-loading WebP images.',
+  'PD-01':'Write the database table diagram, API list, and screen sketches before coding features.',
+  'PD-02':'Create numbered database setup scripts (V1_01 to V1_19) that build all Sprint 1 tables automatically.',
+  'PD-06':'Put the website online on Cloudflare, the backend server on Render, and the database on Supabase.',
+  'PD-07':'Set up automatic tests for individual features, database actions, and the full 7-step demo flow.',
+  'PD-10':'Add a server health-check link (/actuator/health) and an uptime alert that notifies the team if the server goes down.',
+  'PD-11':'Turn on automatic daily database backups in Supabase.',
+  'PD-12':'Store all live passwords and API keys inside GitHub, Render, and Cloudflare secret settings.',
+  'NFR-01':'Guide users through tasks step-by-step with uncluttered screens that need no manual.',
+  'NFR-02':'Use clear, plain-English labels on all menus, buttons, and form inputs (with examples like +233 or GHS).',
+  'NFR-03':'Show a loading spinner while saving and a clear success or error banner after every button click.',
+  'NFR-04':'Connect every form input to a label and make sure all buttons and popups work with a keyboard (Tab, Enter, Escape).',
+  'NFR-05':'Pair every navigation icon and status badge with a readable text label—never show an icon by itself.',
+  'NFR-07':'Use high-contrast text and show both an icon and words on status badges (not just red/green colour).',
+  'NFR-09':'Make all Owner and Admin screens fit mobile phones (360px wide), tablets, and desktop computers.',
+  'NFR-10':'Test all screens on Chrome, Edge, Firefox, and Safari.',
+  'NFR-12':'Prevent sideways (horizontal) scrolling on mobile phone screens.',
+  'NFR-17':'Reject files over 5 MB or invalid file types before upload, and optimise photos so pages load fast on mobile data.',
+  'NFR-19':'Reject any request to a private server route if the sign-in pass is missing or expired.',
+  'NFR-20':'Check user permissions on the backend server for every request—not just by hiding buttons on the screen.',
+  'NFR-21':'Use HTTPS for all web traffic and encrypt sensitive ID numbers before saving them in the database.',
+  'NFR-22':'Never save, log, or display plain-text passwords anywhere in the system.',
+  'NFR-23':'Check all form inputs on both the screen and server to block harmful code (SQL injection or XSS).',
+  'NFR-24':'Verify record ownership before returning any property, document, or verification case by ID.',
+  'NFR-27':'Block any code save that accidentally contains a password or secret key.',
+  'NFR-28':'Mask Ghana Card numbers on normal screens (GHA-*******-X) so full numbers are never exposed.',
+  'NFR-31':'Keep personal contact details and verification files private and never show them on public listing pages.',
+  'NFR-32':'Show a clear Ghana Data Protection Act, 2012 (Act 843) privacy notice during sign-up and owner verification.',
+  'NFR-34':'Collect the required Ghana Card, ownership proof, and tourism licence documents before approving an owner.',
+  'NFR-35':'Allow only the property owner and authorised administrators to view an owner’s personal verification records.',
+  'NFR-36':'Ask only for needed personal details, and require the user to tick the privacy consent box at sign-up.',
+  'NFR-42':'Write a step-by-step backup restore guide and test restoring a daily backup into a test database.',
+  'NFR-43':'Send server errors automatically to an error dashboard (Sentry) so the team can spot and fix bugs quickly.',
+  'NFR-45':'Load lists page-by-page (pagination) and add database indexes so pages stay fast as more properties join.',
+  'NFR-46':'Store property types (Hotel, Guesthouse, Apartment, Hostel) in a database table so new types can be turned on later without changing code.',
+  'NFR-47':'Host the website, server, database, and photos on cloud services that can handle more traffic as FindStay grows.',
+  'NFR-48':'Split the backend server into separate folders by feature (Accounts, Companies, Verification, Listings, Calendar, Alerts, Log, Admin) so teams do not clash.',
+  'NFR-52':'Save all dates and times in UTC and display them in Ghana time (GMT).',
+  'NFR-54':'Automatically generate a live list of all backend API routes so frontend and backend developers stay in sync.',
+  'NFR-55':'Keep a clear README and setup guide in the project folder so any team member can run the app.',
+  'NFR-56':'Run automatic checks on every GitHub code save and block broken code from merging.',
+  'NFR-57':'Keep all project code and database scripts in Git (GitHub) with version tags for each release.',
+  'NFR-58':'Only add new database tables or columns in updates—never delete or break existing columns.',
+  'NFR-60':'Connect email and SMS providers through plug-in settings so providers can be switched without rewriting code.',
+  'NFR-63':'Use one consistent JSON format for all server responses and error messages.',
+  'NFR-66':'Save the user ID, action name, affected record ID, and exact timestamp on every activity log entry.'
+};
+function requirementPrefix(id){return id.startsWith('BRL-')?'BRL':id.split('-')[0]}
+function friendlyRequirement(id,item){
+  if(plainRequirements[id])return plainRequirements[id];
+  const t=item.text.replace(/^Allow /,'People can ').replace(/^Provide /,'The system gives people ').replace(/^Support /,'The system can ').replace(/^Enforce /,'The system makes sure it ').replace(/^Maintain /,'The team keeps ').replace(/^Protect /,'The system keeps ').replace(/^Prevent /,'The system stops ').replace(/^Follow /,'The team follows ').replace(/^Collect /,'The team collects ').replace(/^Publish /,'The system publishes ').replace(/^Validate /,'The system checks ');
+  return t.charAt(0).toUpperCase()+t.slice(1);
+}
+function requirementWhy(id){
+  const kind=requirementPrefix(id);
+  return kind==='UR'?'It keeps the plan connected to a real need from a person who will use or run FindStay.':kind==='FR'?'It gives the team a clear feature to build and check.':kind==='NFR'?'It makes sure the finished work is safe, clear, reliable or easy to use.':kind==='BRL'?'It keeps everyone working by the same rule, so the system stays fair and safe.':kind==='BR'?'It keeps the release focused on the problem FindStay is here to solve.':kind==='TA'?'It makes an important behind-the-scenes promise without asking the team to remember it later.':'It makes sure the team has the support and proof needed for a safe release.';
+}
+const kindShort={UR:'User need',FR:'Feature',NFR:'Quality',BR:'Promise',BRL:'Team rule',TA:'Behind the scenes',PD:'Delivery work'};
+const overviewIcon='<svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>';
+const reqsIcon='<svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M5 6h.01M5 12h.01M5 18h.01"/></svg>';
+const acIcon='<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+const statusIcon='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>';
+const L={
+  Ready:[
+    'Requirement IDs and success criteria are listed',
+    'Decisions it depends on are made, or a default is recorded',
+    'What it needs from earlier sprints is already released',
+    'Each new screen has a sketch',
+    'Test data and provider accounts are available'
+  ],
+  Done:[
+    'Code reviewed and merged; automatic checks pass',
+    'Every requirement ID has an automated test labelled with it',
+    'Database changes only add, stay in range, and work on empty and previous-release databases',
+    'The API has no breaking change',
+    'Security checks pass: no secrets in code, inputs checked, role and organisation checks tested',
+    'Every state change is logged; user-facing changes send a notification',
+    'Works at 360 px on a slow connection, in four browsers',
+    'On the test system with earlier tests passing, then live',
+    'Data diagram, API description and runbook are updated',
+    'Demonstrated at Sprint Review and accepted'
+  ]
+};
+const CHECKS_KEY='findstay_s1_story_checks_v1';
+let storyChecks={};
+try{storyChecks=JSON.parse(localStorage.getItem(CHECKS_KEY)||'{}')||{}}catch(e){storyChecks={}}
+function getStoryGateState(storyId,gate){
+  if(!storyChecks[storyId])storyChecks[storyId]={Ready:[],Done:[]};
+  if(!Array.isArray(storyChecks[storyId][gate]))storyChecks[storyId][gate]=[];
+  return storyChecks[storyId][gate];
+}
+function saveStoryChecks(){
+  try{localStorage.setItem(CHECKS_KEY,JSON.stringify(storyChecks))}catch(e){}
+}
+function getGateStats(storyId,gate){
+  const items=L[gate],arr=getStoryGateState(storyId,gate);
+  let checked=0;
+  for(let i=0;i<items.length;i++)if(arr[i])checked++;
+  const total=items.length,pct=Math.round((checked/total)*100);
+  return{checked,total,pct,ratio:checked/total};
+}
+let currentStory=null;
+function updateStoryHeaderGates(s){
+  if(!s)return;
+  const r=getGateStats(s[0],'Ready'),d=getGateStats(s[0],'Done');
+  const rb=$('#readyGateBadge'),db=$('#doneGateBadge');
+  rb.style.setProperty('--gp',r.ratio);
+  db.style.setProperty('--gp',d.ratio);
+  $('#readyGatePct').textContent=r.pct+'%';
+  $('#doneGatePct').textContent=d.pct+'%';
+  rb.classList.toggle('complete',r.pct===100);
+  db.classList.toggle('complete',d.pct===100);
+  const sc=$('#statusNavCount');
+  if(sc)sc.textContent=(r.checked+d.checked)+'/'+(r.total+d.total);
+}
+let storyReturnFocus=null,storyRenderToken=0;
+function closeStory(){const overlay=$('#storyOverlay');overlay.hidden=true;overlay.setAttribute('aria-hidden','true');document.body.classList.remove('overlay-open');if(storyReturnFocus&&storyReturnFocus.focus)storyReturnFocus.focus()}
+function storyIds(s){return s[8].split(' ').filter(Boolean)}
+function acceptanceList(s){const list=E('ul','acceptance-list');(storyAcceptance['S1-'+s[0]]||[s[6]]).forEach(check=>{const li=E('li','');li.textContent=check;list.append(li)});return list}
+function requirementAcceptanceList(s,item){const list=E('ul','acceptance-list');const checks=(item&&Array.isArray(item.acceptance)&&item.acceptance.length)?item.acceptance:(storyAcceptance['S1-'+s[0]]||[s[6]]);checks.forEach(check=>{const li=E('li','');li.textContent=check;list.append(li)});return list}
+function setRow(label,value){const row=E('div','set-row');const a=E('span','');a.textContent=label;const b=E('span','');b.textContent=value;row.append(a,b);return row}
+function renderStoryOverview(s){
+  storyRenderToken++;updateStoryHeaderGates(s);
+  const c=$('#storyContent');c.innerHTML='';const ids=storyIds(s);
+  const d=storyDesign['S1-'+s[0]]||{};
+  const rStats=getGateStats(s[0],'Ready'),dStats=getGateStats(s[0],'Done');
+  const head=E('h3','','Story Overview');
+  const summary=E('p','story-sec-lead');summary.textContent=s[6];
+  const rows=E('div','set-rows');
+  if(d.who)rows.append(setRow('Who this helps',d.who));
+  rows.append(
+    setRow('Area',s[7]),
+    setRow('Priority',s[2]=='M'?'Must have':'Should have'),
+    setRow('Track',s[3]=='A'?'Track A · backend & platform':'Track B · screens & workflows'),
+    setRow('Timeline','Day '+s[4]+' to Day '+s[5]+' ('+(s[5]-s[4]+1)+' days)'),
+    setRow('Requirements',ids.length?ids.length+' linked requirements':'Final release verification')
+  );
+  if(d.screens)rows.append(setRow('Screens involved',d.screens));
+  if(d.tables)rows.append(setRow('Database tables',d.tables));
+  if(d.api)rows.append(setRow('System actions',d.api));
+  rows.append(
+    setRow('Ready status (read-only)',rStats.pct+'% ('+rStats.checked+' of '+rStats.total+' checked)'),
+    setRow('Completed status (read-only)',dStats.pct+'% ('+dStats.checked+' of '+dStats.total+' checked)')
+  );
+  c.append(E('p','req-kicker','Overview · S1-'+s[0]),head,summary,rows);
+}
+const reqSectionOrder=[
+  {key:'FR',title:'Functional Requirements',match:k=>k==='FR'},
+  {key:'UR',title:'User Requirements',match:k=>k==='UR'},
+  {key:'BR',title:'Business Rules',match:k=>k==='BR'||k==='BRL'},
+  {key:'TA',title:'Technical & Setup Requirements',match:k=>k==='TA'||k==='PD'},
+  {key:'NFR',title:'Non-Functional Requirements',match:k=>k==='NFR'}
+];
+async function renderStoryRequirements(s){
+  const token=++storyRenderToken;updateStoryHeaderGates(s);
+  const c=$('#storyContent');c.innerHTML='';const ids=storyIds(s);
+  const head=E('h3','',ids.length?'Requirements ('+ids.length+')':'Requirements');
+  const lead=E('p','story-sec-lead');
+  lead.textContent=ids.length?'Grouped by section and numbered in simple, straightforward English.':'Story S1-'+s[0]+' is the final release check that tests all 108 Sprint 1 requirements end-to-end with two pilot property owners.';
+  c.append(E('p','req-kicker','Requirements · S1-'+s[0]),head,lead);
+  if(!ids.length)return;
+  await requirementReady;if(token!==storyRenderToken)return;
+  reqSectionOrder.forEach(sec=>{
+    const groupIds=ids.filter(id=>sec.match(requirementPrefix(id)));
+    if(!groupIds.length)return;
+    const secWrap=E('div','req-sec-group');
+    const secHead=E('div','req-sec-head');
+    const secTitle=E('h4','',sec.title);
+    const secCount=E('span','',groupIds.length+(groupIds.length===1?' item':' items'));
+    secHead.append(secTitle,secCount);
+    const list=E('ol','req-num-list');
+    groupIds.forEach((id,idx)=>{
+      const item=requirementData[id];
+      const li=E('li','req-num-item');
+      const num=E('span','req-num-idx',(idx+1)+'.');
+      const txt=E('span','req-num-text');
+      txt.textContent=item?friendlyRequirement(id,item):(plainRequirements[id]||id);
+      const pill=E('span','req-id-pill',id);
+      li.append(num,txt,pill);
+      list.append(li);
+    });
+    secWrap.append(secHead,list);
+    c.append(secWrap);
+  });
+}
+async function renderStoryAcceptance(s){
+  const token=++storyRenderToken;updateStoryHeaderGates(s);
+  const c=$('#storyContent');c.innerHTML='';const ids=storyIds(s);
+  const head=E('h3','','Acceptance Criteria');
+  const lead=E('p','story-sec-lead','Everything that must be true for the Product Owner to accept Story S1-'+s[0]+' at Sprint Review.');
+  const storyBox=E('div','ac-group-card');
+  const storyBoxTitle=E('h4','','Story-level acceptance criteria');
+  storyBox.append(storyBoxTitle,acceptanceList(s));
+  c.append(E('p','req-kicker','Acceptance Criteria · S1-'+s[0]),head,lead,storyBox);
+  if(!ids.length)return;
+  await requirementReady;if(token!==storyRenderToken)return;
+  const reqSecLabel=E('p','story-section-label','Acceptance criteria by requirement ('+ids.length+')');
+  const reqList=E('div','ac-req-list');
+  ids.forEach(id=>{
+    const item=requirementData[id];
+    const box=E('div','ac-req-box');
+    const bHead=E('div','ac-req-box-head');
+    const pill=E('span','req-id-pill',id);
+    const bTitle=E('strong','');
+    bTitle.textContent=item?friendlyRequirement(id,item):id;
+    bHead.append(pill,bTitle);
+    box.append(bHead,requirementAcceptanceList(s,item));
+    reqList.append(box);
+  });
+  c.append(reqSecLabel,reqList);
+}
+function renderStoryStatus(s){
+  storyRenderToken++;updateStoryHeaderGates(s);
+  const c=$('#storyContent');c.innerHTML='';
+  const rStats=getGateStats(s[0],'Ready'),dStats=getGateStats(s[0],'Done');
+  const head=E('h3','','Status & Checklists');
+  const lead=E('p','story-sec-lead','Tick the Ready and Completed items below as your team finishes them. The read-only Ready and Completed badges in the top bar update automatically.');
+  const grid=E('div','status-stats-grid');
+  const rCard=E('div','status-stat-card');
+  const rLeft=E('div','');
+  rLeft.append(
+    E('p','req-kicker','Ready Status'),
+    E('h4','',rStats.checked+' of '+rStats.total+' checked'),
+    E('p','',rStats.pct===100?'Ready to start work in the sprint.':'Tick all 5 checks before starting coding.')
+  );
+  const rRg=E('div','rg','<b class="s">'+rStats.pct+'%</b>');
+  rRg.style.setProperty('--p',rStats.ratio);
+  rCard.append(rLeft,rRg);
+  const dCard=E('div','status-stat-card');
+  const dLeft=E('div','');
+  dLeft.append(
+    E('p','req-kicker','Completed Status'),
+    E('h4','',dStats.checked+' of '+dStats.total+' checked'),
+    E('p','',dStats.pct===100?'Completed and ready for Sprint Review.':'Tick all 10 checks before marking Done.')
+  );
+  const dRg=E('div','rg','<b class="s">'+dStats.pct+'%</b>');
+  dRg.style.setProperty('--p',dStats.ratio);
+  dCard.append(dLeft,dRg);
+  grid.append(rCard,dCard);
+  c.append(E('p','req-kicker','Status · S1-'+s[0]),head,lead,grid);
+  [['Ready','Ready checklist (before starting work)'],['Done','Completed checklist (before marking Done)']].forEach(([gate,label])=>{
+    const gStats=getGateStats(s[0],gate),items=L[gate],state=getStoryGateState(s[0],gate);
+    const gHead=E('div','status-group-head');
+    const gTitle=E('h4','',label);
+    const gMeta=E('span','',gStats.checked+'/'+gStats.total+' checked ('+gStats.pct+'%)');
+    gHead.append(gTitle,gMeta);
+    const list=E('div','chk-list');
+    items.forEach((text,idx)=>{
+      const on=!!state[idx];
+      const btn=E('button','ck'+(on?' on':''),'<span></span><div style="flex:1"></div><i class="chk-badge '+(on?'ok':'todo')+'" style="font-style:normal">'+(on?'Checked':'Pending')+'</i>');
+      btn.type='button';
+      $('div',btn).textContent=text;
+      btn.onclick=()=>{
+        const st=$('#storyContent').scrollTop;
+        state[idx]=!state[idx];
+        saveStoryChecks();
+        layoutTimeline();
+        renderStoryStatus(s);
+        $('#storyContent').scrollTop=st;
+      };
+      list.append(btn);
+    });
+    c.append(gHead,list);
+  });
+}
+function selectStoryTab(button,render){
+  if(currentStory)updateStoryHeaderGates(currentStory);
+  $$('#storyNav button').forEach(b=>{const on=b===button;b.classList.toggle('on',on);b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});
+  button.scrollIntoView({block:'nearest',inline:'nearest'});$('#storyContent').scrollTop=0;render();
+}
+function storyNavButton(iconSvg,label,countText,countId,render){
+  const b=E('button','','<span class="nav-ic">'+iconSvg+'</span><span class="nav-text"><span></span>'+(countText!=null?'<i class="nav-count" style="font-style:normal"'+(countId?' id="'+countId+'"':'')+'></i>':'')+'</span>');
+  b.type='button';b.setAttribute('role','tab');$('.nav-text span',b).textContent=label;
+  if(countText!=null)$('.nav-count',b).textContent=countText;
+  b.onclick=()=>selectStoryTab(b,render);return b;
+}
+function showStory(s){
+  currentStory=s;
+  storyReturnFocus=document.activeElement;
+  const overlay=$('#storyOverlay');overlay.hidden=false;overlay.setAttribute('aria-hidden','false');document.body.classList.add('overlay-open');
+  $('#storyKicker').textContent='Story S1-'+s[0]+' · Days '+s[4]+'–'+s[5];$('#storyTitle').textContent=s[1];
+  const nav=$('#storyNav');nav.innerHTML='';const ids=storyIds(s);
+  const rStats=getGateStats(s[0],'Ready'),dStats=getGateStats(s[0],'Done');
+  const overviewBtn=storyNavButton(overviewIcon,'Overview',null,'',()=>renderStoryOverview(s));
+  const reqsBtn=storyNavButton(reqsIcon,'Requirements',ids.length?String(ids.length):null,'',()=>renderStoryRequirements(s));
+  const acBtn=storyNavButton(acIcon,'Acceptance Criteria',null,'',()=>renderStoryAcceptance(s));
+  const statusBtn=storyNavButton(statusIcon,'Status',(rStats.checked+dStats.checked)+'/'+(rStats.total+dStats.total),'statusNavCount',()=>renderStoryStatus(s));
+  nav.append(overviewBtn,reqsBtn,acBtn,statusBtn);
+  selectStoryTab(overviewBtn,()=>renderStoryOverview(s));
+  nav.scrollTop=0;nav.scrollLeft=0;
+  $('.req-close').focus();
+}
+$('#storyNav').addEventListener('wheel',e=>{
+  if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){e.preventDefault();$('#storyNav').scrollLeft+=e.deltaY}
+},{passive:false});
+$('#storyNav').addEventListener('keydown',e=>{
+  if(!['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+  const tabs=$$('#storyNav button'),i=tabs.indexOf(document.activeElement);if(i<0)return;e.preventDefault();
+  const n=e.key=='Home'?0:e.key=='End'?tabs.length-1:(i+(e.key=='ArrowDown'||e.key=='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+  tabs[n].focus();tabs[n].click();
+});
+const rolesOverlay=$('#rolesOverlay'),rolesBtn=$('#rolesBtn');
+function openRoles(){
+  rolesOverlay.classList.add('open');rolesOverlay.setAttribute('aria-hidden','false');
+  rolesBtn.setAttribute('aria-expanded','true');document.body.classList.add('overlay-open');
+  $('#rolesClose').focus();
+}
+function closeRoles(){
+  if(!rolesOverlay.classList.contains('open'))return;
+  rolesOverlay.classList.remove('open');rolesOverlay.setAttribute('aria-hidden','true');
+  rolesBtn.setAttribute('aria-expanded','false');
+  if($('#storyOverlay').hidden)document.body.classList.remove('overlay-open');
+  rolesBtn.focus();
+}
+rolesBtn.onclick=openRoles;
+document.addEventListener('click',e=>{
+  if(e.target.closest('[data-close-story]'))closeStory();
+  if(e.target.closest('[data-close-roles]'))closeRoles();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(rolesOverlay.classList.contains('open'))closeRoles();
+    else if(!$('#storyOverlay').hidden)closeStory();
+  }
+});
+const tb=$('#th');tb.onclick=()=>{const r=document.documentElement,dk=r.dataset.theme?r.dataset.theme=='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dk?'light':'dark';tb.textContent='Theme · '+(dk?'Light':'Dark')};
+addEventListener('scroll',()=>{$('#hdr').classList.toggle('scrolled',scrollY>40)},{passive:true});
+const J=[['Sign up','Registers with email (or a phone code), confirms, and logs in securely.','<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg>'],['Create organisation','An organisation is created automatically. The owner invites staff and grants permission for one property only.','<svg viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13M9 21v-6h6v6"/></svg>'],['Submit documents','Identity and property documents go in; a status tracker shows progress. Identity numbers are encrypted.','<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>'],['Build a listing','Units, photos, rates, amenities, house rules and an availability calendar. Incomplete listings cannot be submitted.','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>'],['Admin approves','Administrators approve, reject, suspend, restore or ask for corrections, always with a reason.','<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>'],['Published','The listing goes live and the owner gets an email.','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/></svg>']];
+J.forEach((j,i)=>{const b=E('button','nd','<span class="ic">'+j[2]+'</span><span class="lbl">'+j[0]+'</span>');b.onclick=()=>pick(i);$('#jr').append(b)});
+function pick(i){$$('.nd').forEach((b,k)=>{b.classList.toggle('on',k==i);b.classList.toggle('p',k<i)});const n=(i+1)%J.length;$('#jd').innerHTML='<div><b class="s">'+J[i][0]+'</b><p>'+J[i][1]+'</p></div><button class="pill">'+(i==J.length-1?'Start over':'Next step →')+'</button>';$('#jd button').onclick=()=>pick(n)}
+pick(0);
+const S=[
+  ['01','Project setup & system design','M','A',1,3,'Set up the starter website, backend server, and database folders, and write the database and screen designs before feature coding begins.','Platform Setup','TA-01 TA-02 NFR-45 NFR-46 NFR-47 NFR-48 NFR-52 NFR-54 NFR-55 NFR-56 NFR-57 NFR-58 NFR-63 PD-01 PD-02 PD-07','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>'],
+  ['02','Live hosting & daily backups','M','A',2,4,'Put the starter website, backend server, and database online, turn on daily database backups, and practise restoring a backup.','Cloud & Backups','PD-06 PD-10 PD-11 PD-12 TA-11 NFR-27 NFR-42 NFR-43 UR-ON05','<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg>'],
+  ['03','Mobile & desktop page layouts','M','B',2,5,'Build the shared Owner and Admin page layouts, menus, buttons, and status messages so every screen works cleanly on phones and desktops.','Screen Layouts','NFR-01 NFR-02 NFR-03 NFR-04 NFR-05 NFR-07 NFR-09 NFR-10 NFR-12 UR-ON01 BR-10','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>'],
+  ['04','Sign-up, confirmation & sign-in','M','A',2,5,'Let owners, staff, and admins create an account, confirm their email or phone code, and sign in and out safely.','Accounts & Sign-In','UR-G01 FR-01 FR-02 FR-03 FR-05 BRL-01 NFR-19 NFR-22 TA-07 TA-08','<svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>'],
+  ['05','Password reset & user profile','M','A',5,6,'Let users reset a forgotten password through their confirmed email and update their own profile details.','Accounts & Sign-In','FR-04 FR-06','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v3M12 20v3"/></svg>'],
+  ['06','Role permissions & safe access','M','A',4,6,'Make sure every screen and server action checks the signed-in person’s role so admin and owner tools stay protected.','Security & Roles','FR-07 BRL-02 NFR-20 NFR-21 NFR-23 NFR-24 UR-AN01','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'],
+  ['07','Owner companies & staff access','M','A',4,7,'Give each property owner their own company space, let them invite staff for specific properties, and keep every owner’s data separate.','Organisations & Staff','UR-O15 UR-PS01 UR-PSN01 UR-PM03 FR-09 BRL-04 BRL-05 UR-ON02','<svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>'],
+  ['08','Permanent activity log','S','A',5,7,'Record a permanent history of important admin, verification, and account actions that no one can edit or delete.','Activity Log','UR-A07 UR-AN02 NFR-66 BR-11 BRL-19','<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>'],
+  ['09','Photo & document uploads','M','B',4,6,'Let owners upload property photos (compressed to fast-loading WebP) while keeping identity and ownership documents private.','Photos & Files','TA-12 TA-13 NFR-17','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>'],
+  ['10','Email, SMS & in-app alerts','M','A',5,7,'Send automatic email, SMS, and in-app notifications when an account, verification case, or listing status changes.','Notifications','FR-68 FR-69 FR-70 FR-71 NFR-60','<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>'],
+  ['11','Privacy notice & user consent','S','A',6,7,'Show a clear Ghana Act 843 privacy notice at sign-up, record user consent, and ask only for needed personal information.','Privacy & Consent','NFR-31 NFR-32 NFR-35 NFR-36','<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>'],
+  ['12','Owner ID & property verification','M','B',6,8,'Let owners submit their Ghana Card, ownership proof, and tourism licence for review, with ID numbers encrypted in the database.','Owner Verification','UR-O01 FR-08 NFR-28 NFR-34 TA-09','<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M2 10h20"/></svg>'],
+  ['13','Create properties, rooms & prices','M','B',4,8,'Let verified owners create, edit, and pause property listings with individual rooms, photos, nightly GHS prices, amenities, and house rules.','Property Listings','FR-11 FR-12 FR-13 FR-14 FR-15 FR-16 FR-17 FR-22 BRL-06 BR-03 BR-02','<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>'],
+  ['14','Room availability calendar','M','B',7,8,'Let owners and authorised staff block or unblock dates on each room’s calendar, while preventing overlapping blocks.','Availability Calendar','UR-O02 UR-O03 FR-18 FR-39','<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'],
+  ['15','Admin review & listing approval','M','B',7,8,'Let administrators review submitted listings and approve, reject, suspend, restore, or request corrections with a written reason.','Admin Approvals','UR-A02 FR-21 FR-88','<svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>'],
+  ['16','Admin dashboard, users & settings','S','B',6,8,'Give administrators a summary dashboard, tools to create, suspend, or restore user accounts, and a page to update platform settings.','Admin Controls','UR-A01 FR-87 UR-A08 FR-92 FR-86','<svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>'],
+  ['17','Final testing & Release R1','M','A',9,10,'Run full checks with two pilot property owners, test a backup recovery, put Release R1 live, and demo the finished sprint.','Release R1','','<svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>']
+];
+const storyAcceptance={
+  'S1-01':[
+    'The website, backend server, and database folders are set up and connected.',
+    'The database table diagram (ERD), API routes, and screen plan are written down.',
+    'Automatic checks run on every code save to catch broken code or rule violations.'
+  ],
+  'S1-02':[
+    'The website, backend server, and database are live in their cloud homes.',
+    'Daily automatic database backups are turned on and a test restore is timed.',
+    'All passwords and secret keys are kept out of the code files, and health alerts are active.'
+  ],
+  'S1-03':[
+    'Owner and Admin pages fit cleanly on small phones (360px), tablets, and desktops.',
+    'Menus, icons, buttons, and status messages look and behave consistently.',
+    'Screens work across Chrome, Edge, Firefox, and Safari even on a slow mobile connection.'
+  ],
+  'S1-04':[
+    'A new user can register, confirm their email or phone code, sign in, and sign out.',
+    'Private pages block anyone who is not signed in or whose session has expired.',
+    'Passwords are handled safely by the sign-in service and never stored in FindStay tables.'
+  ],
+  'S1-05':[
+    'A user can reset a forgotten password through a single-use link sent to their email.',
+    'A signed-in user can view and edit only their own profile details.',
+    'Expired or already-used password reset links are rejected.'
+  ],
+  'S1-06':[
+    'Every protected page and server action checks the user’s role and permissions.',
+    'Administrator screens and actions are completely blocked for non-admin users.',
+    'All form inputs are checked to block unsafe text or attempts to view other people’s records.'
+  ],
+  'S1-07':[
+    'Each owner automatically gets their own company space during onboarding.',
+    'An owner can invite staff and grant or remove permissions for specific properties.',
+    'One owner can never see or edit another owner’s company, properties, or staff.'
+  ],
+  'S1-08':[
+    'Important admin, verification, and account actions record who did what and when.',
+    'Activity log entries are permanent and cannot be edited or deleted by anyone.',
+    'Administrators can search and filter the activity log by user, action, or date.'
+  ],
+  'S1-09':[
+    'Property photos are compressed into fast-loading WebP images for public viewing.',
+    'Owner ID cards and property documents stay locked in a private folder.',
+    'Oversized or invalid files are rejected, and private documents use temporary expiring links.'
+  ],
+  'S1-10':[
+    'Account, verification, and listing updates notify the user by email, SMS, and in-app alert.',
+    'If a message fails to send, the failure is logged and retried automatically.',
+    'Email and SMS providers can be swapped in settings without changing feature code.'
+  ],
+  'S1-11':[
+    'Users see a clear Ghana Act 843 privacy notice and give consent when signing up.',
+    'Forms ask only for personal details that are genuinely needed.',
+    'Personal and verification details are visible only to the owner and authorised reviewers.'
+  ],
+  'S1-12':[
+    'An owner can upload their Ghana Card, ownership proof, and tourism licence and track review status.',
+    'Ghana Card numbers are encrypted before being saved in the database.',
+    'If an admin asks for corrections, the owner can upload updated files and resubmit.'
+  ],
+  'S1-13':[
+    'A verified owner can create, edit, and pause a property with rooms, photos, GHS prices, amenities, and rules.',
+    'A listing missing required details (such as photos, price, or room capacity) cannot be sent for approval.',
+    'Only verified owners can create or submit listings.'
+  ],
+  'S1-14':[
+    'An owner or authorised staff member can block or unblock dates on each room’s calendar.',
+    'The database blocks any attempt to save two overlapping unavailable ranges on the same room.',
+    'If two people try to block the same dates at the same moment, only the first one succeeds.'
+  ],
+  'S1-15':[
+    'An administrator can approve, reject, suspend, restore, or ask for corrections on submitted listings.',
+    'A listing goes live (Published) only after an administrator approves it.',
+    'Every decision requires a written reason, logs the history, and notifies the owner.'
+  ],
+  'S1-16':[
+    'An administrator sees a summary dashboard of pending verifications, listings, and users.',
+    'An administrator can create, suspend, or restore user accounts and update platform settings.',
+    'Suspended users are blocked immediately, and all admin changes are recorded in the activity log.'
+  ],
+  'S1-17':[
+    'Two pilot property owners complete the full sign-up-to-published-listing journey.',
+    'The team proves one owner cannot see another’s data and completes a backup restore drill.',
+    'Release R1 is live and accepted by the Product Owner at Sprint Review.'
+  ]
+};
+const storyDesign={
+  'S1-01':{
+    who:'Development team (so all 11 members can build without stepping on each other’s work)',
+    screens:'Starter home pages for the Owner Portal, Admin Portal, and Guest Portal',
+    tables:'Starter database setup, shared platform settings, and Takoradi area list',
+    api:'Server health check, Ghana Cedi/pesewa money helper, and Ghana time (GMT) helper'
+  },
+  'S1-02':{
+    who:'Property owners and administrators relying on a safe, backed-up live website',
+    screens:'Live web addresses for the Owner and Admin portals protected by Cloudflare',
+    tables:'Daily automatic database backups plus a practice backup restore test on Day 4',
+    api:'Live cloud website and server hosting, automatic error alerts, and uptime checks'
+  },
+  'S1-03':{
+    who:'Small property owners, staff, and administrators on mobile phones and computers',
+    screens:'Shared Owner and Admin page layouts, mobile menu bar, pop-up alerts, and loading screens',
+    tables:'No new database tables (this story builds the shared screen layouts)',
+    api:'Clear, friendly status and error messages across all screens'
+  },
+  'S1-04':{
+    who:'Guests, Property Owners, Property Staff, and Administrators creating accounts and signing in',
+    screens:'Sign Up page, Email / Phone Code Confirmation page, and Sign In page',
+    tables:'User profiles table and user roles table (Guest, Owner, Property Staff, Administrator)',
+    api:'Create account, confirm email or phone code, sign in, sign out, and load signed-in user details'
+  },
+  'S1-05':{
+    who:'Any signed-in user updating their contact details or recovering a forgotten password',
+    screens:'Forgot Password page, Reset Password page, and My Profile page',
+    tables:'User profile fields (full name, phone number, profile photo, and language)',
+    api:'Send password reset email, save new password, and view or update profile details'
+  },
+  'S1-06':{
+    who:'All users (keeping private owner records and administrator tools locked to the right people)',
+    screens:'Role-aware menus and “Access Denied” screens in the Owner and Admin portals',
+    tables:'Roles, permissions, and role-permission rules',
+    api:'Automatic permission check on every server action and form input safety check'
+  },
+  'S1-07':{
+    who:'Property owners running a business and inviting staff for specific properties',
+    screens:'Company & Staff Management page and Staff Invitation Acceptance page',
+    tables:'Owner companies table, staff memberships table, and per-property staff permissions table',
+    api:'Invite staff member, set or remove staff permissions for a property, and keep each owner’s data separate'
+  },
+  'S1-08':{
+    who:'Administrators reviewing platform history and checking who made important changes',
+    screens:'Admin Activity Log page with filters for user, action type, and date range',
+    tables:'Permanent activity log table (entries can only be added, never edited or deleted)',
+    api:'Record every important action automatically and let administrators search the log'
+  },
+  'S1-09':{
+    who:'Property owners uploading property photos and private verification documents',
+    screens:'Property Photo Uploader and Private Document Uploader in the Owner Portal',
+    tables:'Property photos table and private verification documents table',
+    api:'Shrink property photos to fast-loading WebP format and lock private ID documents behind temporary links'
+  },
+  'S1-10':{
+    who:'Owners, staff, and users receiving alerts about their account, verification, or listings',
+    screens:'In-app Notification Bell & Inbox plus formatted Email and SMS messages',
+    tables:'Notifications table, message templates table, and delivery status log',
+    api:'Send email, SMS, and in-app notifications automatically and retry failed messages'
+  },
+  'S1-11':{
+    who:'All users (protecting personal information under Ghana’s Data Protection Act, Act 843)',
+    screens:'Privacy Notice window and required consent checkbox during Sign Up and Onboarding',
+    tables:'User privacy consent records table (who agreed, which privacy version, and when)',
+    api:'Save user privacy consent and hide private personal details from public pages'
+  },
+  'S1-12':{
+    who:'Property owners proving their identity and property ownership before publishing listings',
+    screens:'Owner Verification form and Verification Status Tracker in the Owner Portal',
+    tables:'Verification cases table (with encrypted Ghana Card number) and uploaded verification files table',
+    api:'Submit Ghana Card and property documents, check review progress, and upload corrected documents'
+  },
+  'S1-13':{
+    who:'Verified property owners creating and managing hotels, guesthouses, and apartments in Takoradi',
+    screens:'Owner Listings page, Property & Rooms Editor, and Listing Preview page',
+    tables:'Properties, rooms/units, listings, nightly GHS prices, amenities, house rules, and Takoradi areas',
+    api:'Create, edit, submit, and pause property listings and check that all required details are complete'
+  },
+  'S1-14':{
+    who:'Property owners and authorised staff managing when each room is available',
+    screens:'Room Availability Calendar with controls to block or unblock date ranges',
+    tables:'Room availability blocks table (with a database rule that stops overlapping date blocks)',
+    api:'View room calendar, block unavailable dates, unblock dates, and prevent double-blocking'
+  },
+  'S1-15':{
+    who:'Administrators checking owner documents and property listings before they go live',
+    screens:'Admin Approval Queue and Detailed Listing & Verification Review screen',
+    tables:'Listing status history table and admin review decisions table',
+    api:'Approve, reject, suspend, restore, or ask for corrections on a listing (always with a written reason)'
+  },
+  'S1-16':{
+    who:'Administrators monitoring platform counts, managing user accounts, and updating settings',
+    screens:'Admin Summary Dashboard, User Accounts page, and Platform Settings page',
+    tables:'Platform settings and feature switches table',
+    api:'Load dashboard counts, create/suspend/restore user accounts, and save platform settings'
+  },
+  'S1-17':{
+    who:'Pilot property owners, administrators, and the Product Owner reviewing Release R1',
+    screens:'All Release R1 screens tested from start to finish in the 7-step Sprint Review demo',
+    tables:'All Sprint 1 database tables verified on the live system plus a backup restore test',
+    api:'All Sprint 1 features tested end-to-end with two real pilot property owners'
+  }
+};
+const tlContainer=$('#timeline');
+let tlFilter=()=>true;
+function layoutTimeline(){
+  tlContainer.innerHTML='';
+  const list=S.filter(tlFilter).slice().sort((a,b)=>a[4]-b[4]||a[5]-b[5]||a[0].localeCompare(b[0]));
+  list.forEach((s,idx)=>{
+    const side=idx%2===0?'right':'left';
+    const cls='vtl-item '+side+(s[2]==='S'?' should':(s[3]==='B'?' track-b':''));
+    const item=E('div',cls);item.setAttribute('role','listitem');
+    const axis=E('div','vtl-axis');axis.setAttribute('aria-hidden','true');
+    const card=E('button','vtl-card');card.type='button';
+    card.setAttribute('aria-label','Story S1-'+s[0]+': '+s[1]+', Days '+s[4]+' to '+s[5]+'. Open story details.');
+    const arm=E('div','vtl-arm-row','<span class="vtl-line"></span><span class="vtl-dot"></span><span class="vtl-num-wrap"><span class="vtl-num">'+s[0]+'</span><span class="vtl-days">Days '+s[4]+'–'+s[5]+'</span></span>');
+    const banner=E('div','vtl-banner',s[9]+'<span></span>');
+    $('span',banner).textContent=s[1];
+    const body=E('div','vtl-body');
+    const sum=E('p','vtl-summary');sum.textContent=s[6];
+    const pts=E('ul','vtl-points');
+    (storyAcceptance['S1-'+s[0]]||[]).forEach(t=>{const li=E('li','');li.textContent=t;pts.append(li)});
+    const reqCount=storyIds(s).length;
+    const rPct=getGateStats(s[0],'Ready').pct,dPct=getGateStats(s[0],'Done').pct;
+    const meta=E('div','vtl-meta','<span>S1-'+s[0]+'</span><span>·</span><span>Track '+s[3]+'</span><span>·</span><span>Ready '+rPct+'%</span><span>·</span><span>Completed '+dPct+'%</span><span>·</span><span>'+(reqCount?reqCount+' reqs →':'Open →')+'</span>');
+    body.append(sum,pts,meta);
+    card.append(arm,banner,body);
+    card.onclick=()=>showStory(s);
+    item.append(axis,card);
+    tlContainer.append(item);
+  });
+}
+layoutTimeline();
+[['All',()=>true],['Track A',s=>s[3]=='A'],['Track B',s=>s[3]=='B'],['Must only',s=>s[2]=='M'],['Should only',s=>s[2]=='S']].forEach((f,k)=>{const b=E('button','pill'+(k?'':' on'),f[0]);b.type='button';b.onclick=()=>{$$('#dayFilters .pill').forEach(x=>x.classList.remove('on'));b.classList.add('on');tlFilter=f[1];layoutTimeline()};$('#dayFilters').append(b)});
+const DM=['An owner signs up with email, confirms it, and logs in.','The owner’s organisation is created automatically; they invite a staff member with permission for one property only.','The owner uploads identity and property documents; an administrator sees the case in the approval queue.','The owner creates a property with two units, photos (served as WebP), rates, amenities and house rules, and blocks some dates.','The administrator approves the listing; it becomes Published and the owner receives an email.','The administrator suspends and restores a user; both actions appear in the activity log.','A second owner cannot see the first owner’s data. The live system passes a restore drill from last night’s backup.'];
+let dk=0;DM.forEach((t,i)=>{const b=E('button','st','<span>'+(i+1)+'</span>'+t);b.onclick=()=>{dk=dk==i+1?i:i+1;$$('.st').forEach((x,j)=>x.classList.toggle('on',j<dk));$$('#demoStops .stop').forEach((s,j)=>{s.querySelector('circle').setAttribute('fill',j<dk?'var(--acc)':'var(--card)');s.querySelector('text').setAttribute('fill',j<dk?'#fff':'var(--acc)')});$('#pb').style.width=dk/DM.length*100+'%'};$('#demoList').append(b);$$('#demoStops .stop')[i].onclick=()=>b.click()});
+const io=new IntersectionObserver(es=>es.forEach(x=>x.isIntersecting&&x.target.classList.add('in')),{threshold:.06});
+$$('section').forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
