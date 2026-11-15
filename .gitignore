@@ -1,32 +1,22 @@
-# Generated PDF build intermediates and temporary files
-tmp/
-output/
-
-# Java and Maven artifacts
+# Build outputs
+dist/
+dist-ssr/
 target/
 *.class
 *.jar
 *.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
 
-# Node and Frontend build artifacts
+# Dependencies
 node_modules/
-dist/
-dist-ssr/
-*.local
-.vercel
 
-# Environment and secrets
+# Environment variables and secrets
 .env
 .env.local
 .env.*.local
 
-# Editor and operating-system files
+# IDE and OS
 .DS_Store
 .vscode/
 .idea/
 *.iml
+*.log
