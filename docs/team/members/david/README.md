@@ -1,10 +1,9 @@
 # David Ofori
 
 - **Index Number:** BC/ITS/24/263
-- **Project Role:** Frontend Developer
+- **Preferred Stack:** _No poll vote yet_ *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @KyleLion
 - **Primary Track:** Track B (Frontend Shell & Catalog)
-- **Preferred Stack Note:** _No poll vote yet_ *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 

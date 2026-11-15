@@ -1,10 +1,9 @@
 # Bright Afedi
 
 - **Index Number:** BC/ITS/24/156
-- **Project Role:** Requirements & Analysis Lead
+- **Preferred Stack:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @kwesipaa643-sys
 - **Primary Track:** Track A/B (Requirements, Privacy & Admin)
-- **Preferred Stack Note:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 

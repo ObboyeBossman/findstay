@@ -1,10 +1,9 @@
 # Emmanuel Rockson
 
 - **Index Number:** BC/ITN/24/153
-- **Project Role:** Database Designer
+- **Preferred Stack:** Database *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @surnuel
 - **Primary Track:** Track A/B (ERD, Schemas & Flyway V1_01..V1_19)
-- **Preferred Stack Note:** Database *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 

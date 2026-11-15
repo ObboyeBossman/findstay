@@ -1,10 +1,9 @@
 # Joseph Osei-Bonsu
 
 - **Index Number:** BC/ITS/24/168
-- **Project Role:** Backend Developer
+- **Preferred Stack:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @joseibonsu206-gif
 - **Primary Track:** Track A (Backend & Identity)
-- **Preferred Stack Note:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 

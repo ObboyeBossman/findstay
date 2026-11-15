@@ -1,10 +1,9 @@
 # Solomon Fummey
 
 - **Index Number:** BC/ITD/24/014
-- **Project Role:** Quality Assurance & Testing
+- **Preferred Stack:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @fummey
 - **Primary Track:** Track A/B (@Req Tests, UAT & Regression R1)
-- **Preferred Stack Note:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 

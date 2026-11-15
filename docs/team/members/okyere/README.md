@@ -1,10 +1,9 @@
 # Okyere Ankomah Julius
 
 - **Index Number:** BC/ITS/24/164
-- **Project Role:** UI/UX Designer
+- **Preferred Stack:** Database *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @Ankomah959Julius
 - **Primary Track:** Track B (Design System, Wireframes & Mobile 360px)
-- **Preferred Stack Note:** Database *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 

@@ -1,10 +1,9 @@
 # Seidu Afeadzi
 
 - **Index Number:** BC/ITS/24/152
-- **Project Role:** Backend Developer
+- **Preferred Stack:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @seiduafeadzi
 - **Primary Track:** Track A (Organisation & RBAC)
-- **Preferred Stack Note:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 

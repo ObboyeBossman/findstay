@@ -1,10 +1,9 @@
 # Mashkura Tahiru
 
 - **Index Number:** BC/ITS/24/265
-- **Project Role:** Landlord Portal Developer
+- **Preferred Stack:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @maskkuratahiru-wq
 - **Primary Track:** Track B (Owner Portal, Verification & Listings)
-- **Preferred Stack Note:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 

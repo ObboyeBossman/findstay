@@ -1,10 +1,9 @@
 # Anthony Maclean
 
 - **Index Number:** BC/ITS/24/155
-- **Project Role:** Team Lead & Booking / Availability Specialist
+- **Preferred Stack:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @dztrb
 - **Primary Track:** Track B (Availability Calendar & Overlap Locks)
-- **Preferred Stack Note:** Frontend (UI/UX) *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 

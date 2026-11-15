@@ -1,10 +1,9 @@
 # Bossman Abraham N. O.
 
 - **Index Number:** BC/ITS/24/197
-- **Project Role:** Scrum Master & System Architecture / Security
+- **Preferred Stack:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @ObboyeBossman
 - **Primary Track:** Track A (Platform, Cloud, R2, Security & Audit)
-- **Preferred Stack Note:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 

@@ -1,10 +1,9 @@
 # Sampson Badu
 
 - **Index Number:** BC/ITS/24/161
-- **Project Role:** Payment & Integration Developer
+- **Preferred Stack:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** @badu12-png
 - **Primary Track:** Track A (Notifications & Integrations)
-- **Preferred Stack Note:** Backend *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 
