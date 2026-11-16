@@ -103,7 +103,7 @@ R5 = S1..S4 + S5 suites + full security re-test
 | Sprint | May use | Must not touch |
 |:------:|---------|----------------|
 | 1 | Shared kernel only | Nothing earlier exists |
-| 2 | S1 public APIs and events: catalog, availability, organisation, identity, media, notification, audit | S1 internals |
+| 2 | S1 public APIs and events: listing, availability, organisation, identity, media, notification, audit | S1 internals |
 | 3 | S1 and S2 public APIs and the frozen event catalogue | S1 and S2 internals; no new booking states |
 | 4 | Phase 1 public APIs, events and seams (availability reasons, charges, roles, audit entity types, documents, notification registry) | Any Phase 1 module's internals |
 | 5 | Phase 1 and Sprint 4 public APIs | Any earlier module's internals |

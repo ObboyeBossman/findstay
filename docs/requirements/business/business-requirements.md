@@ -7,7 +7,7 @@
 | :--- | :--- | :--- | :---: | :---: | :---: |
 | `BR-01` | FindStay shall provide a central platform for discovering accommodation in Ghana. | `platform` | P1 | S2 | S2-01 |
 | `BR-02` | The platform shall initially focus on Takoradi as its proposed local pilot context. | `platform` | P1 | S1 | S1-13 |
-| `BR-03` | The platform shall support hotels, budget hotels, guesthouses, student hostels and serviced/short-stay apartments. | `catalog` | P1+P2 | S1 | S1-13 |
+| `BR-03` | The platform shall support hotels, budget hotels, guesthouses, student hostels and serviced/short-stay apartments. | `listing` | P1+P2 | S1 | S1-13 |
 | `BR-04` | The platform shall improve online visibility of accommodation providers. | `search` | P1 | S2 | S2-01 |
 | `BR-05` | The platform shall reduce fragmentation of accommodation information across informal channels. | `platform` | P1 | S2 | S2-03 |
 | `BR-06` | The platform shall reduce booking conflicts and double-bookings. | `availability` | P1 | S2 | S2-08 |
@@ -22,7 +22,7 @@
 | `BRL-03` | Only administrator-approved listings are publicly searchable and bookable. | `verification` | P1 | S2 | S2-03 |
 | `BRL-04` | Additional property-staff access must be explicitly granted by an authorised owner/manager or administrator. | `organization` | P1 | S1 | S1-07 |
 | `BRL-05` | Owners/managers and staff may access only properties and financial records they are authorised for. | `organization` | P1+P2 | S1 | S1-07 |
-| `BRL-06` | Listings must contain the minimum required information before submission for approval. | `catalog` | P1 | S1 | S1-13 |
+| `BRL-06` | Listings must contain the minimum required information before submission for approval. | `listing` | P1 | S1 | S1-13 |
 | `BRL-07` | Overlapping confirmed bookings for the same unit and dates are not permitted. | `availability` | P1 | S2 | S2-08 |
 | `BRL-08` | Booking flow: Pending → Awaiting Payment (on owner acceptance) → Confirmed (only after verified payment). | `booking` | P1 | S2 | S2-07 |
 | `BRL-09` | Unpaid bookings are automatically cancelled after the payment window expires (30 minutes); the unit is released. | `booking` | P1 | S2 | S2-07 |
