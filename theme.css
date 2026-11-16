@@ -1,290 +1,127 @@
 /**
  * FineStay - Design System Theme Tokens
- * Inspired by the FineStay Brand Identity (Forest Green & Vibrant Leaf Green)
- * 
- * Target: Web-based Accommodation Booking & Property Management Platform
- * Portals: Guest Interface, Property Owner/Manager Dashboard, Admin Console
+ * Based on the FineStay Reference Design Architecture
+ * Primary: Red (#C60026) for CTAs & active states
+ * Structure & Nav: Blue (#004BA0) for chrome, navigation, links & borders
+ * Neutrals: GitHub/Linear-inspired light neutral canvas (#f6f8fa)
  */
 
 :root {
   /* ==========================================================================
-     1. BRAND COLOR PALETTE (Extracted from Brand Identity)
+     1. BRAND COLORS (From Reference Design)
      ========================================================================== */
+  
+  /* Primary Action: Red */
+  --r:           #C60026;
+  --r-light:     #FF1A46;
+  --r-dim:       #8C001A;
+  --r-bg:        #fff0f2;
+  --r-bgd:       rgba(198, 0, 38, 0.12);
 
-  /* Primary Brand: Deep Forest Green (House roof, chimney, structure & foundation) */
-  --brand-forest-950: #042509;
-  --brand-forest-900: #07380F;
-  --brand-forest-800: #0B4A14; /* MAIN PRIMARY */
-  --brand-forest-700: #0E5D1B;
-  --brand-forest-600: #147425;
-  --brand-forest-500: #1B8E31;
-  --brand-forest-400: #29AC42;
-  --brand-forest-300: #5BC771;
-  --brand-forest-200: #A0E2B0;
-  --brand-forest-100: #D6F3DC;
-  --brand-forest-50:  #EFF9F1;
+  /* Structure & Navigation: Blue */
+  --b:           #004BA0;
+  --b-light:     #4D9FFF;
+  --b-dim:       #003578;
+  --b-bg:        #EFF5FF;
+  --b-bgd:       rgba(0, 75, 160, 0.15);
 
-  /* Accent Brand: Vibrant Leaf Green (Window panes & dynamic energetic swoosh) */
-  --brand-leaf-900:   #0B4702;
-  --brand-leaf-800:   #106203;
-  --brand-leaf-700:   #157F04;
-  --brand-leaf-600:   #189904;
-  --brand-leaf-500:   #1BAC04; /* MAIN ACCENT */
-  --brand-leaf-400:   #2ED414;
-  --brand-leaf-300:   #5CE246;
-  --brand-leaf-200:   #9CF08D;
-  --brand-leaf-100:   #DAFBD5;
-  --brand-leaf-50:    #EFFDEF;
+  /* Pure White */
+  --w:           #FFFFFF;
 
-  /* Secondary / Slate Pine: Sophisticated Deep Mineral Green */
-  --brand-slate-900:  #0F1F18;
-  --brand-slate-800:  #192E24;
-  --brand-slate-700:  #254034;
-  --brand-slate-600:  #345445;
-  --brand-slate-500:  #466B59;
-  --brand-slate-400:  #5D8873;
-  --brand-slate-300:  #83A895;
-  --brand-slate-200:  #B5CCBF;
-  --brand-slate-100:  #DCE7E1;
-  --brand-slate-50:   #F1F5F3;
+  /* Neutral Scale */
+  --n900:        #0d1117;
+  --n800:        #161b22;
+  --n700:        #21262d;
+  --n600:        #30363d;
+  --n500:        #484f58;
+  --n400:        #6e7681;
+  --n300:        #8b949e;
+  --n200:        #c9d1d9;
+  --n100:        #e6edf3;
+  --n50:         #f6f8fa;
 
-  /* Warm Neutrals (Grounded off-whites, warm greys, deep charcoal) */
-  --neutral-950:      #0C130E;
-  --neutral-900:      #121C15; /* High-contrast text */
-  --neutral-800:      #212D25;
-  --neutral-700:      #334137;
-  --neutral-600:      #4D5D52; /* Body text */
-  --neutral-500:      #697A6F; /* Muted text / placeholders */
-  --neutral-400:      #8E9F94;
-  --neutral-300:      #BDC8C1;
-  --neutral-200:      #D9E2DC; /* Standard borders */
-  --neutral-150:      #E6ECE8; /* Subtle dividers */
-  --neutral-100:      #F0F4F1; /* Input / card sub-surface */
-  --neutral-50:       #F7FAF8; /* Page background */
-  --neutral-0:        #FFFFFF; /* Pure white card surface */
+  /* Semantic Status Colors */
+  --green:       #1a7f37;
+  --green-bg:    #dafbe1;
+  --green-bgd:   rgba(26, 127, 55, 0.15);
+
+  --amber:       #9a6700;
+  --amber-bg:    #fff8c5;
+  --amber-bgd:   rgba(154, 103, 0, 0.15);
+
+  /* Font Stack */
+  --font:        'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono:   'SF Mono', Consolas, 'Courier New', monospace;
 
   /* ==========================================================================
-     2. FUNCTIONAL & SEMANTIC TOKENS
+     2. SEMANTIC DESIGN TOKENS (FineStay Platform)
      ========================================================================== */
-
-  /* Primary Action & Brand Identity */
-  --color-primary:             var(--brand-forest-800);
-  --color-primary-hover:       var(--brand-forest-700);
-  --color-primary-active:      var(--brand-forest-900);
-  --color-primary-subtle:      var(--brand-forest-50);
-  --color-primary-border:      var(--brand-forest-200);
+  
+  /* Primary Action (Red: Buttons, active tab indicator, urgent flags) */
+  --color-primary:             var(--r);
+  --color-primary-hover:       var(--r-dim);
+  --color-primary-light:       var(--r-light);
+  --color-primary-subtle:      var(--r-bg);
   --color-primary-contrast:    #FFFFFF;
 
-  /* Secondary Action & Portal Elements */
-  --color-secondary:           var(--brand-slate-700);
-  --color-secondary-hover:     var(--brand-slate-800);
-  --color-secondary-active:    var(--brand-slate-900);
-  --color-secondary-subtle:    var(--brand-slate-50);
-  --color-secondary-border:    var(--brand-slate-200);
+  /* Secondary & Structure (Blue: Nav bar, links, focus rings, info badges) */
+  --color-secondary:           var(--b);
+  --color-secondary-hover:     var(--b-dim);
+  --color-secondary-light:     var(--b-light);
+  --color-secondary-subtle:    var(--b-bg);
   --color-secondary-contrast:  #FFFFFF;
 
-  /* Accent & High-Conversion CTAs ("Book Now", "Instant Reserve", highlights) */
-  --color-accent:              var(--brand-leaf-500);
-  --color-accent-hover:        var(--brand-leaf-600);
-  --color-accent-active:       var(--brand-leaf-700);
-  --color-accent-subtle:       var(--brand-leaf-50);
-  --color-accent-border:       var(--brand-leaf-200);
-  --color-accent-contrast:     #052A08; /* Deep forest on bright green for WCAG AA compliance */
-  --color-accent-glow:         rgba(27, 172, 4, 0.28);
-
   /* Backgrounds & Surfaces */
-  --color-bg-base:             var(--neutral-50);  /* #F7FAF8 - Calming ambient */
-  --color-bg-surface:          var(--neutral-0);   /* #FFFFFF - Cards & Modals */
-  --color-bg-surface-elevated: #FFFFFF;
-  --color-bg-muted:            var(--neutral-100); /* #F0F4F1 - Inactive tabs, filter bars */
-  --color-bg-subtle:           var(--brand-forest-50);
-  --color-bg-overlay:          rgba(12, 19, 14, 0.65); /* Modal backdrop */
+  --color-bg-base:             var(--n50);   /* #f6f8fa */
+  --color-bg-surface:          var(--w);     /* #ffffff */
+  --color-bg-muted:            var(--n100);  /* #e6edf3 */
+  --color-bg-nav:              var(--b);     /* #004BA0 */
+  --color-bg-nav-dark:         var(--n900);  /* #0d1117 */
 
-  /* Typography Colors */
-  --color-text-primary:        var(--neutral-900); /* #121C15 - WCAG AAA 15.2:1 */
-  --color-text-secondary:      var(--neutral-600); /* #4D5D52 - WCAG AA 5.8:1 */
-  --color-text-muted:          var(--neutral-500); /* #697A6F - Placeholders / Captions */
-  --color-text-inverse:        #FFFFFF;
-  --color-text-brand:          var(--brand-forest-800);
-  --color-text-accent:         var(--brand-leaf-700);
+  /* Text Tokens */
+  --color-text-primary:        var(--n800);  /* #161b22 */
+  --color-text-secondary:      var(--n400);  /* #6e7681 */
+  --color-text-muted:          var(--n300);  /* #8b949e */
+  --color-text-link:           var(--b);     /* #004BA0 */
+  --color-text-danger:         var(--r);     /* #C60026 */
+  --color-text-success:        var(--green); /* #1a7f37 */
+  --color-text-on-brand:       #FFFFFF;
 
-  /* Borders & Dividers */
-  --color-border-subtle:       var(--neutral-150); /* #E6ECE8 */
-  --color-border-medium:       var(--neutral-200); /* #D9E2DC */
-  --color-border-strong:       var(--neutral-300); /* #BDC8C1 */
-  --color-border-focus:        var(--brand-forest-800);
-  --ring-focus:                0 0 0 3px rgba(27, 172, 4, 0.25); /* Leaf glow on focus */
+  /* Border Tokens */
+  --color-border-subtle:       var(--n100);  /* #e6edf3 */
+  --color-border-default:      var(--n200);  /* #c9d1d9 */
+  --color-border-strong:       var(--n300);  /* #8b949e */
+  --color-border-focus:        var(--b);     /* #004BA0 */
+  --color-border-danger:       var(--r);     /* #C60026 */
 
-  /* ==========================================================================
-     3. SYSTEM STATUS & FEEDBACK TOKENS (Ghana/Local accommodation flows)
-     ========================================================================== */
+  /* Spacing Scale (4px base) */
+  --space-xs:                  4px;
+  --space-sm:                  8px;
+  --space-md:                  12px;
+  --space-lg:                  16px;
+  --space-xl:                  24px;
+  --space-2xl:                 32px;
+  --space-3xl:                 48px;
+  --space-4xl:                 64px;
 
-  /* Success (Confirmed booking, verified property, successful payment) */
-  --color-success:             #1BAC04; /* Matches logo bright green */
-  --color-success-dark:        #127003;
-  --color-success-bg:          #EFFDEF;
-  --color-success-border:      #9CF08D;
-  --color-success-text:        #083802;
-
-  /* Warning (Pending approval, expiring hold, payment awaiting MoMo webhook) */
-  --color-warning:             #D97706; /* Earthen Amber */
-  --color-warning-dark:        #B45309;
-  --color-warning-bg:          #FFFBEB;
-  --color-warning-border:      #FDE68A;
-  --color-warning-text:        #78350F;
-
-  /* Error / Danger (Double-booking conflict, cancelled reservation, failed auth) */
-  --color-error:               #DC2626; /* Coral Crimson */
-  --color-error-dark:          #B91C1C;
-  --color-error-bg:            #FEF2F2;
-  --color-error-border:        #FECACA;
-  --color-error-text:          #7F1D1D;
-
-  /* Info (Guest tips, policy details, platform notes) */
-  --color-info:                #0284C7; /* Coastal Marine Cyan */
-  --color-info-dark:           #0369A1;
-  --color-info-bg:             #F0F9FF;
-  --color-info-border:         #BAE6FD;
-  --color-info-text:           #0C4A6E;
-
-  /* ==========================================================================
-     4. PORTAL-SPECIFIC ACCENT ROLES
-     ========================================================================== */
-
-  /* Guest Portal (Inviting, airy, discovery-focused) */
-  --portal-guest-accent:       var(--brand-leaf-500);
-  --portal-guest-bg:           var(--neutral-50);
-
-  /* Property Manager Portal (Operational, clear, data-driven) */
-  --portal-owner-nav:          var(--brand-forest-900);
-  --portal-owner-active:       var(--brand-leaf-500);
-  --portal-owner-bg:           #F4F7F5;
-
-  /* Admin Portal (Authoritative, structured, compliance-focused) */
-  --portal-admin-nav:          var(--brand-slate-900);
-  --portal-admin-active:       var(--brand-forest-500);
-  --portal-admin-badge:        #0E5D1B;
-
-  /* ==========================================================================
-     5. TYPOGRAPHY SYSTEM
-     ========================================================================== */
-
-  --font-family-sans:          system-ui, -apple-system, "Segoe UI", Roboto, "Plus Jakarta Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-family-mono:          ui-monospace, SFMono-Regular, "Cascadia Code", "Roboto Mono", Consolas, monospace;
-
-  --font-size-xs:              0.75rem;    /* 12px */
-  --font-size-sm:              0.875rem;   /* 14px */
-  --font-size-base:            1rem;       /* 16px */
-  --font-size-md:              1.125rem;   /* 18px */
-  --font-size-lg:              1.25rem;    /* 20px */
-  --font-size-xl:              1.5rem;     /* 24px */
-  --font-size-2xl:             1.875rem;   /* 30px */
-  --font-size-3xl:             2.25rem;    /* 36px */
-  --font-size-4xl:             3rem;       /* 48px */
-
-  --font-weight-regular:       400;
-  --font-weight-medium:        500;
-  --font-weight-semibold:      600;
-  --font-weight-bold:          700;
-  --font-weight-extrabold:     800;
-
-  --line-height-tight:         1.2;
-  --line-height-snug:          1.375;
-  --line-height-normal:        1.5;
-  --line-height-relaxed:       1.625;
-
-  --letter-spacing-tight:      -0.02em;
-  --letter-spacing-normal:     0em;
-  --letter-spacing-wide:       0.025em;
-
-  /* ==========================================================================
-     6. SPACING SCALE (4px Base Grid)
-     ========================================================================== */
-
-  --space-0:                   0px;
-  --space-1:                   0.25rem;    /* 4px */
-  --space-2:                   0.5rem;     /* 8px */
-  --space-3:                   0.75rem;    /* 12px */
-  --space-4:                   1rem;       /* 16px */
-  --space-5:                   1.25rem;    /* 20px */
-  --space-6:                   1.5rem;     /* 24px */
-  --space-8:                   2rem;       /* 32px */
-  --space-10:                  2.5rem;     /* 40px */
-  --space-12:                  3rem;       /* 48px */
-  --space-16:                  4rem;       /* 64px */
-  --space-20:                  5rem;       /* 80px */
-  --space-24:                  6rem;       /* 96px */
-
-  /* ==========================================================================
-     7. BORDER RADIUS SCALE
-     ========================================================================== */
-
+  /* Border Radius */
+  --radius-none:               2px;
   --radius-xs:                 4px;
   --radius-sm:                 6px;
-  --radius-md:                 10px;       /* Standard cards & inputs */
-  --radius-lg:                 14px;       /* Property cards & modal dialogs */
-  --radius-xl:                 20px;       /* Featured hero banners */
-  --radius-2xl:                28px;       /* Floating search widgets */
-  --radius-full:               9999px;     /* Badges & pill buttons */
-
-  /* ==========================================================================
-     8. ELEVATION & SHADOWS (Tuned with Organic Forest Green Ambience)
-     ========================================================================== */
-
-  --shadow-xs:                 0 1px 2px rgba(12, 19, 14, 0.05);
-  --shadow-sm:                 0 2px 4px rgba(12, 19, 14, 0.06), 0 1px 2px rgba(12, 19, 14, 0.04);
-  --shadow-md:                 0 4px 12px rgba(12, 19, 14, 0.08), 0 2px 4px rgba(12, 19, 14, 0.04);
-  --shadow-lg:                 0 10px 25px -4px rgba(12, 19, 14, 0.10), 0 4px 10px -2px rgba(12, 19, 14, 0.05);
-  --shadow-xl:                 0 20px 35px -8px rgba(12, 19, 14, 0.14), 0 8px 16px -4px rgba(12, 19, 14, 0.06);
-  --shadow-card-hover:         0 14px 30px -4px rgba(11, 74, 20, 0.12), 0 4px 12px -2px rgba(12, 19, 14, 0.06);
-  --shadow-glow:               0 0 16px rgba(27, 172, 4, 0.35);
-
-  /* ==========================================================================
-     9. TRANSITIONS & TIMING
-     ========================================================================== */
-
-  --transition-fast:           150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal:         250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-smooth:         350ms cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* ==========================================================================
-     10. LAYOUT & BREAKPOINTS
-     ========================================================================== */
-
-  --container-sm:              640px;
-  --container-md:              768px;
-  --container-lg:              1024px;
-  --container-xl:              1280px;
-  --container-2xl:             1440px;
-
-  /* Z-Index Hierarchy */
-  --z-dropdown:                1000;
-  --z-sticky:                  1100;
-  --z-fixed:                   1200;
-  --z-modal-backdrop:          1300;
-  --z-modal:                   1400;
-  --z-popover:                 1500;
-  --z-toast:                   1600;
+  --radius-md:                 8px;
+  --radius-lg:                 12px;
+  --radius-xl:                 16px;
+  --radius-pill:               9999px;
 }
 
-/* Optional Dark Theme Variant (Preserving Brand Green Consistency) */
+/* Dark Theme Support */
 [data-theme="dark"] {
-  --color-bg-base:             #09110B;
-  --color-bg-surface:          #111C14;
-  --color-bg-surface-elevated: #16241A;
-  --color-bg-muted:            #1B2C21;
-  --color-bg-subtle:           #142518;
-
-  --color-text-primary:        #F2F7F3;
-  --color-text-secondary:      #B2C4B7;
-  --color-text-muted:          #7D9484;
-
-  --color-border-subtle:       #1E3023;
-  --color-border-medium:       #2A4232;
-  --color-border-strong:       #3A5744;
-
-  --shadow-xs:                 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-sm:                 0 2px 4px rgba(0, 0, 0, 0.4);
-  --shadow-md:                 0 4px 12px rgba(0, 0, 0, 0.45);
-  --shadow-lg:                 0 10px 25px rgba(0, 0, 0, 0.55);
+  --color-bg-base:             #0d1117;
+  --color-bg-surface:          #161b22;
+  --color-bg-nav:              #010409;
+  --color-text-primary:        #e6edf3;
+  --color-text-secondary:      #8b949e;
+  --color-border-subtle:       #21262d;
+  --color-border-default:      #30363d;
+  --color-text-link:           #4D9FFF;
 }
