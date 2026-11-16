@@ -5,7 +5,7 @@
 A story cannot enter a sprint until all five checks are met:
 
 1. **Clear Requirements:** Every requirement tied to the story (`FR-*`, `NFR-*`, `SEC-*`, `BRL-*`, `CON-*`, `UI-*`) is listed along with its priority (`Must`, `Should`, or `Could`).
-2. **Clear Acceptance Criteria:** It is written in plain Given/When/Then steps or clear pass/fail checks so anyone can test it.
+2. **Clear Acceptance Criteria:** It is written in Given/When/Then steps or clear pass/fail checks so anyone can test it.
 3. **No Open Blockers:** Any stakeholder decisions (`J-*`, `P-*`) are already decided, or there is an agreed fallback plan.
 4. **Fits in One Sprint:** The work takes 1–3 days and can be finished within the current sprint.
 5. **Impact Identified:** We know upfront which database migrations, shared APIs, or module boundaries the story touches.

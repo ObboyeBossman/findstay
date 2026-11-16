@@ -1,10 +1,10 @@
 # Theresa Becky Oblitey
 
 - **Index Number:** BC/ITS/24/196
-- **Project Role:** _TBD_
+- **Preferred Stack:** Database *(Preference note only to inform task assignment; not a restriction.)*
 - **GitHub Handle:** _TBD_
+- **WhatsApp Name:** `Ũm_Bèċky💜🎀`
 - **Primary Track:** _TBD_
-- **Preferred Stack Note:** Database *(Preference note only to inform task assignment; not a restriction.)*
 
 ## Assigned Stories & Backlog
 
