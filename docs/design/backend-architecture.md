@@ -3,8 +3,8 @@
 - **Task:** [`S1-01-T6`](../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T6.md) (Issue [#30](https://github.com/ObboyeBossman/findstay/issues/30))
 - **Story:** [`S1-01: Project Setup & System Design`](../../scrum/sprint-01/stories/S1-01/README.md) — Release `R1`
 - **Owner:** @ObboyeBossman (Bossman Abraham N. O.) — Product Owner
-- **Status:** In Review (contracts pending team sign-off — see [§8 Review agenda](#8-review-agenda-checklist-item-5))
-- **Decisions recorded in:** [`docs/decisions/dec-s1-01-t6-backend-contracts.md`](../decisions/dec-s1-01-t6-backend-contracts.md) (`DEC-S1-01/A/B/C`)
+- **Status:** Agreed & closed — issue [#30](https://github.com/ObboyeBossman/findstay/issues/30) closed 2026-11-16; merged via [PR #39](https://github.com/ObboyeBossman/findstay/pull/39) (`dc48b3b`) + [PR #40](https://github.com/ObboyeBossman/findstay/pull/40) (`da4e34f`). The [§8 Review agenda](#8-review-agenda-checklist-item-5) items remain as confirm-or-adjust inputs for T8 (issue #32) and the Sprint 1 backend — they are hand-offs, not blockers.
+- **Decisions recorded in:** [`docs/decisions/dec-s1-01-t6-backend-contracts.md`](../decisions/dec-s1-01-t6-backend-contracts.md) (`DEC-S1-01/A`–`/E`)
 
 This document is the backend half of the Sprint 1 system design. It names the big
 parts of the back end, shows how data travels between the screens, the parts, and
