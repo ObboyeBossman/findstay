@@ -75,6 +75,7 @@ function isPlaceholderOnly(text) {
     .replace(SUMMARY_HEADING_RE, '')
     .replace(/^#{1,6}\s+.*$/gm, '')
     .replace(/PR\s*\/\s*commit\s*\/\s*live URL\s*:/gi, '')
+    .replace(/Link to live page, test result, or pull request\s*:/gi, '')
     .replace(/[-*]\s*\[[ xX]\]\s*/g, '')
     .replace(/<[^>]+>/g, '')
     .replace(/[_\s`>*|-]/g, '')
@@ -351,18 +352,18 @@ async function handleIssueEvent(repoPath, issueNumber, action, token, projectTok
         PROMPT_MARKER,
         '## Completion Summary Required Before Closing',
         '',
-        'To keep an accurate record of what was accomplished (and feed the story roll-up), please add a short summary before closing this issue.',
+        'Before closing this issue, please add a short summary in **plain, simple English (no technical jargon)** so anyone on the team can see what was accomplished.',
         '',
         'Copy and fill in the template below as a comment, then close the issue again:',
         '',
         '```markdown',
         '## Completion Summary',
         '',
-        '### What was accomplished',
+        '### What was accomplished (in plain English)',
         '- ',
         '',
-        '### Evidence / Links',
-        '- PR / commit / live URL: ',
+        '### Proof / Links',
+        '- Link to live page, test result, or pull request: ',
         '```',
       ].join('\n');
 
