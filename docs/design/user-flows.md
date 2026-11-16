@@ -1,295 +1,438 @@
-# FindStay — User Flow Diagrams (`S1-01-T3`)
+# FindStay — User Flow Diagrams & Screen Specification (`S1-01-T3`)
 
 - **Task:** [`S1-01-T3`](../scrum/sprint-01/stories/S1-01/tasks/S1-01-T3.md) (Issue [#27](https://github.com/ObboyeBossman/findstay/issues/27))
 - **Story:** [`S1-01`](../scrum/sprint-01/stories/S1-01/README.md) — Project Setup & System Design
 - **Author:** Anthony Maclean (`@dztrb`)
-- **Status:** Accepted (reviewed; note: `SCR-23`/`SCR-24` public search filtering ships in Sprint 2 per `S1-01-T1`, while Guest landing shell `SCR-22` is Sprint 1)
+- **Status:** Draft (pending `S1-01-T1` confirmation & team review)
 
-This document defines the **numbered screen inventory** and **screen-to-screen user flow diagrams** for FindStay's three journeys (**Shared Auth**, **Property Owner**, **Administrator**, and **Guest**), including **happy paths**, **error paths**, and **empty states**.
+This document is the screen-to-screen blueprint for Sprint 1 and the direct input to **T4 (Wireframes)**, **T6 (API Contracts)**, **T8 (Database ERD)**, and **T13 (Test Plan)**.
+
+---
+
+## Sprint 1 vs. Later Sprints Legend
+
+| Marker | Meaning |
+| :--- | :--- |
+| **Sprint 1** (default) | Built and shipped in Phase 1, Release `R1` (Foundation, Auth, Org/Staff, Verification, Catalog, Calendar, Admin Review & Audit). |
+| **`[Sprint 2+]`** | Deferred beyond `R1` (Guest booking, checkout, payments, "Booked" calendar state). Drawn only to show end-to-end continuity. |
+| **`[Sprint 3]`** | Future enhancement stub (e.g., Guest save/share property). |
+| **`[Audit: event_name]`** | Action writes an immutable record to `audit.audit_log` (`BRL-13`, `BRL-16`, `NFR-66`). |
+| **`[Notify: target]`** | Action triggers a `NotificationSender` event (`FR-66..71`, `BRL-17`). |
+| **`[OrgScope]`** | Enforces `organization_id` tenant isolation (`BRL-04`, `UR-ON02`). |
 
 > [!NOTE]
-> **Sprint 1 Scope:** Sprint 1 delivers Foundation, Auth & Password Recovery (`S1-04`, `S1-05`), Owner Organisation & Staff (`S1-07`), Owner Verification (`S1-12`), Property/Unit Catalog (`S1-13`), Availability Calendar (`S1-14`), and Admin Approval & Management (`S1-15`, `S1-16`). Guest booking steps **9–11** are explicitly marked **`[Sprint 2+]`** inside the Guest diagram.
+> **Money & Timezone Conventions (`NFR-08`, `NFR-52`):** All prices are **displayed in GHS** and **stored as integer pesewas**. All timestamps are **stored in UTC/GMT** and **formatted for `Africa/Accra` (Ghana time)** at presentation boundaries.
 
 ---
 
-## 1. Numbered Screen Inventory (For `T4` Wireframes & `T6` API Check)
+## 1. Numbered Screen Inventory (Input for `T4`, `T6`, `T8`)
 
-| Screen ID | Screen Name | Story | Scope | One-Line Purpose |
-| :--- | :--- | :---: | :---: | :--- |
-| **SCR-01** | Sign In | `S1-04` | Sprint 1 | Authenticate existing Guest, Owner, or Admin with email/phone and password. |
-| **SCR-02** | Create Account | `S1-04` | Sprint 1 | Register a new user account and accept Act 843 privacy/consent notice (`S1-11`). |
-| **SCR-03** | Account Verification (Email / OTP) | `S1-04` | Sprint 1 | Confirm email or phone OTP code after sign-up before first sign-in. |
-| **SCR-04** | Forgot Password | `S1-05` | Sprint 1 | Request a password-reset link or OTP by entering registered email. |
-| **SCR-05** | Reset Password | `S1-05` | Sprint 1 | Enter and confirm a new password from the recovery link/token. |
-| **SCR-06** | User Profile (`/me`) | `S1-05` | Sprint 1 | View and update basic profile details and session settings. |
-| **SCR-07** | Owner Dashboard | `S1-07` | Sprint 1 | Central owner/staff workspace showing organisation status, listings, and alerts. |
-| **SCR-08** | Organisation & Staff Setup | `S1-07` | Sprint 1 | View company space (`organization_id`) and invite/manage staff roles. |
-| **SCR-09** | Owner Verification Upload | `S1-12` | Sprint 1 | Upload Ghana Card, proof of ownership/authorisation, and GTA licence. |
-| **SCR-10** | Owner Verification Status | `S1-12` | Sprint 1 | Track verification state (`Pending`, `Approved`, `Rejected` with reason & resubmit). |
-| **SCR-11** | Add / Edit Property Form | `S1-13` | Sprint 1 | Create or edit property details, units/rooms, amenities, rules, and GHS pesewa prices. |
-| **SCR-12** | Upload Property Images | `S1-09` | Sprint 1 | Upload and reorder property/unit photos (WebP) via pre-signed URLs. |
-| **SCR-13** | Property Submission Status | `S1-13` | Sprint 1 | View listing review status (`Draft`, `Pending Review`, `Approved`, `Rejected` + edit). |
-| **SCR-14** | Manage Property & Units | `S1-13` | Sprint 1 | View/edit published or draft properties and select a unit to manage. |
-| **SCR-15** | Unit Availability Calendar | `S1-14` | Sprint 1 | View a unit's date calendar showing available, booked, and owner-blocked dates. |
-| **SCR-16** | Block / Unblock Dates Form | `S1-14` | Sprint 1 | Create, edit, or remove an owner availability block (`availability_block`) for a date range. |
-| **SCR-17** | Admin Sign In | `S1-04` | Sprint 1 | Authenticate platform administrator into the `/admin` portal. |
-| **SCR-18** | Admin Dashboard | `S1-16` | Sprint 1 | Overview of pending verification/listing queues, user counts, and platform health. |
-| **SCR-19** | Submitted Properties Queue | `S1-15` | Sprint 1 | List properties and owner verifications awaiting administrator review. |
-| **SCR-20** | Property & Verification Review | `S1-15` | Sprint 1 | Inspect property info, photos, and private owner verification docs; approve or reject with reason. |
-| **SCR-21** | Users, Settings & Audit Log | `S1-08`, `S1-16` | Sprint 1 | Manage user accounts/roles, platform settings, and view append-only `audit_log`. |
-| **SCR-22** | Homepage (Browse & Search) | `S1-03` | Sprint 1 | Public landing page where guests browse featured listings and start a search. |
-| **SCR-23** | Search Accommodation | `S1-03` | Sprint 1 | Enter destination, dates, guest count, and price/amenity filters. |
-| **SCR-24** | Search Results | `S1-03` | Sprint 1 | Display available accommodations matching filters (or empty state). |
-| **SCR-25** | Property Details | `S1-13` | Sprint 1 | View property photos, GHS pricing, location, facilities, and "Make a Booking" CTA. |
-| **SCR-26** | Booking Details `[Sprint 2+]` | `S2+` | Sprint 2+ | Enter/confirm stay dates, guest count, and contact details before checkout. |
-| **SCR-27** | Confirm Booking `[Sprint 2+]` | `S2+` | Sprint 2+ | Review booking summary and confirm reservation (and payment in Sprint 2+). |
-| **SCR-28** | Booking Confirmation `[Sprint 2+]` | `S2+` | Sprint 2+ | Display confirmed booking reference and summary. |
-| **SCR-ERR** | Global Offline / Server Error | `S1-03` | Sprint 1 | Shown when internet is offline or API returns `5xx`, with a `[Retry]` action. |
+| ID | Screen Name | Story | Scope | API Endpoint (`/api/v1/...`) | Audit Event (`audit.audit_log`) | Mobile (`360px+`) & Desktop Variant | One-Line Purpose |
+| :--- | :--- | :---: | :---: | :--- | :--- | :--- | :--- |
+| **SCR-01** | Sign In | `S1-04` | Sprint 1 | `POST /api/v1/auth/session` (Supabase + `/me`) | `auth.login_success` / `auth.login_failed` | Single-column card (mobile) / Centered split card (desktop) | Authenticate Guest, Owner, Staff, or Admin with email/phone and password. |
+| **SCR-02** | Create Account | `S1-04` | Sprint 1 | `POST /api/v1/auth/register` + `POST /api/v1/consents` | `user.registered`, `consent.recorded` | Vertical stacked form (mobile) / Centered card (desktop) | Register account and capture Ghana Act 843 privacy consent (`S1-11`). |
+| **SCR-03A** | Account Verification (OTP) | `S1-04` | Sprint 1 | `POST /api/v1/auth/verify-otp` | `auth.account_verified` | Large 6-digit OTP inputs (mobile) / Centered card (desktop) | Enter email/SMS OTP code after sign-up to activate account. |
+| **SCR-03B** | Email Verification Link Landing | `S1-04` | Sprint 1 | `GET /api/v1/auth/verify-email?token=...` | `auth.account_verified` | Full-screen status card + icon (mobile & desktop) | Handle email-link click: Verified / Already Verified / Expired Link (`[Resend]`). |
+| **SCR-04** | Forgot Password | `S1-05` | Sprint 1 | `POST /api/v1/auth/password-reset/request` | `auth.password_reset_requested` | Single-input card (mobile & desktop) | Request password-reset email/OTP by entering registered email. |
+| **SCR-05** | Reset Password | `S1-05` | Sprint 1 | `POST /api/v1/auth/password-reset/confirm` | `auth.password_reset_completed` | Form + inline password-policy checklist (mobile & desktop) | Enter and confirm new password meeting policy rules. |
+| **SCR-06** | Profile & Notification Preferences | `S1-05`, `S1-10` | Sprint 1 | `GET/PATCH /api/v1/me`, `GET/PUT /api/v1/me/notifications/preferences` | `user.profile_updated` | Tabbed sections + bottom nav (mobile) / Left sidebar + form (desktop) | Update `/me` profile, toggle Email/SMS/In-App preferences, and **Logout**. |
+| **SCR-06B** | Role / Portal Picker | `S1-06` | Sprint 1 | `GET /api/v1/me` (roles & memberships) | — | Stacked role cards with icons (mobile) / Grid cards (desktop) | Let multi-role users (Guest + Owner + Staff) pick or switch active portal (`BRL-02`). |
+| **SCR-06C** | Policy Re-Consent Gate | `S1-11` | Sprint 1 | `GET /api/v1/consents/latest`, `POST /api/v1/consents` | `consent.recorded` | Full-screen modal sheet (mobile) / Centered dialog (desktop) | Block entry until user reviews and accepts updated `policy_version` (`NFR-36`). |
+| **SCR-06D** | Session Expired Redirect | `S1-04` | Sprint 1 | — (401 / refresh failure) | `auth.session_expired` | Banner + redirect to `SCR-01` (mobile & desktop) | Inform user 1-hr JWT/refresh expired mid-task and return to `SCR-01` (`TA-08`). |
+| **SCR-07** | Owner Dashboard | `S1-07` | Sprint 1 | `GET /api/v1/owner/dashboard` `[OrgScope]` | — | Summary cards + icon nav bar (mobile) / Sidebar + KPI grid (desktop) | Owner/staff home showing org verification status, listing counts, and alerts. |
+| **SCR-07B** | Owner Listings List (`/owner/listings`) | `S1-13` | Sprint 1 | `GET /api/v1/owner/properties` `[OrgScope]` | — | Card list + status badges (mobile) / Table + filter bar (desktop) | Entry list of all org properties with status, quick preview, pause/activate actions. |
+| **SCR-08** | Organisation & Staff Setup | `S1-07` | Sprint 1 | `GET/PATCH /api/v1/owner/org`, `POST /api/v1/owner/invitations` `[OrgScope]` | `org.staff_invited`, `org.staff_role_updated` | Stacked org card + invite sheet (mobile) / Two-column layout (desktop) | Manage company space (`organization_id`) and invite staff scoped to properties. |
+| **SCR-08B** | Staff Invitation Acceptance (`/owner/invitations`) | `S1-07` | Sprint 1 | `GET /api/v1/invitations/{token}`, `POST /api/v1/invitations/{token}/accept` | `org.staff_invite_accepted` | Single-column onboarding card (mobile & desktop) | Invited staff views org + assigned properties, sets password, and joins org. |
+| **SCR-09** | Owner Verification Upload | `S1-12` | Sprint 1 | `POST /api/v1/owner/verification/presign`, `POST /api/v1/owner/verification/submit` `[OrgScope]` | `verification.submitted` | Step-by-step per-doc upload cards (mobile) / 3-doc grid (desktop) | Upload Ghana Card, ownership proof, and GTA licence (or re-upload single rejected doc). |
+| **SCR-10** | Owner Verification Status | `S1-12` | Sprint 1 | `GET /api/v1/owner/verification` `[OrgScope]` | — | Per-document status cards with icons/text (mobile & desktop) | Show overall and **per-document** status (`Pending`, `Approved`, `Rejected` + fix note). |
+| **SCR-11** | Add / Edit Property Form | `S1-13` | Sprint 1 | `POST /api/v1/owner/properties`, `PATCH /api/v1/owner/properties/{id}` `[OrgScope]` | `listing.draft_saved`, `listing.paused`, `listing.reactivated` | Multi-step accordion + auto-save badge (mobile) / Two-column form (desktop) | Edit property details, location, amenities, rules, and pause/deactivate listing. |
+| **SCR-11B** | Multi-Unit Editor | `S1-13` | Sprint 1 | `POST/PATCH/DELETE /api/v1/owner/properties/{id}/units` `[OrgScope]` | `unit.created`, `unit.updated` | Unit card list + bottom sheet editor (mobile) / Inline table + drawer (desktop) | Add/edit individual units (`unit_id`) with own pesewa rate and billing period (`P-02`). |
+| **SCR-11C** | Listing Preview | `S1-13` | Sprint 1 | `GET /api/v1/owner/properties/{id}/preview`, `POST .../submit` `[OrgScope]` | `listing.submitted` | Mobile guest-view preview + `[Submit]` sticky bar (mobile & desktop) | Preview listing as guests will see it before submitting for admin review. |
+| **SCR-12** | Photo Management | `S1-09` | Sprint 1 | `POST /api/v1/owner/properties/{id}/photos/presign`, `PUT/DELETE .../photos` `[OrgScope]` | `listing.photos_updated` | 2-column photo grid + reorder/cover/delete (mobile) / 4-col grid (desktop) | Upload WebP photos (max 10), reorder, set cover photo, replace, or delete (`FR-14`). |
+| **SCR-13** | Property Submission Status | `S1-13` | Sprint 1 | `GET /api/v1/owner/properties/{id}` `[OrgScope]` | — | Status timeline + correction list (mobile & desktop) | Show `Draft`, `Pending Review`, `Corrections Requested`, `Approved`, or `Rejected`. |
+| **SCR-14** | Manage Property & Units | `S1-13` | Sprint 1 | `GET /api/v1/owner/properties/{id}` `[OrgScope]` | — | Summary header + action list (mobile) / Tabs: Overview, Units, Calendar (desktop) | Central property management hub: edit, pause/activate, open unit calendar. |
+| **SCR-15** | Unit Availability Calendar | `S1-14` | Sprint 1 | `GET /api/v1/owner/units/{unitId}/availability` `[OrgScope]` | — | Month grid with colour+pattern legend (mobile & desktop) | View unit calendar: `Available` / `Owner-Blocked` (`Booked` is `[Sprint 2+]`). |
+| **SCR-16** | Block / Unblock Dates Form | `S1-14` | Sprint 1 | `POST/DELETE /api/v1/owner/units/{unitId}/blocks` `[OrgScope]` | `availability.block_created`, `availability.block_removed` | Bottom-sheet date picker (mobile) / Side panel form (desktop) | Create, edit, or remove owner date-range blocks (`btree_gist` conflict check). |
+| **SCR-17** | Admin Sign In | `S1-04` | Sprint 1 | `POST /api/v1/auth/session` (Admin role check) | `auth.admin_login` | Centered card (mobile & desktop) | Authenticate platform administrator into `/admin`. |
+| **SCR-18** | Admin Dashboard | `S1-16` | Sprint 1 | `GET /api/v1/admin/dashboard` | — | KPI stack + icon nav (mobile) / Sidebar + KPI cards (desktop) | Overview of pending verification/listing queues, user stats, and recent alerts. |
+| **SCR-19** | Submitted Review Queue | `S1-15` | Sprint 1 | `GET /api/v1/admin/reviews?status=pending` | — | Queue cards with age badge (mobile) / Filterable table (desktop) | List pending owner verifications and property submissions awaiting review. |
+| **SCR-20** | Property & Verification Review | `S1-15` | Sprint 1 | `GET /api/v1/admin/reviews/{id}`, `POST .../decision` | `verification.approved/rejected`, `listing.approved/corrections/rejected` | Stacked sections + sticky decision bar (mobile) / Split pane (desktop) | Inspect listing, photos, and per-doc verification; **Approve / Request Corrections / Reject**. |
+| **SCR-21A** | User Management (`/admin/users`) | `S1-16` | Sprint 1 | `GET /api/v1/admin/users`, `POST /api/v1/admin/users/{id}/suspend\|restore` | `user.suspended`, `user.restored` | User card list + action sheet (mobile) / Searchable table (desktop) | Search users, view roles, and suspend or restore accounts (`BRL-16`, `FR-87`). |
+| **SCR-21B** | Platform Settings (`/admin/settings`) | `S1-16` | Sprint 1 | `GET/PATCH /api/v1/admin/settings` | `platform.setting_updated` | Stacked setting groups (mobile) / Categorized form (desktop) | Configure platform settings (`platform_setting`), policy version, and feature flags. |
+| **SCR-21C** | Audit Log Viewer (`/admin/audit`) | `S1-08` | Sprint 1 | `GET /api/v1/admin/audit-logs` | — (read-only) | Compact event cards (mobile) / Filterable log table (desktop) | Inspect immutable `audit.audit_log` entries (actor, action, target, UTC/Ghana time). |
+| **SCR-22** | Homepage (Browse & Search) | `S1-03` | Sprint 1 | `GET /api/v1/properties/featured` | — | Search bar + 1-col cards + icon nav (mobile) / Hero search + 3-col grid (desktop) | Public landing page where guests browse featured listings and start searching. |
+| **SCR-23** | Search Accommodation | `S1-03` | Sprint 1 | `GET /api/v1/properties/search` | — | Full-screen filter sheet (mobile) / Top bar + left filter sidebar (desktop) | Enter destination, dates, guests, and filters. |
+| **SCR-24** | Search Results | `S1-03` | Sprint 1 | `GET /api/v1/properties/search` | — | 1-col listing cards + Verified badge (mobile) / 2–3-col grid + map/sort (desktop) | Display matching available properties with GHS price and Verified Owner badge. |
+| **SCR-25** | Property Details | `S1-13` | Sprint 1 | `GET /api/v1/properties/{id}` | — | Photo carousel + sticky CTA bar (mobile) / Gallery + 2-col layout (desktop) | Show photos, GHS price, **Verified Owner badge**, facilities, and Save/Share `[Sprint 3]` stub. |
+| **SCR-26** | Booking Details `[Sprint 2+]` | `S2+` | Sprint 2+ | `POST /api/v1/bookings/draft` `[Sprint 2+]` | — | Single-column form (mobile) / 2-col form + price summary (desktop) | Enter/confirm stay dates, guests, and contact info. |
+| **SCR-27** | Confirm Booking `[Sprint 2+]` | `S2+` | Sprint 2+ | `POST /api/v1/bookings` `[Sprint 2+]` | `booking.created` `[Sprint 2+]` | Summary + confirm CTA (mobile & desktop) | Review booking summary and confirm reservation/payment. |
+| **SCR-28** | Booking Confirmation `[Sprint 2+]` | `S2+` | Sprint 2+ | `GET /api/v1/bookings/{id}` `[Sprint 2+]` | — | Confirmation card + receipt download (mobile & desktop) | Display confirmed booking reference and summary. |
+| **SCR-29** | 404 Not Found | `S1-03` | Sprint 1 | — | — | Centered icon + `[Go Home]` (mobile & desktop) | Shown when a route or property ID does not exist. |
+| **SCR-ERR** | Global Offline / Server Error | `S1-03` | Sprint 1 | — | — | Centered icon + plain-language message + `[Retry]` | Shown when offline or API returns `5xx`. |
 
 ---
 
-## 2. Shared Flow: Authentication & Password Recovery (`SCR-01` – `SCR-06`)
+## 2. Shared Flow: Authentication, Consent, Role Picker & Session Lifecycle
 
-All three journeys (**Guest**, **Property Owner**, **Administrator**) enter this shared flow whenever authentication is required.
+Covers **`S1-04`**, **`S1-05`**, **`S1-06`**, **`S1-10`**, **`S1-11`**. Drawn once and referenced by all portals.
 
 ```mermaid
 flowchart TD
-    AuthEntry(["Entry: Auth Required<br/>(Guest / Owner / Admin)"]) --> NetCheck{"Internet & Server<br/>Reachable?"}
-    NetCheck -- "No (Offline / 5xx)" --> GlobalErr["SCR-ERR: Offline / Server Down<br/>[Retry]"]
-    GlobalErr -- "Retry" --> NetCheck
+    AuthEntry(["Entry: Auth Required /<br/>Session Expired (SCR-06D)"]) --> NetCheck{"Internet & Server<br/>Reachable?"}
+    NetCheck -- "No (Offline / 5xx)" --> SCRERR["SCR-ERR: Offline / Server Down<br/>[Retry]"]
+    SCRERR -- "Retry" --> NetCheck
 
     NetCheck -- "Yes" --> AuthChoice{"Sign In or<br/>Create Account?"}
 
     %% Sign In Path
     AuthChoice -- "Sign In" --> SCR01["SCR-01: Sign In<br/>(Email/Phone + Password)"]
     SCR01 -- "Click 'Forgot Password?'" --> SCR04["SCR-04: Forgot Password<br/>(Enter Registered Email)"]
-    SCR01 --> SignInCheck{"Credentials<br/>Valid?"}
-    SignInCheck -- "Wrong Password /<br/>Invalid Email" --> ErrPass["Inline Error:<br/>Invalid Email or Password"]
+    SCR01 --> RateCheck{"Rate Limit<br/>Exceeded? (NFR-23)"}
+    RateCheck -- "Yes (Too Many Attempts)" --> ErrLockout["Lockout Notice:<br/>Too Many Attempts — Wait & Retry"]
+    ErrLockout --> SCR01
+
+    RateCheck -- "No" --> SignInCheck{"Credentials &<br/>Account Status?"}
+    SignInCheck -- "Wrong Password /<br/>Invalid Email" --> ErrPass["Inline Error:<br/>Invalid Email or Password<br/>[Audit: auth.login_failed]"]
     ErrPass --> SCR01
-    SignInCheck -- "Account Unverified" --> SCR03
+    SignInCheck -- "Account Suspended (BRL-16)" --> ErrSuspended["Error Screen:<br/>Account Suspended — Contact Support"]
+    SignInCheck -- "Account Unverified" --> SCR03A
     SignInCheck -- "Network / 5xx" --> ErrAuthNet["Error Banner:<br/>Sign-In Failed [Retry]"]
     ErrAuthNet --> SCR01
-    SignInCheck -- "Valid" --> RoleRoute{"User Role /<br/>Portal Check"}
 
-    RoleRoute -- "Guest" --> ReturnGuest(["Proceed to Guest Flow<br/>(SCR-26 / SCR-22)"])
-    RoleRoute -- "Owner / Staff" --> ReturnOwner(["Proceed to SCR-07:<br/>Owner Dashboard"])
-    RoleRoute -- "Admin" --> ReturnAdmin(["Proceed to SCR-18:<br/>Admin Dashboard"])
+    SignInCheck -- "Valid [Audit: auth.login_success]" --> PolicyCheck{"Policy Version<br/>Up to Date? (NFR-36)"}
+    PolicyCheck -- "Policy Updated" --> SCR06C["SCR-06C: Policy Re-Consent Gate<br/>(Act 843 Notice)"]
+    SCR06C -- "Accept [Audit: consent.recorded]" --> RoleRoute
+    PolicyCheck -- "Current" --> RoleRoute{"User Roles /<br/>Memberships? (BRL-02)"}
+
+    %% Multi-role routing
+    RoleRoute -- "Multiple Roles<br/>(e.g. Guest + Owner/Staff)" --> SCR06B["SCR-06B: Role / Portal Picker<br/>(Choose Guest, Owner, or Admin)"]
+    SCR06B -- "Guest" --> ReturnGuest(["Guest Flow (SCR-22 / SCR-26)"])
+    SCR06B -- "Owner / Staff" --> ReturnOwner(["SCR-07: Owner Dashboard"])
+    SCR06B -- "Admin" --> ReturnAdmin(["SCR-18: Admin Dashboard"])
+    RoleRoute -- "Single Role: Guest" --> ReturnGuest
+    RoleRoute -- "Single Role: Owner / Staff" --> ReturnOwner
+    RoleRoute -- "Single Role: Admin" --> ReturnAdmin
     RoleRoute -- "Non-Admin on /admin (403)" --> Err403["Error Screen:<br/>403 Access Denied"]
 
-    %% Create Account Path
+    %% Create Account + Split SCR-03A / SCR-03B
     AuthChoice -- "Create Account" --> SCR02["SCR-02: Create Account<br/>(Name, Email/Phone, Password + Act 843 Consent)"]
     SCR02 --> RegCheck{"Inputs Valid &<br/>Consent Checked?"}
     RegCheck -- "Missing Consent /<br/>Email Exists" --> ErrReg["Inline Error:<br/>Fix Highlighted Fields"]
     ErrReg --> SCR02
-    RegCheck -- "Valid" --> SCR03["SCR-03: Account Verification<br/>(Enter Email / OTP Code)"]
-    SCR03 --> OTPCheck{"Code Valid &<br/>Not Expired?"}
-    OTPCheck -- "Invalid / Expired" --> ErrOTP["Inline Error:<br/>Invalid or Expired Code<br/>[Resend Code]"]
-    ErrOTP --> SCR03
-    OTPCheck -- "Verified" --> RoleRoute
+    RegCheck -- "Valid [Audit: user.registered, consent.recorded]" --> VerifyMethod{"Verification<br/>Method (FR-05)"}
+
+    VerifyMethod -- "OTP Code" --> SCR03A["SCR-03A: Account Verification (OTP)<br/>(Enter 6-Digit Code)"]
+    SCR03A --> OTPCheck{"Code Valid &<br/>Not Rate-Limited?"}
+    OTPCheck -- "Invalid / Expired" --> ErrOTP["Inline Error:<br/>Invalid or Expired Code [Resend]"]
+    ErrOTP --> SCR03A
+    OTPCheck -- "Verified [Audit: auth.account_verified]" --> RoleRoute
+
+    VerifyMethod -- "Email Link" --> SCR03B["SCR-03B: Email Link Landing<br/>(/auth/verify-email?token=...)"]
+    SCR03B --> LinkCheck{"Token Status?"}
+    LinkCheck -- "Valid [Audit: auth.account_verified]" --> RoleRoute
+    LinkCheck -- "Already Verified" --> SCR01
+    LinkCheck -- "Expired" --> ErrLink["Expired Link Notice [Resend Link]"]
+    ErrLink --> SCR03B
 
     %% Password Recovery Path
-    SCR04 --> SendReset{"Email Found &<br/>Request Sent?"}
-    SendReset -- "Invalid Format /<br/>Network Error" --> ErrForgot["Inline Error / Retry"]
+    SCR04 --> SendReset{"Email Valid &<br/>Request Sent?"}
+    SendReset -- "Error" --> ErrForgot["Inline Error / Retry"]
     ErrForgot --> SCR04
-    SendReset -- "Sent" --> ResetSent["Confirmation Notice:<br/>Check Email for Reset Link/Token"]
-    ResetSent --> SCR05["SCR-05: Reset Password<br/>(New Password + Confirm)"]
-    SCR05 --> ResetCheck{"Password Policy Met<br/>& Token Valid?"}
-    ResetCheck -- "Mismatch / Expired Token" --> ErrReset["Inline Error:<br/>Password Mismatch or Expired Link"]
+    SendReset -- "Sent [Audit: auth.password_reset_requested]" --> SCR05["SCR-05: Reset Password<br/>(New Password + Confirm + Policy Rules)"]
+    SCR05 --> ResetCheck{"Policy Met &<br/>Token Valid?"}
+    ResetCheck -- "Mismatch / Expired" --> ErrReset["Inline Error:<br/>Check Policy Rules or Expired Link"]
     ErrReset --> SCR05
-    ResetCheck -- "Updated" --> ResetDone["Success Notice:<br/>Password Updated"]
-    ResetDone --> SCR01
+    ResetCheck -- "Updated [Audit: auth.password_reset_completed]" --> SCR01
+
+    %% Profile, Notification Preferences, Logout & Session Expiry
+    ReturnGuest -. "Profile / Logout" .-> SCR06["SCR-06: Profile & Notification Preferences<br/>(/me, Email/SMS/In-App Toggles, Switch Portal, Logout)"]
+    ReturnOwner -. "Profile / Logout" .-> SCR06
+    SCR06 -- "Logout" --> SCR01
+    SCR06 -- "Save Prefs [Audit: user.profile_updated]" --> SCR06
+    ReturnGuest -. "1-hr JWT / Refresh Expired (TA-08)" .-> SCR06D["SCR-06D: Session Expired<br/>(Redirect to Sign In)"]
+    ReturnOwner -. "1-hr JWT / Refresh Expired (TA-08)" .-> SCR06D
+    SCR06D --> SCR01
 ```
 
 ---
 
-## 3. Property Owner Journey (Sprint 1 Core)
+## 3. Staff Onboarding Flow (`S1-07` — `FR-09`, `UR-O15`, `UR-PM03`, `UR-PS01`)
 
-Covers **Owner Onboarding (`S1-07`)**, **Owner Verification (`S1-12`)**, **Property & Unit Creation (`S1-13`)**, **Image Upload (`S1-09`)**, **Submission Status (`S1-13`)**, and **Availability Calendar (`S1-14`)**.
+Covers inviting staff, accepting an invitation at `/owner/invitations`, setting a password, and entering the owner portal scoped to assigned properties `[OrgScope]`.
 
 ```mermaid
 flowchart TD
-    Start(["Open Application<br/>(/owner)"]) --> AuthCheck{"Signed In as<br/>Owner / Staff?"}
-    AuthCheck -- "No" --> SharedAuth(["Shared Auth Flow<br/>(SCR-01 / SCR-02 / SCR-04)"])
-    SharedAuth --> SCR07
+    Owner(["Owner on SCR-08:<br/>Organisation & Staff Setup [OrgScope]"]) --> InviteForm["Enter Staff Email, Role &<br/>Assigned Property IDs"]
+    InviteForm --> SendInvite{"Invitation Valid &<br/>Sent?"}
+    SendInvite -- "Validation / Already Member" --> ErrInv["Inline Error:<br/>Invalid Email or Already Invited"]
+    ErrInv --> InviteForm
+    SendInvite -- "Sent [Audit: org.staff_invited]<br/>[Notify: Staff Email]" --> StaffClick["Staff Clicks Invite Link<br/>(/owner/invitations?token=...)"]
 
-    AuthCheck -- "Yes" --> SCR07["SCR-07: Owner Dashboard"]
-    SCR07 --> OrgCheck{"Organisation<br/>Set Up?"}
-    OrgCheck -- "Manage Org / Staff" --> SCR08["SCR-08: Organisation & Staff Setup<br/>(Company Space + Invite Staff)"]
-    SCR08 --> SCR07
+    StaffClick --> SCR08B["SCR-08B: Staff Invitation Acceptance"]
+    SCR08B --> TokenOK{"Invite Token<br/>Valid & Active?"}
+    TokenOK -- "Expired / Revoked" --> ErrToken["Error Screen:<br/>Invitation Expired — Ask Owner to Resend"]
+    TokenOK -- "Valid" --> HasAccount{"Staff Already Has<br/>FindStay Account?"}
 
-    %% Verification Flow (S1-12)
-    SCR07 --> VerifCheck{"Owner Verification<br/>Status?"}
-    VerifCheck -- "Not Submitted" --> SCR09["SCR-09: Owner Verification Upload<br/>(Ghana Card, Ownership Proof, GTA Licence)"]
-    SCR09 --> VerifUploadOK{"Upload & Submit<br/>Succeeded?"}
-    VerifUploadOK -- "File Too Large /<br/>Bad Format / Timeout" --> ErrVerifUpload["Upload Error:<br/>Invalid File or Timeout [Retry]"]
-    ErrVerifUpload --> SCR09
-    VerifUploadOK -- "Yes" --> SCR10["SCR-10: Owner Verification Status<br/>(Pending / Approved / Rejected)"]
+    HasAccount -- "No" --> SetPass["Set Password + Accept Act 843 Consent"]
+    SetPass --> AcceptCall
+    HasAccount -- "Yes" --> SignInStaff["Sign In via SCR-01"] --> AcceptCall
 
-    VerifCheck -- "Pending / Rejected" --> SCR10
-    SCR10 -- "Rejected (View Reason)" --> SCR09
-    SCR10 -- "Approved" --> DashState
+    AcceptCall{"Accept Invite<br/>Succeeded?"} -- "Network / 5xx" --> ErrAccept["Error Banner: Retry"]
+    ErrAccept --> AcceptCall
+    AcceptCall -- "Yes [Audit: org.staff_invite_accepted]" --> ScopedDash(["SCR-07: Owner Dashboard<br/>(Scoped to Assigned Properties Only [OrgScope])"])
+```
 
-    %% Property & Listing Flow (S1-13)
-    VerifCheck -- "Approved" --> DashState{"Any Properties<br/>Added Yet?"}
-    DashState -- "No (0 properties)" --> EmptyProps["Empty State:<br/>No Properties Yet<br/>[+ Add Your First Property]"]
-    EmptyProps --> SCR11
+---
 
-    DashState -- "Yes" --> OwnerAction{"Owner Action"}
-    OwnerAction -- "Add Property" --> SCR11["SCR-11: Add / Edit Property Form<br/>(Name, Type, Location, Units, GHS Prices)"]
-    SCR11 --> PropFormOK{"Required Fields &<br/>Pesewa Rates Valid?"}
-    PropFormOK -- "Validation Error" --> ErrPropForm["Inline Error:<br/>Fix Highlighted Property Fields"]
-    ErrPropForm --> SCR11
+## 4. Property Owner Journey (`S1-07`, `S1-09`, `S1-12`, `S1-13`, `S1-14`)
 
-    PropFormOK -- "Yes" --> SCR12["SCR-12: Upload Property Images<br/>(WebP Photos via Pre-Signed URL)"]
-    SCR12 --> ImgOK{"Image Upload<br/>Succeeded?"}
-    ImgOK -- "Invalid Format /<br/>Size / Timeout" --> ErrImg["Upload Error:<br/>Retry Image Upload"]
+All `/owner/*` routes enforce **`[OrgScope]`** (`organization_id` tenant isolation).
+
+```mermaid
+flowchart TD
+    Start(["Open Owner Portal (/owner)"]) --> AuthCheck{"Signed In as<br/>Owner / Staff?"}
+    AuthCheck -- "No" --> SharedAuth(["Shared Auth Flow (SCR-01..SCR-06D)"]) --> SCR07
+    AuthCheck -- "Yes" --> SCR07["SCR-07: Owner Dashboard [OrgScope]"]
+
+    SCR07 --> OrgMenu["SCR-08: Organisation & Staff Setup [OrgScope]"]
+    SCR07 --> VerifCheck{"Owner Verification<br/>Status? (S1-12)"}
+
+    %% Per-Document Verification (S1-12, NFR-28)
+    VerifCheck -- "Not Submitted" --> SCR09["SCR-09: Owner Verification Upload [OrgScope]<br/>(Ghana Card, Ownership Proof, GTA Licence)"]
+    SCR09 --> VerifUpOK{"Upload & Submit<br/>Succeeded?"}
+    VerifUpOK -- "File Too Large /<br/>Bad Format / Timeout" --> ErrVerif["Upload Error: Retry Document"]
+    ErrVerif --> SCR09
+    VerifUpOK -- "Yes [Audit: verification.submitted]<br/>[Notify: Admin Inbox & Email]" --> SCR10["SCR-10: Owner Verification Status [OrgScope]<br/>(Per-Doc Status: Ghana Card / Ownership / GTA)"]
+
+    VerifCheck -- "Pending / Partial Rejection" --> SCR10
+    SCR10 -- "Doc Rejected (Re-upload Rejected Doc Only)" --> SCR09
+    SCR10 -- "All Docs Approved" --> SCR07B
+
+    %% Listings Entry & Lifecycle (FR-13)
+    VerifCheck -- "Approved" --> SCR07B["SCR-07B: Owner Listings List (/owner/listings) [OrgScope]"]
+    SCR07B --> HasListings{"Any Properties<br/>in Organisation?"}
+    HasListings -- "No (0 listings)" --> EmptyList["Empty State: No Properties Yet<br/>[+ Add Your First Property]"]
+    EmptyList --> SCR11
+
+    HasListings -- "Yes" --> ListAction{"Owner Action"}
+    ListAction -- "Pause / Deactivate /<br/>Re-activate (FR-13)" --> ToggleState{"Update Listing<br/>State OK?"}
+    ToggleState -- "Error" --> ErrToggle["Error Banner: Retry"]
+    ToggleState -- "Yes [Audit: listing.paused / listing.reactivated]" --> SCR07B
+
+    %% Property + Multi-Unit + Photo + Preview Flow
+    ListAction -- "Add or Edit Property" --> SCR11["SCR-11: Add / Edit Property Form [OrgScope]<br/>(Details, Amenities, Rules · Draft Auto-Save)"]
+    SCR11 --> PropOK{"Required Fields<br/>Valid?"}
+    PropOK -- "Validation Error" --> ErrProp["Inline Error: Fix Highlighted Fields"]
+    ErrProp --> SCR11
+
+    PropOK -- "Yes" --> SCR11B["SCR-11B: Multi-Unit Editor [OrgScope] (P-02)<br/>(Add/Edit Units, Price in GHS / Stored Pesewas, Billing Period)"]
+    SCR11B --> UnitOK{"At Least 1 Valid<br/>Unit?"}
+    UnitOK -- "Invalid Rate / Missing Unit" --> ErrUnit["Inline Error: Add Valid Unit & Pesewa Rate"]
+    ErrUnit --> SCR11B
+
+    UnitOK -- "Yes" --> SCR12["SCR-12: Photo Management [OrgScope] (FR-14)<br/>(Upload WebP, Reorder, Set Cover, Replace, Delete · Max 10)"]
+    SCR12 --> ImgOK{"Photos Valid<br/>(<= 10, WebP/Size OK)?"}
+    ImgOK -- "Cap Exceeded / Upload Fail" --> ErrImg["Upload Error: Check Limit/Format [Retry]"]
     ErrImg --> SCR12
 
-    ImgOK -- "Yes" --> SubmitProp{"Submit Property<br/>for Review?"}
-    SubmitProp -- "Network / 5xx" --> ErrSub["Error Banner:<br/>Submission Failed [Retry]"]
-    ErrSub --> SCR12
-    SubmitProp -- "Yes" --> SCR13["SCR-13: Property Submission Status<br/>(Pending Review)"]
+    ImgOK -- "Yes [Audit: listing.photos_updated]" --> SCR11C["SCR-11C: Listing Preview [OrgScope]<br/>(Guest-View Preview before Submit)"]
+    SCR11C --> SubmitProp{"Submit Property<br/>for Review?"}
+    SubmitProp -- "Concurrent Admin Review (409)" --> ErrLock["Conflict Error: Listing Locked Under Active Review"]
+    ErrLock --> SCR13
+    SubmitProp -- "Network / 5xx" --> ErrSub["Error Banner: Submission Failed [Retry]"]
+    ErrSub --> SCR11C
+    SubmitProp -- "Yes [Audit: listing.submitted]<br/>[Notify: Admin Inbox]" --> SCR13["SCR-13: Property Submission Status [OrgScope]<br/>(Pending Review / Corrections / Approved / Rejected)"]
 
-    SCR13 --> ReviewOutcome{"Admin Review<br/>Outcome"}
-    ReviewOutcome -- "Rejected" --> PropRejected["Status: Rejected<br/>(View Admin Reason)<br/>[Edit & Resubmit]"]
-    PropRejected --> SCR11
-    ReviewOutcome -- "Approved" --> SCR14
+    SCR13 -- "Corrections Requested / Rejected" --> SCR11
+    SCR13 -- "Approved" --> SCR14
 
     %% Manage Property & Availability Calendar (S1-14)
-    OwnerAction -- "Manage Existing Property" --> SCR14["SCR-14: Manage Property & Units<br/>(Select Unit / View Bookings)"]
-    SCR14 --> ManageChoice{"Select Action"}
-
-    ManageChoice -- "View Bookings [Sprint 2+]" --> BookingsCheck{"Any Bookings<br/>Received?"}
-    BookingsCheck -- "No (0 bookings)" --> EmptyBook["Empty State:<br/>No Bookings Received Yet"]
-    BookingsCheck -- "Yes" --> BookingsList(["View & Manage Bookings"])
-
-    ManageChoice -- "Availability Calendar" --> SCR15["SCR-15: Unit Availability Calendar<br/>(Available / Booked / Blocked Dates)"]
-    SCR15 --> CalLoadOK{"Calendar Loaded?"}
-    CalLoadOK -- "Network / 5xx" --> ErrCalLoad["Error Banner:<br/>Could Not Load Calendar [Retry]"]
-    ErrCalLoad --> SCR15
-
-    CalLoadOK -- "Yes" --> CalAction{"Calendar Action"}
-    CalAction -- "Block / Edit / Unblock Dates" --> SCR16["SCR-16: Block / Unblock Dates Form<br/>(Start Date, End Date, Reason)"]
-    SCR16 --> CalSave{"Save Block<br/>Succeeded?"}
-    CalSave -- "Overlap Conflict (409)<br/>(btree_gist)" --> ErrOverlap["Conflict Error:<br/>Dates Overlap an Existing Block/Booking"]
+    ListAction -- "Manage Property" --> SCR14["SCR-14: Manage Property & Units [OrgScope]"]
+    SCR14 --> ManageChoice{"Action"}
+    ManageChoice -- "View Bookings [Sprint 2+]" --> EmptyBook["Empty State / Bookings List [Sprint 2+]"]
+    ManageChoice -- "Availability Calendar" --> SCR15["SCR-15: Unit Availability Calendar [OrgScope]<br/>(Available / Owner-Blocked · 'Booked' is [Sprint 2+])"]
+    SCR15 --> CalLoad{"Calendar Loaded?"}
+    CalLoad -- "Error" --> ErrCal["Error Banner: Retry"]
+    ErrCal --> SCR15
+    CalLoad -- "Yes" --> SCR16["SCR-16: Block / Unblock Dates Form [OrgScope]<br/>(Start/End Date in Ghana Time / Stored UTC)"]
+    SCR16 --> CalSave{"Save Block OK?"}
+    CalSave -- "Overlap Conflict (409 btree_gist)" --> ErrOverlap["Conflict Error: Dates Overlap Existing Block"]
     ErrOverlap --> SCR16
-    CalSave -- "Invalid Date Range" --> ErrDateRange["Inline Error:<br/>End Date Must Follow Start Date"]
-    ErrDateRange --> SCR16
-    CalSave -- "Saved" --> SCR15
+    CalSave -- "Invalid Range" --> ErrRange["Inline Error: End Date Must Follow Start Date"]
+    ErrRange --> SCR16
+    CalSave -- "Saved [Audit: availability.block_created/removed]" --> SCR15
 ```
 
 ---
 
-## 4. Administrator Journey (Sprint 1 Core)
+## 5. Administrator Journey (`S1-08`, `S1-15`, `S1-16`)
 
-Covers **Admin Sign In**, **Dashboard (`S1-16`)**, **Pending Review Queue (`S1-15`)**, **Approve / Reject (`S1-15`)**, and **Users, Settings & Audit Log (`S1-08`, `S1-16`)**.
+Covers **Admin Review Queue** (with 3-way **Approve / Request Corrections / Reject** and **Per-Document Verification**), **User Management (Suspend/Restore)**, **Platform Settings**, and **Audit Log Viewer**.
 
 ```mermaid
 flowchart TD
-    Start(["Open Administration Portal<br/>(/admin)"]) --> AuthCheck{"Signed In as<br/>Admin?"}
-    AuthCheck -- "No" --> SCR17["SCR-17: Admin Sign In<br/>(via Shared Auth Flow)"]
-    SCR17 -- "Wrong Password / 403" --> ErrAdminAuth["Error: Invalid Credentials<br/>or 403 Access Denied"]
-    ErrAdminAuth --> SCR17
-    SCR17 -- "Authenticated (Admin)" --> SCR18
+    Start(["Open Admin Portal (/admin)"]) --> AuthCheck{"Signed In as<br/>Admin?"}
+    AuthCheck -- "No" --> SCR17["SCR-17: Admin Sign In (via Shared Auth)"]
+    SCR17 -- "Wrong Password / 403" --> ErrAdmin["Error: Invalid Credentials or 403 Access Denied"]
+    ErrAdmin --> SCR17
+    SCR17 -- "Authenticated" --> SCR18
 
     AuthCheck -- "Yes" --> SCR18["SCR-18: Admin Dashboard"]
-    SCR18 --> AdminSection{"Select Admin<br/>Section"}
+    SCR18 --> AdminNav{"Admin Section"}
 
-    %% Property & Verification Review Queue (S1-15)
-    AdminSection -- "Review Queue" --> QueueLoad{"Load Pending<br/>Queue OK?"}
-    QueueLoad -- "Network / 5xx" --> ErrQueue["Error Banner:<br/>Failed to Load Queue [Retry]"]
-    ErrQueue --> SCR18
+    %% Review Queue (S1-15)
+    AdminNav -- "Review Queue" --> QLoad{"Load Queue OK?"}
+    QLoad -- "Network / 5xx" --> ErrQ["Error Banner: Failed to Load Queue [Retry]"]
+    ErrQ --> SCR18
+    QLoad -- "Yes" --> QEmpty{"Any Pending<br/>Items?"}
+    QEmpty -- "No (0 pending)" --> EmptyQ["Empty State: All Caught Up — No Pending Reviews"]
+    QEmpty -- "Yes" --> SCR19["SCR-19: Submitted Review Queue"]
 
-    QueueLoad -- "Yes" --> QueueEmpty{"Any Pending<br/>Submissions?"}
-    QueueEmpty -- "No (0 pending)" --> EmptyQueue["Empty State:<br/>All Caught Up — No Pending Submissions"]
-    QueueEmpty -- "Yes" --> SCR19["SCR-19: Submitted Properties Queue"]
+    SCR19 --> SCR20["SCR-20: Property & Verification Review<br/>(Listing Details, Photos, Per-Doc ID/Ownership/GTA)"]
+    SCR20 --> Decision{"Review Decision<br/>(FR-88, NFR-28)"}
 
-    SCR19 --> SCR20["SCR-20: Property & Verification Review<br/>(Listing Info, Photos, Private Owner ID / GTA Docs)"]
-    SCR20 --> Decision{"Approve or<br/>Reject?"}
+    Decision -- "Approve" --> AppSave{"Save Approval OK?"}
+    AppSave -- "Already Reviewed (409) / Error" --> ErrApp["Error Notice: Refresh Queue"]
+    ErrApp --> SCR19
+    AppSave -- "Yes [Audit: verification/listing.approved]<br/>[Notify: Owner Email & In-App]" --> Approved(["Published / Verified"])
 
-    Decision -- "Approve" --> ApproveSave{"Save Approval<br/>Succeeded?"}
-    ApproveSave -- "Already Reviewed (409) /<br/>Network Error" --> ErrApprove["Error Notice:<br/>Action Failed or Already Reviewed<br/>[Refresh Queue]"]
-    ErrApprove --> SCR19
-    ApproveSave -- "Yes" --> Approved(["Property Published &<br/>Owner Notified"])
+    Decision -- "Request Corrections<br/>(Per-Doc or Listing)" --> FixList["Enter Required Fix List /<br/>Select Rejected Docs"]
+    FixList --> FixValid{"Fix Notes<br/>Provided?"}
+    FixValid -- "Empty" --> ErrFix["Inline Error: Specify Corrections Needed"]
+    ErrFix --> FixList
+    FixValid -- "Yes [Audit: listing.corrections_requested]<br/>[Notify: Owner Email & In-App]" --> Returned(["Returned to Owner for Fixes"])
 
-    Decision -- "Reject" --> RejectInput["Enter Rejection Reason<br/>(Required)"]
-    RejectInput --> ReasonValid{"Reason<br/>Provided?"}
-    ReasonValid -- "Empty" --> ErrReason["Inline Error:<br/>Rejection Reason Is Required"]
-    ErrReason --> RejectInput
-    ReasonValid -- "Yes" --> RejectSave{"Save Rejection<br/>Succeeded?"}
-    RejectSave -- "Network / 5xx" --> ErrReject["Error Notice:<br/>Failed to Reject [Retry]"]
-    ErrReject --> RejectInput
-    RejectSave -- "Yes" --> Rejected(["Property Rejected &<br/>Owner Notified"])
+    Decision -- "Reject" --> RejReason["Enter Rejection Reason<br/>(Required)"]
+    RejReason --> RejValid{"Reason Provided?"}
+    RejValid -- "Empty" --> ErrRej["Inline Error: Rejection Reason Required"]
+    ErrRej --> RejReason
+    RejValid -- "Yes [Audit: verification/listing.rejected]<br/>[Notify: Owner Email & In-App]" --> Rejected(["Rejected & Owner Notified"])
 
-    %% Users, Platform Settings & Audit Log (S1-08, S1-16)
-    AdminSection -- "Users, Settings &<br/>Audit Log" --> SCR21["SCR-21: Users, Settings & Audit Log<br/>(Suspend/Restore Users, Settings, Audit Trail)"]
-    SCR21 --> UsersEmpty{"Any Matching<br/>Records?"}
-    UsersEmpty -- "No" --> EmptyUsers["Empty State:<br/>No Users or Activity Found"]
-    UsersEmpty -- "Yes" --> UsersDone(["View / Update Users, Settings & Audit Log"])
+    %% Split SCR-21 into 21A, 21B, 21C
+    AdminNav -- "User Management" --> SCR21A["SCR-21A: User Management (/admin/users)<br/>(Search Users, Roles, Suspend / Restore)"]
+    SCR21A --> UserEmpty{"Users Found?"}
+    UserEmpty -- "No" --> EmptyU["Empty State: No Matching Users"]
+    UserEmpty -- "Yes" --> UserAct{"Suspend or<br/>Restore User? (BRL-16)"}
+    UserAct -- "Suspend" --> SuspOK["Account Suspended & Session Revoked<br/>[Audit: user.suspended] [Notify: User Email]"]
+    UserAct -- "Restore" --> RestOK["Account Restored<br/>[Audit: user.restored] [Notify: User Email]"]
+
+    AdminNav -- "Platform Settings" --> SCR21B["SCR-21B: Platform Settings (/admin/settings)<br/>(platform_setting, Policy Version, Flags)"]
+    SCR21B -- "Save [Audit: platform.setting_updated]" --> SCR21B
+
+    AdminNav -- "Audit Log" --> SCR21C["SCR-21C: Audit Log Viewer (/admin/audit)<br/>(Read-Only Immutable Trail · Ghana Time Display)"]
+    SCR21C --> AuditEmpty{"Records Match?"}
+    AuditEmpty -- "No" --> EmptyA["Empty State: No Matching Audit Events"]
+    AuditEmpty -- "Yes" --> AuditList(["Inspect Audit Events"])
 ```
 
 ---
 
-## 5. Guest Journey (Updated Flow)
+## 6. Guest Journey (Updated Flow)
 
-Covers **Browse & Search (`SCR-22` – `SCR-25`)** in Sprint 1, **Shared Auth (`SCR-01` – `SCR-05`)**, and clearly marks **Booking (`SCR-26` – `SCR-28`)** as **`[Sprint 2+]`**.
+Covers **Browse & Search (`SCR-22` – `SCR-25`)** in Sprint 1 (including **Verified Owner badge** on `SCR-25` and **Save/Share `[Sprint 3]`** stub), **Shared Auth (`SCR-01` – `SCR-06D`)**, and **`[Sprint 2+]` Booking**.
 
 ```mermaid
 flowchart TD
     Start(["1. Open Application"]) --> NetCheck{"Internet & Server<br/>Reachable?"}
-    NetCheck -- "No (Offline / 5xx)" --> SCRERR["SCR-ERR: Offline / Server Down<br/>[Retry]"]
+    NetCheck -- "No (Offline / 5xx)" --> SCRERR["SCR-ERR: Offline / Server Down [Retry]"]
     SCRERR -- "Retry" --> NetCheck
 
-    NetCheck -- "Yes" --> SCR22["2. SCR-22: Homepage<br/>(Browse & Search)"]
+    NetCheck -- "Yes" --> SCR22["2. SCR-22: Homepage (Browse & Search)"]
     SCR22 --> HomeEmpty{"Any Published<br/>Properties?"}
-    HomeEmpty -- "No" --> EmptyHome["Empty State:<br/>No Accommodations Listed Yet"]
+    HomeEmpty -- "No" --> EmptyHome["Empty State: No Accommodations Listed Yet"]
     HomeEmpty -- "Yes" --> SCR23["3. SCR-23: Search Accommodation<br/>(Location, Dates, Guests, Filters)"]
 
-    SCR23 --> SearchFetch{"Search Request<br/>Succeeded?"}
-    SearchFetch -- "No (Network / 5xx)" --> ErrSearch["Error Banner:<br/>Unable to Load Results [Retry]"]
+    SCR23 --> SearchOK{"Search Request<br/>Succeeded?"}
+    SearchOK -- "Network / 5xx" --> ErrSearch["Error Banner: Unable to Load Results [Retry]"]
     ErrSearch --> SCR23
+    SearchOK -- "Yes" --> HasRes{"Results > 0?"}
+    HasRes -- "No (0 matches)" --> EmptyRes["Empty State: No Matching Accommodations [Clear Filters]"]
+    EmptyRes --> SCR23
 
-    SearchFetch -- "Yes" --> HasResults{"Matching<br/>Properties > 0?"}
-    HasResults -- "No (0 matches)" --> EmptyResults["Empty State:<br/>No Matching Accommodations<br/>[Clear Filters / Edit Search]"]
-    EmptyResults --> SCR23
-
-    HasResults -- "Yes" --> SCR24["4. SCR-24: Search Results<br/>(Display Available Accommodation)"]
+    HasRes -- "Yes" --> SCR24["4. SCR-24: Search Results<br/>(GHS Price + Verified Owner Badge)"]
     SCR24 --> SelectProp["5. Select a Property"]
-    SelectProp --> PropFetch{"Property Still<br/>Available?"}
-    PropFetch -- "No (404 / Unlisted)" --> ErrPropGone["Error Screen:<br/>Property No Longer Available<br/>[Back to Results]"]
-    ErrPropGone --> SCR24
+    SelectProp --> PropOK{"Property Exists &<br/>Published?"}
+    PropOK -- "404 / Unlisted" --> SCR29["SCR-29: 404 Property Not Found [Back to Results]"]
+    SCR29 --> SCR24
 
-    PropFetch -- "Yes" --> SCR25["6. SCR-25: Property Details<br/>(GHS Price, Images, Location, Facilities)"]
+    PropOK -- "Yes" --> SCR25["6. SCR-25: Property Details<br/>(GHS Price, Photos, Location, Facilities, Verified Owner Badge, Save/Share [Sprint 3])"]
     SCR25 --> ClickBook["7. Click 'Make a Booking'"]
-    ClickBook --> AuthCheck{"8. User Already<br/>Signed In?"}
+    ClickBook --> AuthCheck{"8. Signed In?"}
 
-    AuthCheck -- "No" --> SharedAuth(["8. Shared Auth Flow<br/>(SCR-01 Sign In / SCR-02 Create Account / SCR-04 Forgot Password)"])
-    SharedAuth --> SCR26
+    AuthCheck -- "No" --> SharedAuth(["8. Shared Auth Flow (SCR-01..SCR-06D)"]) --> SCR26
     AuthCheck -- "Yes" --> SCR26
 
     subgraph LaterSprints ["Later Sprints (Sprint 2+: Booking & Checkout)"]
-        SCR26["9. SCR-26: Booking Details [Sprint 2+]<br/>(Dates, Guests, Contact Info, Total GHS)"] --> ValidateBooking{"Dates Available &<br/>Inputs Valid?"}
-        ValidateBooking -- "Validation Error" --> ErrBookVal["Inline Error:<br/>Fix Invalid Booking Fields"]
+        SCR26["9. SCR-26: Booking Details [Sprint 2+]<br/>(Dates, Guests, Contact Info, Total GHS)"] --> BookVal{"Inputs & Dates<br/>Valid?"}
+        BookVal -- "Validation Error" --> ErrBookVal["Inline Error: Fix Booking Fields"]
         ErrBookVal --> SCR26
-
-        ValidateBooking -- "Yes" --> SCR27["10. SCR-27: Confirm Booking [Sprint 2+]<br/>(Summary & Confirm Action)"]
-        SCR27 --> SubmitBook{"Booking Request<br/>Succeeded?"}
-        SubmitBook -- "Dates Taken / Conflict" --> ErrConflict["Error Notice:<br/>Dates Just Booked —<br/>Choose Different Dates"]
+        BookVal -- "Yes" --> SCR27["10. SCR-27: Confirm Booking [Sprint 2+]<br/>(Summary & Confirm)"]
+        SCR27 --> SubBook{"Confirmed?"}
+        SubBook -- "Date Conflict (409)" --> ErrConflict["Error: Dates Taken — Choose Other Dates"]
         ErrConflict --> SCR26
-        SubmitBook -- "Network / 5xx" --> ErrBookNet["Error Banner:<br/>Could Not Confirm [Retry]"]
+        SubBook -- "Network / 5xx" --> ErrBookNet["Error Banner: Retry"]
         ErrBookNet --> SCR27
-
-        SubmitBook -- "Yes" --> SCR28(["11. SCR-28: Booking Confirmation [Sprint 2+]<br/>(Booking Reference & Summary)"])
+        SubBook -- "Yes" --> SCR28(["11. SCR-28: Booking Confirmation [Sprint 2+]"])
     end
 ```
 
 ---
 
-## 6. Summary of Error Paths & Empty States
+## 7. Screen-State Matrix (`NFR-03` Loading, Empty, Error, Success)
 
-| Flow | Error Paths Covered | Empty States Covered |
-| :--- | :--- | :--- |
-| **Shared Auth & Recovery** | Offline/server down (`SCR-ERR`), wrong password/invalid email, unverified account redirect, duplicate email/missing Act 843 consent, invalid/expired OTP, expired reset token/password mismatch, `403 Access Denied` | — |
-| **Property Owner** | Verification/image upload failure (size, format, timeout), property form validation, submission failure, admin rejection with reason, calendar load failure, `btree_gist` date-overlap conflict (`409`), invalid date range | `0` properties on Owner Dashboard; `0` bookings received |
-| **Administrator** | Wrong credentials, `403 Access Denied`, queue load failure, missing rejection reason, concurrent review conflict (`409`) | `0` pending submissions in review queue; `0` matching users/activity logs |
-| **Guest** | Offline/server down (`SCR-ERR`), search failure, property unavailable (`404`), booking validation error `[Sprint 2+]`, date conflict `[Sprint 2+]` | `0` published properties on Homepage; `0` matching search results |
+| Screen(s) | Loading / Skeleton (`NFR-03`) | Empty State | Error State | Success State |
+| :--- | :--- | :--- | :--- | :--- |
+| **`SCR-01`, `02`, `03A`, `04`, `05`** | Disabled submit button + spinner | — | Inline field errors, wrong password, lockout (`NFR-23`), suspended (`BRL-16`), `SCR-ERR` | Authenticated session / reset confirmation |
+| **`SCR-03B`, `06C`, `06D`, `08B`** | Centered loading spinner | — | Expired/invalid token or `SCR-ERR` with `[Retry]` | Verified / consented / invite accepted |
+| **`SCR-06`, `06B`** | Skeleton profile/role cards | — (at least 1 role) | Failed to save preferences banner | Profile/preferences saved / portal switched |
+| **`SCR-07`, `07B`, `08`** | Dashboard KPI & card skeletons | "No properties yet" / "No staff invited yet" | `SCR-ERR` or inline invite validation error | Org dashboard, listings list, staff invite sent |
+| **`SCR-09`, `10`** | Upload progress bar / status skeleton | "No verification submitted yet" | File size/format/timeout error; per-doc rejection note | `Pending` / `Approved` per document |
+| **`SCR-11`, `11B`, `11C`, `12`** | Form/photo grid skeletons + auto-save indicator | "No units added yet" / "No photos yet" | Field/pesewa validation, 10-photo cap, `409` concurrent review | Draft auto-saved, preview rendered, submitted |
+| **`SCR-13`, `14`, `15`, `16`** | Calendar month & timeline skeletons | "No blocks on this unit" / `[S2+]` "No bookings yet" | `409` `btree_gist` overlap conflict, invalid date range | Status displayed, date block saved/removed |
+| **`SCR-17` – `SCR-21C`** | Queue/table/log skeletons | "No pending reviews" / "No users" / "No audit events" | `403`, missing fix/rejection reason, `409` already reviewed | Approved/corrections/rejected, user suspended/restored, audit viewed |
+| **`SCR-22` – `SCR-25`, `SCR-29`** | Card grid & gallery skeletons | "No accommodations listed" / "0 matching results" | `SCR-ERR` offline/server error, `SCR-29` 404 | Listings browsed, filtered, and property viewed |
+
+---
+
+## 8. Notification-Trigger Matrix (`FR-66..71`, `BRL-17`)
+
+| Event | Recipient | Channels | Notes / Fallback |
+| :--- | :--- | :--- | :--- |
+| **Account Sign-Up Verification** | Guest / Owner / Staff | Email (Link/OTP) + SMS (OTP) | Email-only OTP fallback if SMS sender-ID delayed past Day 2 (`P-08`) |
+| **Password Reset Requested** | User | Email | Time-limited reset link/token (`S1-05`) |
+| **Staff Invitation Sent** | Invited Staff | Email | Contains `/owner/invitations?token=...` (`S1-07`) |
+| **Owner Verification Submitted** | Platform Admin | In-App + Email | Alerts admin queue (`S1-12`, `S1-15`) |
+| **Verification Approved / Rejected** | Property Owner | Email + In-App | Includes per-document status & fix reason if rejected |
+| **Listing Submitted for Review** | Platform Admin | In-App + Email | Alerts admin review queue (`S1-15`) |
+| **Listing Approved / Corrections / Rejected** | Property Owner | Email + In-App (+ SMS if opted in) | Includes fix list or rejection reason (`FR-88`) |
+| **Account Suspended / Restored** | Affected User | Email | Explains status change (`BRL-16`, `FR-87`) |
+
+---
+
+## 9. API-Contract Appendix (Direct Input for `T6`)
+
+- **Auth & Profile:** `POST /api/v1/auth/session`, `POST /api/v1/auth/register`, `POST /api/v1/auth/verify-otp`, `GET /api/v1/auth/verify-email`, `POST /api/v1/auth/password-reset/request`, `POST /api/v1/auth/password-reset/confirm`, `GET/PATCH /api/v1/me`, `GET/PUT /api/v1/me/notifications/preferences`, `GET /api/v1/consents/latest`, `POST /api/v1/consents`
+- **Owner & Staff (`[OrgScope]`):** `GET /api/v1/owner/dashboard`, `GET/PATCH /api/v1/owner/org`, `POST /api/v1/owner/invitations`, `GET /api/v1/invitations/{token}`, `POST /api/v1/invitations/{token}/accept`
+- **Owner Verification (`[OrgScope]`):** `POST /api/v1/owner/verification/presign`, `POST /api/v1/owner/verification/submit`, `GET /api/v1/owner/verification`
+- **Properties, Units, Photos & Calendar (`[OrgScope]`):** `GET/POST /api/v1/owner/properties`, `GET/PATCH /api/v1/owner/properties/{id}`, `GET /api/v1/owner/properties/{id}/preview`, `POST /api/v1/owner/properties/{id}/submit`, `POST/PATCH/DELETE /api/v1/owner/properties/{id}/units`, `POST /api/v1/owner/properties/{id}/photos/presign`, `PUT/DELETE /api/v1/owner/properties/{id}/photos`, `GET /api/v1/owner/units/{unitId}/availability`, `POST/DELETE /api/v1/owner/units/{unitId}/blocks`
+- **Admin:** `GET /api/v1/admin/dashboard`, `GET /api/v1/admin/reviews`, `GET /api/v1/admin/reviews/{id}`, `POST /api/v1/admin/reviews/{id}/decision`, `GET /api/v1/admin/users`, `POST /api/v1/admin/users/{id}/suspend`, `POST /api/v1/admin/users/{id}/restore`, `GET/PATCH /api/v1/admin/settings`, `GET /api/v1/admin/audit-logs`
+- **Public Guest:** `GET /api/v1/properties/featured`, `GET /api/v1/properties/search`, `GET /api/v1/properties/{id}`
+
+---
+
+## 10. Accessibility, Localization & Convention Notes (`NFR-05`, `NFR-07`, `NFR-08`, `NFR-09`, `NFR-52`)
+
+- **Mobile-First Responsive (`NFR-09`):** Every screen supports `360px+` mobile viewports first, scaling cleanly to tablet and desktop.
+- **Icon-Driven Navigation (`NFR-05`):** Primary navigation and status cards pair clear icons with short text labels.
+- **Low-Literacy & Colour-Vision Safety (`NFR-07`):** Never rely on colour alone for status (e.g., Calendar `Available` vs `Owner-Blocked`, Verification `Approved` vs `Rejected`)—always pair colour with icons, patterns, and plain-language labels.
+- **Currency & Time (`NFR-08`, `NFR-52`):** Display GHS (`GH₵`) / store integer pesewas; store UTC / display `Africa/Accra`.
+
+---
+
+## 11. Review Checklist for `T14` Kickoff & Team Sign-Off
+
+- [ ] **Product (`T1` / `@kwesipaa643-sys`):** Confirm Sprint 1 vs `[Sprint 2+]` boundaries match the finalized work list.
+- [ ] **UI/UX (`T4` / `@maskkuratahiru-wq`):** Confirm every `SCR-*` ID and Mobile/Desktop variant maps 1:1 to wireframes.
+- [ ] **Backend (`T6` / `@ObboyeBossman`):** Confirm `/api/v1/...` endpoints, `[OrgScope]` boundaries, and `409` conflict codes.
+- [ ] **Database (`T8` / `@fummey`):** Confirm all `[Audit: ...]` events and `notification_preference` / `consent_record` tables are in the ERD.
+- [ ] **QA (`T13` / `@fummey`):** Confirm Loading/Empty/Error/Success states and Notification triggers are covered in the test plan.
