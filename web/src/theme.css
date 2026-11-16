@@ -1,6 +1,6 @@
 /**
- * FineStay - Design System Theme Tokens
- * Based on the FineStay Reference Design Architecture
+ * FindStay - Design System Theme Tokens
+ * Based on the FindStay Reference Design Architecture
  * Primary: Red (#C60026) for CTAs & active states
  * Structure & Nav: Blue (#004BA0) for chrome, navigation, links & borders
  * Neutrals: GitHub/Linear-inspired light neutral canvas (#f6f8fa)
@@ -54,7 +54,7 @@
   --font-mono:   'SF Mono', Consolas, 'Courier New', monospace;
 
   /* ==========================================================================
-     2. SEMANTIC DESIGN TOKENS (FineStay Platform)
+     2. SEMANTIC DESIGN TOKENS (FindStay Platform)
      ========================================================================== */
   
   /* Primary Action (Red: Buttons, active tab indicator, urgent flags) */

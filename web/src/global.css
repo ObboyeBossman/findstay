@@ -1,5 +1,5 @@
 /**
- * FineStay - Central Global Stylesheet
+ * FindStay - Central Global Stylesheet
  * Incorporates the reference design system layout, components, and color rules.
  * Primary Action: Red (#C60026) | Structure & Nav: Blue (#004BA0)
  */
@@ -562,7 +562,7 @@ a:hover {
 }
 
 /* ==========================================================================
-   8. DATA TABLES & FINESTAY INTERFACES
+   8. DATA TABLES & FINDSTAY INTERFACES
    ========================================================================== */
 
 .table-wrap {

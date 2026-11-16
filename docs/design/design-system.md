@@ -1,6 +1,6 @@
-# FineStay — Design System & Theme Documentation
+# FindStay — Design System & Theme Documentation
 
-FineStay is a web-based accommodation booking and property management platform designed for regional urban centers (initial deployment: Takoradi, Ghana).
+FindStay is a web-based accommodation booking and property management platform designed for regional urban centers (initial deployment: Takoradi, Ghana).
 
 This design system directly implements the attached HTML reference design architecture:
 - **Red (`--r: #C60026`)**: Primary action, CTA buttons ("Reserve", "Search Stays"), active tab indicator, urgent flags, delete actions, stat highlights.
@@ -13,7 +13,7 @@ This design system directly implements the attached HTML reference design archit
 
 ## 1. Brand Color Palette & Hex Tokens
 
-| Variable | HEX Code | Role in Design Reference | FineStay Platform Placement |
+| Variable | HEX Code | Role in Design Reference | FindStay Platform Placement |
 | :--- | :--- | :--- | :--- |
 | `--r` | `#C60026` | **Primary Action (Red)** | Primary buttons (`.btn-primary`), "Reserve Now", active tab bottom border, stat highlights, error/danger states. |
 | `--r-light` | `#FF1A46` | Red Light | Active state accent. |
@@ -82,7 +82,7 @@ This design system directly implements the attached HTML reference design archit
 
 ---
 
-## 3. FineStay Application Interfaces
+## 3. FindStay Application Interfaces
 
 1. **Guest Interface**:
    - Location search (Airport Ridge, TTU Campus, Beach Road)

@@ -3,165 +3,900 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FineStay — Accommodation & Property Management Platform</title>
+<title>FindStay — Accommodation Booking & Property Management</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --r:#C60026;--r-light:#FF1A46;--r-dim:#8C001A;--r-bg:#fff0f2;--r-bgd:rgba(198,0,38,.12);
-  --b:#004BA0;--b-light:#4D9FFF;--b-dim:#003578;--b-bg:#EFF5FF;--b-bgd:rgba(0,75,160,.15);
-  --w:#FFFFFF;
-  --n900:#0d1117;--n800:#161b22;--n700:#21262d;--n600:#30363d;--n500:#484f58;
-  --n400:#6e7681;--n300:#8b949e;--n200:#c9d1d9;--n100:#e6edf3;--n50:#f6f8fa;
-  --green:#1a7f37;--green-bg:#dafbe1;--green-bgd:rgba(26,127,55,.15);
-  --amber:#9a6700;--amber-bg:#fff8c5;--amber-bgd:rgba(154,103,0,.15);
-  --font:'Segoe UI',system-ui,sans-serif;
+/* Inlined copy of web/src/theme.css + web/src/global.css (source of truth lives in the web app; regenerate when tokens change) */
+/**
+ * FindStay - Design System Theme Tokens
+ * Based on the FindStay Reference Design Architecture
+ * Primary: Red (#C60026) for CTAs & active states
+ * Structure & Nav: Blue (#004BA0) for chrome, navigation, links & borders
+ * Neutrals: GitHub/Linear-inspired light neutral canvas (#f6f8fa)
+ */
+
+:root {
+  /* ==========================================================================
+     1. BRAND COLORS (From Reference Design)
+     ========================================================================== */
+  
+  /* Primary Action: Red */
+  --r:           #C60026;
+  --r-light:     #FF1A46;
+  --r-dim:       #8C001A;
+  --r-bg:        #fff0f2;
+  --r-bgd:       rgba(198, 0, 38, 0.12);
+
+  /* Structure & Navigation: Blue */
+  --b:           #004BA0;
+  --b-light:     #4D9FFF;
+  --b-dim:       #003578;
+  --b-bg:        #EFF5FF;
+  --b-bgd:       rgba(0, 75, 160, 0.15);
+
+  /* Pure White */
+  --w:           #FFFFFF;
+
+  /* Neutral Scale */
+  --n900:        #0d1117;
+  --n800:        #161b22;
+  --n700:        #21262d;
+  --n600:        #30363d;
+  --n500:        #484f58;
+  --n400:        #6e7681;
+  --n300:        #8b949e;
+  --n200:        #c9d1d9;
+  --n100:        #e6edf3;
+  --n50:         #f6f8fa;
+
+  /* Semantic Status Colors */
+  --green:       #1a7f37;
+  --green-bg:    #dafbe1;
+  --green-bgd:   rgba(26, 127, 55, 0.15);
+
+  --amber:       #9a6700;
+  --amber-bg:    #fff8c5;
+  --amber-bgd:   rgba(154, 103, 0, 0.15);
+
+  /* Font Stack */
+  --font:        'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono:   'SF Mono', Consolas, 'Courier New', monospace;
+
+  /* ==========================================================================
+     2. SEMANTIC DESIGN TOKENS (FindStay Platform)
+     ========================================================================== */
+  
+  /* Primary Action (Red: Buttons, active tab indicator, urgent flags) */
+  --color-primary:             var(--r);
+  --color-primary-hover:       var(--r-dim);
+  --color-primary-light:       var(--r-light);
+  --color-primary-subtle:      var(--r-bg);
+  --color-primary-contrast:    #FFFFFF;
+
+  /* Secondary & Structure (Blue: Nav bar, links, focus rings, info badges) */
+  --color-secondary:           var(--b);
+  --color-secondary-hover:     var(--b-dim);
+  --color-secondary-light:     var(--b-light);
+  --color-secondary-subtle:    var(--b-bg);
+  --color-secondary-contrast:  #FFFFFF;
+
+  /* Backgrounds & Surfaces */
+  --color-bg-base:             var(--n50);   /* #f6f8fa */
+  --color-bg-surface:          var(--w);     /* #ffffff */
+  --color-bg-muted:            var(--n100);  /* #e6edf3 */
+  --color-bg-nav:              var(--b);     /* #004BA0 */
+  --color-bg-nav-dark:         var(--n900);  /* #0d1117 */
+
+  /* Text Tokens */
+  --color-text-primary:        var(--n800);  /* #161b22 */
+  --color-text-secondary:      var(--n400);  /* #6e7681 */
+  --color-text-muted:          var(--n300);  /* #8b949e */
+  --color-text-link:           var(--b);     /* #004BA0 */
+  --color-text-danger:         var(--r);     /* #C60026 */
+  --color-text-success:        var(--green); /* #1a7f37 */
+  --color-text-on-brand:       #FFFFFF;
+
+  /* Border Tokens */
+  --color-border-subtle:       var(--n100);  /* #e6edf3 */
+  --color-border-default:      var(--n200);  /* #c9d1d9 */
+  --color-border-strong:       var(--n300);  /* #8b949e */
+  --color-border-focus:        var(--b);     /* #004BA0 */
+  --color-border-danger:       var(--r);     /* #C60026 */
+
+  /* Spacing Scale (4px base) */
+  --space-xs:                  4px;
+  --space-sm:                  8px;
+  --space-md:                  12px;
+  --space-lg:                  16px;
+  --space-xl:                  24px;
+  --space-2xl:                 32px;
+  --space-3xl:                 48px;
+  --space-4xl:                 64px;
+
+  /* Border Radius */
+  --radius-none:               2px;
+  --radius-xs:                 4px;
+  --radius-sm:                 6px;
+  --radius-md:                 8px;
+  --radius-lg:                 12px;
+  --radius-xl:                 16px;
+  --radius-pill:               9999px;
 }
-body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n50);line-height:1.5;}
-.ds{padding:0 0 2rem;}
 
-/* Top Header Bar */
-.brand-topbar{background:var(--n900);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--n700);}
-.brand-title{font-size:15px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:6px;}
-.brand-badge{font-size:10px;text-transform:uppercase;background:var(--b);color:#fff;padding:2px 6px;border-radius:4px;font-weight:600;}
-
-/* Navigation Tabs */
-.tabs{display:flex;gap:0;border-bottom:1px solid var(--n200);background:#fff;padding:0 20px;position:sticky;top:0;z-index:100;overflow-x:auto;}
-.tab{font-size:13px;padding:11px 16px;cursor:pointer;border-bottom:2px solid transparent;color:var(--n400);font-weight:500;transition:color .15s;white-space:nowrap;}
-.tab:hover{color:var(--n700);}
-.tab.on{color:var(--n800);border-bottom-color:var(--r);font-weight:600;}
-
-/* Section Container */
-.section{display:none;padding:24px 20px;max-width:1160px;margin:0 auto;}
-.section.on{display:block;}
-
-.sec-head{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--n400);margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid var(--n100);}
-
-.row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;}
-
-/* Color Swatches & Scale */
-.swatch-block{flex:1;min-width:100px;}
-.swatch{height:64px;border-radius:8px 8px 0 0;display:flex;align-items:flex-end;padding:6px 8px;}
-.swatch-meta{background:#fff;border:1px solid var(--n100);border-top:none;border-radius:0 0 8px 8px;padding:8px 10px;}
-.swatch-name{font-size:12px;font-weight:600;color:var(--n800);}
-.swatch-hex{font-size:11px;font-family:monospace;color:var(--n400);}
-.swatch-role{font-size:11px;color:var(--n300);margin-top:1px;}
-
-.scale-row{display:grid;grid-template-columns:repeat(8,1fr);gap:0;border-radius:8px;overflow:hidden;margin-bottom:8px;border:1px solid var(--n100);}
-.scale-cell{height:40px;}
-.scale-labels{display:grid;grid-template-columns:repeat(8,1fr);gap:0;margin-bottom:20px;}
-.scale-label{font-size:10px;color:var(--n400);text-align:center;font-family:monospace;}
-
-.token-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px;}
-.token-row{background:#fff;border:1px solid var(--n100);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;}
-.token-dot{width:28px;height:28px;border-radius:6px;flex-shrink:0;border:1px solid var(--n100);}
-.token-name{font-size:12px;font-family:monospace;color:var(--n700);font-weight:500;}
-.token-val{font-size:11px;color:var(--n400);margin-top:2px;}
-
-.type-row{background:#fff;border:1px solid var(--n100);border-radius:8px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:baseline;gap:16px;}
-.type-label{font-size:11px;color:var(--n400);font-family:monospace;min-width:110px;flex-shrink:0;}
-.type-spec{font-size:11px;color:var(--n300);margin-left:auto;font-family:monospace;}
-
-.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
-.comp-card{background:#fff;border:1px solid var(--n100);border-radius:10px;padding:16px;}
-.comp-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--n400);margin-bottom:12px;}
-.comp-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;}
-
-/* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;font-family:inherit;transition:all .15s;}
-.btn-primary{background:var(--r);color:#fff;border-color:var(--r-dim);}
-.btn-primary:hover{background:var(--r-dim);}
-.btn-secondary{background:var(--b);color:#fff;border-color:var(--b-dim);}
-.btn-secondary:hover{background:var(--b-dim);}
-.btn-outline{background:#fff;color:var(--n700);border-color:var(--n200);}
-.btn-outline:hover{background:var(--n50);border-color:var(--n300);}
-.btn-ghost{background:transparent;color:var(--b);border-color:transparent;}
-.btn-ghost:hover{background:var(--b-bg);}
-.btn-danger{background:#fff;color:var(--r);border-color:var(--r);}
-.btn-danger:hover{background:var(--r-bg);}
-.btn-sm{padding:4px 10px;font-size:12px;}
-.btn-lg{padding:10px 20px;font-size:15px;}
-.btn-dis{opacity:.45;cursor:not-allowed;}
-
-/* Badges */
-.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;line-height:1.4;}
-.badge-red{background:var(--r-bg);color:var(--r-dim);}
-.badge-blue{background:var(--b-bg);color:var(--b-dim);}
-.badge-green{background:var(--green-bg);color:var(--green);}
-.badge-amber{background:var(--amber-bg);color:var(--amber);}
-.badge-gray{background:var(--n100);color:var(--n500);}
-
-/* Form Controls */
-.inp{width:100%;height:34px;border:1px solid var(--n200);border-radius:6px;padding:0 10px;font-size:13px;color:var(--n800);outline:none;font-family:inherit;background:#fff;}
-.inp:focus{border-color:var(--b);box-shadow:0 0 0 3px var(--b-bg);}
-.inp-err{border-color:var(--r);}
-.inp-err:focus{box-shadow:0 0 0 3px var(--r-bg);}
-
-/* Alerts */
-.alert{border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:8px;border:1px solid;}
-.alert-info{background:var(--b-bg);color:var(--b-dim);border-color:rgba(0,75,160,.2);}
-.alert-success{background:var(--green-bg);color:var(--green);border-color:rgba(26,127,55,.2);}
-.alert-warn{background:var(--amber-bg);color:var(--amber);border-color:rgba(154,103,0,.2);}
-.alert-danger{background:var(--r-bg);color:var(--r-dim);border-color:rgba(198,0,38,.2);}
-
-/* Theme Split */
-.theme-split{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:10px;overflow:hidden;border:1px solid var(--n200);margin-bottom:16px;}
-.light-panel{background:#fff;padding:16px;}
-.dark-panel{background:#0d1117;padding:16px;}
-.panel-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;}
-.theme-token{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.theme-dot{width:20px;height:20px;border-radius:4px;flex-shrink:0;}
-.theme-txt{font-size:11px;font-family:monospace;}
-
-/* Spacing */
-.space-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:20px;}
-.space-block{background:var(--b-bg);border:1px solid rgba(0,75,160,.2);border-radius:3px;}
-.space-meta{text-align:center;}
-.space-px{font-size:11px;font-family:monospace;color:var(--b-dim);font-weight:500;}
-.space-name{font-size:10px;color:var(--n400);}
-
-/* Platform Interfaces & Data Displays */
-.table-wrap{border:1px solid var(--n100);border-radius:8px;overflow-x:auto;background:#fff;}
-.table{width:100%;border-collapse:collapse;font-size:13px;text-align:left;}
-.table th{background:var(--n50);color:var(--n600);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--n100);font-size:12px;white-space:nowrap;}
-.table td{padding:12px 14px;border-bottom:1px solid var(--n100);color:var(--n800);vertical-align:middle;}
-.table tr:last-child td{border-bottom:none;}
-.table tr:hover td{background:var(--n50);}
-
-.prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px;}
-.prop-card{background:#fff;border:1px solid var(--n100);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s;}
-.prop-card:hover{border-color:var(--b);}
-.prop-img{height:140px;background:var(--n100);position:relative;overflow:hidden;}
-.prop-img img{width:100%;height:100%;object-fit:cover;}
-.prop-badge-pos{position:absolute;top:8px;left:8px;}
-.prop-body{padding:14px;display:flex;flex-direction:column;flex:1;}
-.prop-title{font-size:14px;font-weight:600;color:var(--n800);margin-bottom:4px;}
-.prop-loc{font-size:12px;color:var(--n400);margin-bottom:12px;}
-.prop-footer{margin-top:auto;padding-top:10px;border-top:1px solid var(--n100);display:flex;align-items:center;justify-content:space-between;}
-.prop-price{font-size:15px;font-weight:700;color:var(--r);}
-.prop-unit{font-size:11px;color:var(--n400);font-weight:normal;}
-
-@media(max-width:768px){
-  .comp-grid,.prop-grid,.token-grid{grid-template-columns:1fr;}
-  .tabs{padding:0 10px;}
-  .section{padding:16px 12px;}
+/* Dark Theme Support */
+[data-theme="dark"] {
+  --color-bg-base:             #0d1117;
+  --color-bg-surface:          #161b22;
+  --color-bg-nav:              #010409;
+  --color-text-primary:        #e6edf3;
+  --color-text-secondary:      #8b949e;
+  --color-border-subtle:       #21262d;
+  --color-border-default:      #30363d;
+  --color-text-link:           #4D9FFF;
 }
+
+/**
+ * FindStay - Central Global Stylesheet
+ * Incorporates the reference design system layout, components, and color rules.
+ * Primary Action: Red (#C60026) | Structure & Nav: Blue (#004BA0)
+ */
+
+/* ==========================================================================
+   1. RESET & BASE ELEMENTS
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--n800);
+  background: var(--n50);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--b);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   2. TABS & SECTION ARCHITECTURE (From Reference)
+   ========================================================================== */
+
+.ds {
+  padding: 0 0 2rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--n200);
+  background: #fff;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow-x: auto;
+}
+
+.tab {
+  font-size: 13px;
+  padding: 11px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: var(--n400);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+.tab:hover {
+  color: var(--n700);
+}
+
+.tab.on {
+  color: var(--n800);
+  border-bottom-color: var(--r);
+  font-weight: 600;
+}
+
+.section {
+  display: none;
+  padding: 24px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section.on {
+  display: block;
+}
+
+.sec-head {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--n400);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--n100);
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+/* ==========================================================================
+   3. BUTTONS (From Reference)
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--r);
+  color: #fff;
+  border-color: var(--r-dim);
+}
+
+.btn-primary:hover {
+  background: var(--r-dim);
+}
+
+.btn-secondary {
+  background: var(--b);
+  color: #fff;
+  border-color: var(--b-dim);
+}
+
+.btn-secondary:hover {
+  background: var(--b-dim);
+}
+
+.btn-outline {
+  background: #fff;
+  color: var(--n700);
+  border-color: var(--n200);
+}
+
+.btn-outline:hover {
+  background: var(--n50);
+  border-color: var(--n300);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--b);
+  border-color: transparent;
+}
+
+.btn-ghost:hover {
+  background: var(--b-bg);
+}
+
+.btn-danger {
+  background: #fff;
+  color: var(--r);
+  border-color: var(--r);
+}
+
+.btn-danger:hover {
+  background: var(--r-bg);
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.btn-lg {
+  padding: 10px 20px;
+  font-size: 15px;
+}
+
+.btn-dis,
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   4. BADGES & STATUS PILLS (From Reference)
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.badge-red {
+  background: var(--r-bg);
+  color: var(--r-dim);
+}
+
+.badge-blue {
+  background: var(--b-bg);
+  color: var(--b-dim);
+}
+
+.badge-green {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.badge-amber {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+
+.badge-gray {
+  background: var(--n100);
+  color: var(--n500);
+}
+
+.dot-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ==========================================================================
+   5. FORM INPUTS (From Reference)
+   ========================================================================== */
+
+.inp {
+  width: 100%;
+  height: 34px;
+  border: 1px solid var(--n200);
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 13px;
+  color: var(--n800);
+  outline: none;
+  font-family: inherit;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.inp:focus {
+  border-color: var(--b);
+  box-shadow: 0 0 0 3px var(--b-bg);
+}
+
+.inp-err {
+  border-color: var(--r);
+}
+
+.inp-err:focus {
+  box-shadow: 0 0 0 3px var(--r-bg);
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--n700);
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* ==========================================================================
+   6. ALERTS & NOTICES (From Reference)
+   ========================================================================== */
+
+.alert {
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 8px;
+  border: 1px solid;
+}
+
+.alert-info {
+  background: var(--b-bg);
+  color: var(--b-dim);
+  border-color: rgba(0, 75, 160, 0.2);
+}
+
+.alert-success {
+  background: var(--green-bg);
+  color: var(--green);
+  border-color: rgba(26, 127, 55, 0.2);
+}
+
+.alert-warn {
+  background: var(--amber-bg);
+  color: var(--amber);
+  border-color: rgba(154, 103, 0, 0.2);
+}
+
+.alert-danger {
+  background: var(--r-bg);
+  color: var(--r-dim);
+  border-color: rgba(198, 0, 38, 0.2);
+}
+
+/* ==========================================================================
+   7. CARDS & CONTAINER SYSTEM (From Reference)
+   ========================================================================== */
+
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.comp-card {
+  background: #fff;
+  border: 1px solid var(--n100);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.comp-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--n400);
+  margin-bottom: 12px;
+}
+
+.comp-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* Swatches, Scales & Tokens */
+.swatch-block {
+  flex: 1;
+  min-width: 90px;
+}
+
+.swatch {
+  height: 64px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 6px 8px;
+}
+
+.swatch-meta {
+  background: #fff;
+  border: 1px solid var(--n100);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 8px 10px;
+}
+
+.swatch-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--n800);
+}
+
+.swatch-hex {
+  font-size: 11px;
+  font-family: monospace;
+  color: var(--n400);
+}
+
+.swatch-role {
+  font-size: 11px;
+  color: var(--n300);
+  margin-top: 1px;
+}
+
+.scale-row {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  border: 1px solid var(--n100);
+}
+
+.scale-cell {
+  height: 40px;
+}
+
+.scale-labels {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0;
+  margin-bottom: 20px;
+}
+
+.scale-label {
+  font-size: 10px;
+  color: var(--n400);
+  text-align: center;
+  font-family: monospace;
+}
+
+.token-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.token-row {
+  background: #fff;
+  border: 1px solid var(--n100);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.token-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  border: 1px solid var(--n100);
+}
+
+.token-name {
+  font-size: 12px;
+  font-family: monospace;
+  color: var(--n700);
+  font-weight: 500;
+}
+
+.token-val {
+  font-size: 11px;
+  color: var(--n400);
+  margin-top: 2px;
+}
+
+.type-row {
+  background: #fff;
+  border: 1px solid var(--n100);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.type-label {
+  font-size: 11px;
+  color: var(--n400);
+  font-family: monospace;
+  min-width: 110px;
+  flex-shrink: 0;
+}
+
+.type-spec {
+  font-size: 11px;
+  color: var(--n300);
+  margin-left: auto;
+  font-family: monospace;
+}
+
+.theme-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--n200);
+  margin-bottom: 16px;
+}
+
+.light-panel {
+  background: #fff;
+  padding: 16px;
+}
+
+.dark-panel {
+  background: #0d1117;
+  padding: 16px;
+}
+
+.panel-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 12px;
+}
+
+.theme-token {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.theme-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.theme-txt {
+  font-size: 11px;
+  font-family: monospace;
+}
+
+.space-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.space-block {
+  background: var(--b-bg);
+  border: 1px solid rgba(0, 75, 160, 0.2);
+  border-radius: 3px;
+}
+
+.space-meta {
+  text-align: center;
+}
+
+.space-px {
+  font-size: 11px;
+  font-family: monospace;
+  color: var(--b-dim);
+  font-weight: 500;
+}
+
+.space-name {
+  font-size: 10px;
+  color: var(--n400);
+}
+
+/* ==========================================================================
+   8. DATA TABLES & FINDSTAY INTERFACES
+   ========================================================================== */
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--n100);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.table th {
+  background: var(--n50);
+  color: var(--n600);
+  font-weight: 600;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--n100);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--n100);
+  color: var(--n800);
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: var(--n50);
+}
+
+/* Property Listing Cards */
+.prop-card {
+  background: #fff;
+  border: 1px solid var(--n100);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.prop-card:hover {
+  border-color: var(--b);
+  box-shadow: 0 4px 12px rgba(0, 75, 160, 0.08);
+}
+
+.prop-img-box {
+  width: 100%;
+  height: 160px;
+  background: var(--n100);
+  position: relative;
+  overflow: hidden;
+}
+
+.prop-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.prop-badge-top {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+
+.prop-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.prop-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--n800);
+  margin-bottom: 4px;
+}
+
+.prop-loc {
+  font-size: 12px;
+  color: var(--n400);
+  margin-bottom: 10px;
+}
+
+.prop-footer {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--n100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prop-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--r);
+}
+
+.prop-unit {
+  font-size: 11px;
+  color: var(--n400);
+  font-weight: normal;
+}
+
+/* Metric / Stat Card */
+.stat-card {
+  background: #fff;
+  border: 1px solid var(--n100);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 160px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--n400);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--n800);
+  line-height: 1.2;
+}
+
+.stat-value-highlight {
+  color: var(--r);
+}
+
+/* Utilities */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .comp-grid,
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    padding: 0 10px;
+  }
+
+  .section {
+    padding: 16px 12px;
+  }
+}
+
 </style>
 </head>
 <body>
 
-<div class="brand-topbar">
-  <div class="brand-title">
-    <span style="color:var(--r);font-size:18px;">●</span> FineStay
-    <span class="brand-badge">Platform v1.2</span>
+<div class="brand-topbar" style="background:var(--n900);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--n700);">
+  <div class="brand-title" style="font-size:15px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:6px;">
+    <span style="color:var(--r);font-size:18px;">●</span> FindStay
+    <span class="brand-badge" style="font-size:10px;text-transform:uppercase;background:var(--b);color:#fff;padding:2px 6px;border-radius:4px;font-weight:600;">Takoradi Platform</span>
   </div>
-  <div style="font-size:12px;color:var(--n400);">
-    Takoradi, Ghana Accommodation Ecosystem
+  <div style="font-size:12px;color:var(--n400);display:flex;align-items:center;gap:12px;">
+    <span>Takoradi, Ghana</span>
+    <span class="badge badge-green"><span class="dot-indicator" style="background:var(--green);"></span>MoMo Active</span>
   </div>
 </div>
 
 <div class="ds">
 
-<!-- Top Navigation Tabs -->
+<!-- Top Navigation Tabs (Exact Reference Structure) -->
 <div class="tabs">
   <div class="tab on" onclick="show('guest',this)">Guest Interface</div>
   <div class="tab" onclick="show('owner',this)">Owner / Manager</div>
@@ -182,18 +917,18 @@ body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n
   
   <!-- Search Box -->
   <div class="comp-card" style="margin-bottom:16px;">
-    <div class="comp-label">Find Accommodation in Takoradi</div>
+    <div class="comp-label">Search Accommodation in Takoradi</div>
     <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end;">
       <div>
-        <div style="font-size:12px;color:var(--n700);margin-bottom:4px;font-weight:500;">Location / Area</div>
+        <div style="font-size:12px;color:var(--n700);margin-bottom:4px;font-weight:500;">Area / Destination</div>
         <input class="inp" type="text" value="Airport Ridge & TTU Campus Axis" />
       </div>
       <div>
-        <div style="font-size:12px;color:var(--n700);margin-bottom:4px;font-weight:500;">Check-In</div>
+        <div style="font-size:12px;color:var(--n700);margin-bottom:4px;font-weight:500;">Check-In Date</div>
         <input class="inp" type="text" value="20 Nov 2026" />
       </div>
       <div>
-        <div style="font-size:12px;color:var(--n700);margin-bottom:4px;font-weight:500;">Guests</div>
+        <div style="font-size:12px;color:var(--n700);margin-bottom:4px;font-weight:500;">Stayers</div>
         <input class="inp" type="text" value="2 Guests (1 Room)" />
       </div>
       <div>
@@ -208,19 +943,19 @@ body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n
     <span class="badge badge-gray">🎓 TTU Student Hostels</span>
     <span class="badge badge-gray">🌊 Beach Road Suites</span>
     <span class="badge badge-gray">💼 Oil & Gas Executive Lets</span>
-    <span class="badge badge-red"><span style="width:6px;height:6px;border-radius:50%;background:var(--r);display:inline-block;margin-right:2px;"></span>Instant Book</span>
-    <span class="badge badge-green"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-right:2px;"></span>MoMo Accepted</span>
+    <span class="badge badge-red"><span class="dot-indicator" style="background:var(--r);margin-right:2px;"></span>Instant Book</span>
+    <span class="badge badge-green"><span class="dot-indicator" style="background:var(--green);margin-right:2px;"></span>MoMo Checkout</span>
   </div>
 
-  <div class="sec-head">Verified Listings (Takoradi)</div>
+  <div class="sec-head">Available Properties</div>
 
   <!-- Property Cards Grid -->
-  <div class="prop-grid">
+  <div class="grid-3" style="margin-bottom:24px;">
     <!-- Property 1 -->
     <div class="prop-card">
-      <div class="prop-img">
-        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80" alt="Executive Guesthouse" />
-        <div class="prop-badge-pos">
+      <div class="prop-img-box">
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80" alt="Executive Guesthouse" class="prop-img" />
+        <div class="prop-badge-top">
           <span class="badge badge-blue">✓ Verified Property</span>
         </div>
       </div>
@@ -237,10 +972,10 @@ body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n
 
     <!-- Property 2 -->
     <div class="prop-card">
-      <div class="prop-img">
-        <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80" alt="TTU Student Hostel" />
-        <div class="prop-badge-pos">
-          <span class="badge badge-green"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;"></span>Available</span>
+      <div class="prop-img-box">
+        <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80" alt="TTU Student Hostel" class="prop-img" />
+        <div class="prop-badge-top">
+          <span class="badge badge-green"><span class="dot-indicator" style="background:var(--green);"></span>Available</span>
         </div>
       </div>
       <div class="prop-body">
@@ -256,9 +991,9 @@ body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n
 
     <!-- Property 3 -->
     <div class="prop-card">
-      <div class="prop-img">
-        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Beach Road Apartment" />
-        <div class="prop-badge-pos">
+      <div class="prop-img-box">
+        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Beach Road Apartment" class="prop-img" />
+        <div class="prop-badge-top">
           <span class="badge badge-blue">✓ Verified Property</span>
         </div>
       </div>
@@ -274,11 +1009,11 @@ body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n
     </div>
   </div>
 
-  <div class="sec-head" style="margin-top:24px;">Booking & Mobile Money Checkout</div>
+  <div class="sec-head">Reservation Summary & Mobile Money</div>
   <div class="comp-card" style="max-width:440px;">
-    <div class="comp-label">Quick Reservation Summary</div>
+    <div class="comp-label">Payment & Confirmation</div>
     <div style="font-size:13px;color:var(--n700);margin-bottom:10px;">
-      <strong>Ridge Executive Suite</strong> · 3 Nights (GH₵ 1,050)
+      <strong>Ridge Executive Suite</strong> · 3 Nights (GH₵ 1,050 Total)
     </div>
     <div style="margin-bottom:10px;">
       <div style="font-size:12px;font-weight:500;color:var(--n700);margin-bottom:4px;">Mobile Money Number</div>
@@ -302,28 +1037,28 @@ body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n
 
   <!-- Operational Stat Highlights -->
   <div class="row">
-    <div class="comp-card" style="flex:1;min-width:180px;">
-      <div class="comp-label">Monthly Revenue</div>
-      <div style="font-size:24px;font-weight:700;color:var(--r);">GH₵ 24,850</div>
+    <div class="stat-card">
+      <div class="stat-label">Monthly Revenue</div>
+      <div class="stat-value stat-value-highlight">GH₵ 24,850</div>
       <div style="font-size:11px;color:var(--green);font-weight:600;margin-top:4px;">▲ +14% vs previous month</div>
     </div>
-    <div class="comp-card" style="flex:1;min-width:180px;">
-      <div class="comp-label">Current Occupancy</div>
-      <div style="font-size:24px;font-weight:700;color:var(--b);">92%</div>
+    <div class="stat-card">
+      <div class="stat-label">Current Occupancy</div>
+      <div class="stat-value" style="color:var(--b);">92%</div>
       <div style="font-size:11px;color:var(--n400);margin-top:4px;">22 / 24 Units Occupied</div>
     </div>
-    <div class="comp-card" style="flex:1;min-width:180px;">
-      <div class="comp-label">Double-Booking Status</div>
+    <div class="stat-card">
+      <div class="stat-label">Double-Booking Engine</div>
       <div style="font-size:14px;font-weight:600;color:var(--green);margin-top:6px;">
-        <span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;"></span>
-        Engine Active & Guarded
+        <span class="dot-indicator" style="background:var(--green);margin-right:4px;"></span>
+        Active & Conflict-Free
       </div>
-      <div style="font-size:11px;color:var(--n400);margin-top:4px;">Zero conflict records</div>
+      <div style="font-size:11px;color:var(--n400);margin-top:4px;">Concurrency lock operational</div>
     </div>
-    <div class="comp-card" style="flex:1;min-width:180px;">
-      <div class="comp-label">Pending Inflows</div>
-      <div style="font-size:24px;font-weight:700;color:var(--amber);">GH₵ 1,800</div>
-      <div style="font-size:11px;color:var(--n400);margin-top:4px;">1 Semester hold awaiting MoMo</div>
+    <div class="stat-card">
+      <div class="stat-label">Pending Inflows</div>
+      <div class="stat-value" style="color:var(--amber);">GH₵ 1,800</div>
+      <div style="font-size:11px;color:var(--n400);margin-top:4px;">1 Semester booking awaiting MoMo</div>
     </div>
   </div>
 
@@ -401,7 +1136,7 @@ body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n
     </div>
 
     <div class="comp-card">
-      <div class="comp-label">Expense Logging</div>
+      <div class="comp-label">Log Operating Expense</div>
       <div style="margin-bottom:8px;">
         <div style="font-size:12px;font-weight:500;color:var(--n700);margin-bottom:4px;">Expense Description</div>
         <input class="inp" type="text" placeholder="e.g. Generator Diesel / ECG Prepaid" />
@@ -617,7 +1352,7 @@ body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n
      ========================================================================= -->
 <div id="type" class="section">
   <div class="sec-head">Type scale</div>
-  <div class="type-row"><div class="type-label">display</div><div style="font-size:32px;font-weight:700;color:#0d1117;line-height:1.2;">FineStay Platform</div><div class="type-spec">32px / 700</div></div>
+  <div class="type-row"><div class="type-label">display</div><div style="font-size:32px;font-weight:700;color:#0d1117;line-height:1.2;">FindStay Platform</div><div class="type-spec">32px / 700</div></div>
   <div class="type-row"><div class="type-label">h1</div><div style="font-size:24px;font-weight:600;color:#0d1117;">Takoradi Accommodation Hub</div><div class="type-spec">24px / 600</div></div>
   <div class="type-row"><div class="type-label">h2</div><div style="font-size:20px;font-weight:600;color:#0d1117;">Student Hostels & Guesthouses</div><div class="type-spec">20px / 600</div></div>
   <div class="type-row"><div class="type-label">h3</div><div style="font-size:16px;font-weight:600;color:#0d1117;">Verified Listings & Bookings</div><div class="type-spec">16px / 600</div></div>
@@ -665,10 +1400,10 @@ body{font-family:var(--font);font-size:14px;color:var(--n800);background:var(--n
       </div>
       <div class="comp-row" style="margin-top:8px;">
         <span style="display:inline-flex;align-items:center;gap:4px;background:var(--r-bg);color:var(--r-dim);font-size:12px;padding:4px 10px;border-radius:6px;border:1px solid rgba(198,0,38,.2);">
-          <span style="width:6px;height:6px;border-radius:50%;background:var(--r);display:inline-block;"></span>Double-booking lock
+          <span class="dot-indicator" style="background:var(--r);"></span>Double-booking lock
         </span>
         <span style="display:inline-flex;align-items:center;gap:4px;background:var(--green-bg);color:var(--green);font-size:12px;padding:4px 10px;border-radius:6px;border:1px solid rgba(26,127,55,.2);">
-          <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;"></span>Online booking active
+          <span class="dot-indicator" style="background:var(--green);"></span>Online booking active
         </span>
       </div>
     </div>
