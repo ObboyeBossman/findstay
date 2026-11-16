@@ -14,7 +14,7 @@ This document is the screen-to-screen blueprint for Sprint 1 and the direct inpu
 | Marker | Meaning |
 | :--- | :--- |
 | **Sprint 1** (default) | Built and shipped in Phase 1, Release `R1` (Foundation, Auth, Org/Staff, Verification, Catalog, Calendar, Admin Review & Audit). |
-| **`[Sprint 2+]`** | Deferred beyond `R1` (Guest booking, checkout, payments, "Booked" calendar state). Drawn only to show end-to-end continuity. |
+| **`[Sprint 2+]`** | Deferred beyond `R1` (Guest-session continuity, recently viewed history, booking, checkout, payments, "Booked" calendar state). Drawn only to show end-to-end continuity. |
 | **`[Sprint 3]`** | Future enhancement stub (e.g., Guest save/share property). |
 | **`[Audit: event_name]`** | Action writes an immutable record to `audit.audit_log` (`BRL-13`, `BRL-16`, `NFR-66`). |
 | **`[Notify: target]`** | Action triggers a `NotificationSender` event (`FR-66..71`, `BRL-17`). |
@@ -64,6 +64,7 @@ This document is the screen-to-screen blueprint for Sprint 1 and the direct inpu
 | **SCR-23** | Search Accommodation | `S1-03` | Sprint 1 | `GET /api/v1/properties/search` | — | Full-screen filter sheet (mobile) / Top bar + left filter sidebar (desktop) | Enter destination, dates, guests, and filters. |
 | **SCR-24** | Search Results | `S1-03` | Sprint 1 | `GET /api/v1/properties/search` | — | 1-col listing cards + Verified badge (mobile) / 2–3-col grid + map/sort (desktop) | Display matching available properties with GHS price and Verified Owner badge. |
 | **SCR-25** | Property Details | `S1-13` | Sprint 1 | `GET /api/v1/properties/{id}` | — | Photo carousel + sticky CTA bar (mobile) / Gallery + 2-col layout (desktop) | Show photos, GHS price, **Verified Owner badge**, facilities, and Save/Share `[Sprint 3]` stub. |
+| **SCR-25A** | Recently Viewed (`/recently-viewed`) | `S2+` | Sprint 2+ | `GET /api/v1/me/recently-viewed`, `DELETE /api/v1/me/recently-viewed` | — | Recent-property cards + clear-history action (mobile) / Filterable history grid (desktop) | Let a signed-in user revisit properties first viewed during an anonymous or authenticated session. |
 | **SCR-26** | Booking Details `[Sprint 2+]` | `S2+` | Sprint 2+ | `POST /api/v1/bookings/draft` `[Sprint 2+]` | — | Single-column form (mobile) / 2-col form + price summary (desktop) | Enter/confirm stay dates, guests, and contact info. |
 | **SCR-27** | Confirm Booking `[Sprint 2+]` | `S2+` | Sprint 2+ | `POST /api/v1/bookings` `[Sprint 2+]` | `booking.created` `[Sprint 2+]` | Summary + confirm CTA (mobile & desktop) | Review booking summary and confirm reservation/payment. |
 | **SCR-28** | Booking Confirmation `[Sprint 2+]` | `S2+` | Sprint 2+ | `GET /api/v1/bookings/{id}` `[Sprint 2+]` | — | Confirmation card + receipt download (mobile & desktop) | Display confirmed booking reference and summary. |
@@ -102,8 +103,11 @@ flowchart TD
 
     SignInCheck -- "Valid [Audit: auth.login_success]" --> PolicyCheck{"Policy Version<br/>Up to Date? (NFR-36)"}
     PolicyCheck -- "Policy Updated" --> SCR06C["SCR-06C: Policy Re-Consent Gate<br/>(Act 843 Notice)"]
-    SCR06C -- "Accept [Audit: consent.recorded]" --> RoleRoute
-    PolicyCheck -- "Current" --> RoleRoute{"User Roles /<br/>Memberships? (BRL-02)"}
+    SCR06C -- "Accept [Audit: consent.recorded]" --> VisitorClaim
+    PolicyCheck -- "Current" --> VisitorClaim{"Temporary Visitor<br/>History Exists? [Sprint 2+]"}
+    VisitorClaim -- "Yes" --> ClaimHistory["Claim Recent Views for Account<br/>and Clear Temporary Session [Sprint 2+]"]
+    ClaimHistory --> RoleRoute
+    VisitorClaim -- "No" --> RoleRoute{"User Roles /<br/>Memberships? (BRL-02)"}
 
     %% Multi-role routing
     RoleRoute -- "Multiple Roles<br/>(e.g. Guest + Owner/Staff)" --> SCR06B["SCR-06B: Role / Portal Picker<br/>(Choose Guest, Owner, or Admin)"]
@@ -331,9 +335,12 @@ flowchart TD
 
 ---
 
-## 6. Guest Journey (Updated Flow)
+## 6. Guest Journey (Anonymous Browsing, Account Handoff & Booking)
 
-Covers **Browse & Search (`SCR-22` – `SCR-25`)** in Sprint 1 (including **Verified Owner badge** on `SCR-25` and **Save/Share `[Sprint 3]`** stub), **Shared Auth (`SCR-01` – `SCR-06D`)**, and **`[Sprint 2+]` Booking**.
+Covers **Browse & Search (`SCR-22` – `SCR-25`)** in Sprint 1 (including **Verified Owner badge** on `SCR-25` and **Save/Share `[Sprint 3]`** stub), **Shared Auth (`SCR-01` – `SCR-06D`)**, and the **`[Sprint 2+]` temporary visitor session, recently viewed history, account handoff, and booking flow**.
+
+> [!NOTE]
+> **Product Owner clarification (2026-11-16):** A person may browse public accommodations without registering or signing in. FindStay may keep low-risk browsing continuity in a temporary, first-party visitor session. If the person later authenticates, the system claims that session's recently viewed properties for the account and returns the person to the page or protected action they were using. Leaving or cancelling authentication creates no account, booking, or payment obligation.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
@@ -342,7 +349,10 @@ flowchart TD
     NetCheck -- "No (Offline / 5xx)" --> SCRERR["SCR-ERR: Offline / Server Down [Retry]"]
     SCRERR -- "Retry" --> NetCheck
 
-    NetCheck -- "Yes" --> SCR22["2. SCR-22: Homepage (Browse & Search)"]
+    NetCheck -- "Yes" --> SignedAtEntry{"Already<br/>Signed In?"}
+    SignedAtEntry -- "No" --> VisitorSession["Create/Resume Temporary Visitor Session [Sprint 2+]<br/>(Secure First-Party Cookie · No Account)"]
+    VisitorSession --> SCR22
+    SignedAtEntry -- "Yes" --> SCR22["2. SCR-22: Homepage (Browse & Search)"]
     SCR22 --> HomeEmpty{"Any Published<br/>Properties?"}
     HomeEmpty -- "No" --> EmptyHome["Empty State: No Accommodations Listed Yet"]
     HomeEmpty -- "Yes" --> SCR23["3. SCR-23: Search Accommodation<br/>(Location, Dates, Guests, Filters)"]
@@ -361,10 +371,24 @@ flowchart TD
     SCR29 --> SCR24
 
     PropOK -- "Yes" --> SCR25["6. SCR-25: Property Details<br/>(GHS Price, Photos, Location, Facilities, Verified Owner Badge, Save/Share [Sprint 3])"]
-    SCR25 --> ClickBook["7. Click 'Make a Booking'"]
-    ClickBook --> AuthCheck{"8. Signed In?"}
+    SCR25 --> RecordView["Record Recent View [Sprint 2+]<br/>(Temporary Session or Signed-In Account)"]
+    RecordView --> GuestChoice{"What Does the<br/>Visitor Do Next?"}
+    GuestChoice -- "Continue Browsing" --> SCR24
+    GuestChoice -- "View History" --> HistoryCheck{"Signed In?"}
+    HistoryCheck -- "No" --> TempHistory["Show Temporary Recently Viewed<br/>on This Browser [Sprint 2+]"]
+    TempHistory --> SCR25
+    HistoryCheck -- "Yes" --> SCR25A["SCR-25A: Recently Viewed [Sprint 2+]<br/>(Account History · Clear History)"]
+    SCR25A --> SCR25
+    GuestChoice -- "Leave" --> ExitGuest(["Leave Freely<br/>No Account, Booking, or Payment Created"])
+    GuestChoice -- "Make a Booking" --> AuthCheck{"7. Signed In?"}
 
-    AuthCheck -- "No" --> SharedAuth(["8. Shared Auth Flow (SCR-01..SCR-06D)"]) --> SCR26
+    AuthCheck -- "No" --> AuthGate{"Sign In / Create Account<br/>or Continue Browsing?"}
+    AuthGate -- "Continue Browsing" --> SCR25
+    AuthGate -- "Sign In / Create Account" --> SharedAuth(["8. Shared Auth Flow (SCR-01..SCR-06D)<br/>Preserve Property, Dates & Intended Action"])
+    SharedAuth -. "Cancel" .-> SCR25
+    SharedAuth -- "Authenticated" --> MergeHistory["Claim Temporary Recent Views<br/>for Account [Sprint 2+]"]
+    MergeHistory --> ResumeAction["Return to the Same Property<br/>and Resume Intended Action"]
+    ResumeAction --> SCR26
     AuthCheck -- "Yes" --> SCR26
 
     subgraph LaterSprints ["Later Sprints (Sprint 2+: Booking & Checkout)"]
@@ -396,6 +420,7 @@ flowchart TD
 | **`SCR-13`, `14`, `15`, `16`** | Calendar month & timeline skeletons | "No blocks on this unit" / `[S2+]` "No bookings yet" | `409` `btree_gist` overlap conflict, invalid date range | Status displayed, date block saved/removed |
 | **`SCR-17` – `SCR-21C`** | Queue/table/log skeletons | "No pending reviews" / "No users" / "No audit events" | `403`, missing fix/rejection reason, `409` already reviewed | Approved/corrections/rejected, user suspended/restored, audit viewed |
 | **`SCR-22` – `SCR-25`, `SCR-29`** | Card grid & gallery skeletons | "No accommodations listed" / "0 matching results" | `SCR-ERR` offline/server error, `SCR-29` 404 | Listings browsed, filtered, and property viewed |
+| **`SCR-25A` `[Sprint 2+]`** | Recent-property card skeletons | "You have not viewed any properties yet" | History unavailable banner; temporary session expired | Temporary views claimed after authentication; history displayed or cleared |
 
 ---
 
@@ -422,6 +447,7 @@ flowchart TD
 - **Properties, Units, Photos & Calendar (`[OrgScope]`):** `GET/POST /api/v1/owner/properties`, `GET/PATCH /api/v1/owner/properties/{id}`, `GET /api/v1/owner/properties/{id}/preview`, `POST /api/v1/owner/properties/{id}/submit`, `POST/PATCH/DELETE /api/v1/owner/properties/{id}/units`, `POST /api/v1/owner/properties/{id}/photos/presign`, `PUT/DELETE /api/v1/owner/properties/{id}/photos`, `GET /api/v1/owner/units/{unitId}/availability`, `POST/DELETE /api/v1/owner/units/{unitId}/blocks`
 - **Admin:** `GET /api/v1/admin/dashboard`, `GET /api/v1/admin/reviews`, `GET /api/v1/admin/reviews/{id}`, `POST /api/v1/admin/reviews/{id}/decision`, `GET /api/v1/admin/users`, `POST /api/v1/admin/users/{id}/suspend`, `POST /api/v1/admin/users/{id}/restore`, `GET/PATCH /api/v1/admin/settings`, `GET /api/v1/admin/audit-logs`
 - **Public Guest:** `GET /api/v1/properties/featured`, `GET /api/v1/properties/search`, `GET /api/v1/properties/{id}`
+- **Guest Session & History `[Sprint 2+]`:** `POST /api/v1/visitor-sessions`, `POST /api/v1/visitor-sessions/recently-viewed`, `POST /api/v1/me/recently-viewed/claim`, `GET /api/v1/me/recently-viewed`, `DELETE /api/v1/me/recently-viewed`. The API owns the secure first-party visitor cookie; the browser never accesses business tables directly.
 
 ---
 
@@ -431,12 +457,14 @@ flowchart TD
 - **Icon-Driven Navigation (`NFR-05`):** Primary navigation and status cards pair clear icons with short text labels.
 - **Low-Literacy & Colour-Vision Safety (`NFR-07`):** Never rely on colour alone for status (e.g., Calendar `Available` vs `Owner-Blocked`, Verification `Approved` vs `Rejected`)—always pair colour with icons, patterns, and clear, simple labels.
 - **Currency & Time (`NFR-08`, `NFR-52`):** Display GHS (`GH₵`) / store integer pesewas; store UTC / display `Africa/Accra`.
+- **Anonymous Browsing & Privacy (`NFR-36`):** Public browsing never requires an account. Temporary history contains only the minimum property/search references needed for continuity, expires under the approved retention policy, can be cleared, and never creates a booking or payment. The privacy notice must explain this first-party activity tracking before the feature is released.
 
 ---
 
 ## 11. Review Checklist for `T14` Kickoff & Team Sign-Off
 
 - [ ] **Product (`T1` / `@kwesipaa643-sys`):** Confirm Sprint 1 vs `[Sprint 2+]` boundaries match the finalized work list.
+- [ ] **Product (`T1` / `@kwesipaa643-sys`):** Confirm the new anonymous-session/history behaviour, retention period, and exact protected-action boundary before it enters a delivery sprint.
 - [ ] **UI/UX (`T4` / `@maskkuratahiru-wq`):** Confirm every `SCR-*` ID and Mobile/Desktop variant maps 1:1 to wireframes.
 - [ ] **Backend (`T6` / `@ObboyeBossman`):** Confirm `/api/v1/...` endpoints, `[OrgScope]` boundaries, and `409` conflict codes.
 - [ ] **Database (`T8` / `@fummey`):** Confirm all `[Audit: ...]` events and `notification_preference` / `consent_record` tables are in the ERD.
