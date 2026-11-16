@@ -3,7 +3,7 @@
 - **Task:** [`S1-01-T3`](../scrum/sprint-01/stories/S1-01/tasks/S1-01-T3.md) (Issue [#27](https://github.com/ObboyeBossman/findstay/issues/27))
 - **Story:** [`S1-01`](../scrum/sprint-01/stories/S1-01/README.md) — Project Setup & System Design
 - **Author:** Anthony Maclean (`@dztrb`)
-- **Status:** Draft (pending `S1-01-T1` confirmation & team review)
+- **Status:** Accepted (reviewed; note: `SCR-23`/`SCR-24` public search filtering ships in Sprint 2 per `S1-01-T1`, while Guest landing shell `SCR-22` is Sprint 1)
 
 This document defines the **numbered screen inventory** and **screen-to-screen user flow diagrams** for FindStay's three journeys (**Shared Auth**, **Property Owner**, **Administrator**, and **Guest**), including **happy paths**, **error paths**, and **empty states**.
 
