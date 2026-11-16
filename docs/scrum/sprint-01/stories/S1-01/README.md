@@ -20,12 +20,12 @@ Nobody owns this story alone. Its 16 tasks are shared completely across the nine
 | [`S1-01-T1`](./tasks/S1-01-T1.md) | Confirm the Sprint 1 work list — what we build first, agreed by everyone | `requirements` | — | Product & Requirements | @kwesipaa643-sys | Todo |
 | [`S1-01-T2`](./tasks/S1-01-T2.md) | Pick FindStay's colors, fonts & spacing (one style file, swappable) | `ui-ux` | [`S1-01-T1`](./tasks/S1-01-T1.md) | UI/UX Design | @maskkuratahiru-wq | Todo |
 | [`S1-01-T3`](./tasks/S1-01-T3.md) | Draw the user flow diagrams — every screen-to-screen path | `ui-ux` | [`S1-01-T1`](./tasks/S1-01-T1.md) | UI/UX Design | @dztrb | Todo |
-| [`S1-01-T4`](./tasks/S1-01-T4.md) | Sketch every Sprint 1 screen (wireframes, phone-first) | `ui-ux` | [`S1-01-T2`](./tasks/S1-01-T2.md), [`S1-01-T3`](./tasks/S1-01-T3.md) | UI/UX Design | @maskkuratahiru-wq | Todo |
+| [`S1-01-T4`](./tasks/S1-01-T4.md) | Sketch every Sprint 1 screen (wireframes, phone-first) | `ui-ux` | [`S1-01-T2`](./tasks/S1-01-T2.md), [`S1-01-T3`](./tasks/S1-01-T3.md) | UI/UX Design | @surnuel | Todo |
 | [`S1-01-T5`](./tasks/S1-01-T5.md) | Build the empty starter website — guest, owner & admin areas wired | `frontend` | [`S1-01-T2`](./tasks/S1-01-T2.md), [`S1-01-T10`](./tasks/S1-01-T10.md) | Frontend Development | @maskkuratahiru-wq | Todo |
 | [`S1-01-T6`](./tasks/S1-01-T6.md) | Draw the backend map & data-flow diagram, agree the API contracts | `backend` | [`S1-01-T1`](./tasks/S1-01-T1.md) | Backend Development | @ObboyeBossman | Todo |
 | [`S1-01-T7`](./tasks/S1-01-T7.md) | Set up the empty server app with the shared pieces ready | `backend` | [`S1-01-T6`](./tasks/S1-01-T6.md), [`S1-01-T10`](./tasks/S1-01-T10.md) | Backend Development | @joseibonsu206-gif | Todo |
 | [`S1-01-T8`](./tasks/S1-01-T8.md) | Draw the database diagram (ERD) — every table & how it connects | `database` | [`S1-01-T1`](./tasks/S1-01-T1.md), [`S1-01-T6`](./tasks/S1-01-T6.md) | Database & Data | @fummey | Todo |
-| [`S1-01-T9`](./tasks/S1-01-T9.md) | Build the real database from the ERD with numbered scripts | `database` | [`S1-01-T8`](./tasks/S1-01-T8.md) | Database & Data | @surnuel | Todo |
+| [`S1-01-T9`](./tasks/S1-01-T9.md) | Build the real database from the ERD with numbered scripts | `database` | [`S1-01-T8`](./tasks/S1-01-T8.md) | Database & Data | @fummey | Todo |
 | [`S1-01-T10`](./tasks/S1-01-T10.md) | Set up the code repo, branch rules, secrets & staging site | `devops` | — | Architecture, Cloud & Security | @ObboyeBossman | Todo |
 | [`S1-01-T11`](./tasks/S1-01-T11.md) | Build the automatic checker — tests & publishes every change | `devops` | [`S1-01-T5`](./tasks/S1-01-T5.md), [`S1-01-T7`](./tasks/S1-01-T7.md), [`S1-01-T10`](./tasks/S1-01-T10.md) | Architecture, Cloud & Security | @ObboyeBossman | Todo |
 | [`S1-01-T12`](./tasks/S1-01-T12.md) | Set up tests that run on a real throwaway database | `testing` | [`S1-01-T7`](./tasks/S1-01-T7.md), [`S1-01-T9`](./tasks/S1-01-T9.md) | QA & Testing | @badu12-png | Todo |
@@ -39,12 +39,12 @@ Nobody owns this story alone. Its 16 tasks are shared completely across the nine
 | Teammate | GitHub | Tasks | What they will have at the end |
 | :--- | :--- | :--- | :--- |
 | Bright Afedi | @kwesipaa643-sys | T1 | The agreed Sprint 1 work list — everyone starts from the same page |
-| Mashkura Tahiru | @maskkuratahiru-wq | T2, T4, T5 | The style file (colors/fonts/spacing), the screen sketches (wireframes), and the empty starter website |
+| Mashkura Tahiru | @maskkuratahiru-wq | T2, T5 | The style file (colors/fonts/spacing) and the empty starter website |
 | Anthony Maclean | @dztrb | T3, T14 | The user flow diagrams (screen-to-screen paths) and a started sprint with tasks handed out |
 | Bossman Abraham N. O. | @ObboyeBossman | T6, T10, T11 | The backend map & data-flow diagram with API agreements, the protected code home, and the automatic checker/publisher |
 | Joseph Osei-Bonsu | @joseibonsu206-gif | T7 | The empty server app with the shared pieces (money, dates, errors) ready |
-| Solomon Fummey | @fummey | T8, T13 | The database diagram (ERD) and the acceptance walkthrough & repeat-test plan |
-| Emmanuel Rockson | @surnuel | T9 | The real staging database, built from the ERD by numbered scripts |
+| Solomon Fummey | @fummey | T8, T9, T13 | The database diagram (ERD), the real staging database built from it, and the acceptance walkthrough & repeat-test plan |
+| Emmanuel Rockson | @surnuel | T4 | The screen sketches (wireframes) of every Sprint 1 screen, phone-first with desktop variant |
 | Sampson Badu | @badu12-png | T12, T16 | Tests that run on a real throwaway database, and the proof that staging is alive end to end |
 | Okyere Ankomah Julius | @Ankomah959Julius | T15 | The starter reference lists (room types, billing periods, settings) loaded identically everywhere |
 
