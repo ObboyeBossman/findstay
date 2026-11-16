@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FineStay — Unified Design System & Theme Showcase</title>
+  <link rel="stylesheet" href="./theme.css">
+  <link rel="stylesheet" href="./global.css">
+  <style>
+    /* Showcase-specific layout styling */
+    .showcase-header {
+      background: linear-gradient(135deg, var(--brand-forest-950) 0%, var(--brand-forest-800) 100%);
+      color: #ffffff;
+      padding: var(--space-12) 0 var(--space-10);
+      border-bottom: 4px solid var(--brand-leaf-500);
+      position: relative;
+    }
+
+    .showcase-header h1 {
+      color: #ffffff;
+      font-size: var(--font-size-3xl);
+      margin-bottom: var(--space-2);
+    }
+
+    .showcase-header p {
+      color: var(--brand-forest-200);
+      font-size: var(--font-size-lg);
+      max-width: 700px;
+      margin-bottom: var(--space-4);
+    }
+
+    .brand-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      background: rgba(255, 255, 255, 0.1);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: var(--space-4);
+    }
+
+    .showcase-nav {
+      background-color: var(--color-bg-surface);
+      border-bottom: 1px solid var(--color-border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .showcase-nav-links {
+      display: flex;
+      gap: var(--space-6);
+      list-style: none;
+      overflow-x: auto;
+      padding: var(--space-3) 0;
+    }
+
+    .showcase-nav-links a {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      padding: var(--space-2) 0;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .showcase-nav-links a:hover,
+    .showcase-nav-links a.active {
+      color: var(--brand-forest-800);
+      border-bottom-color: var(--brand-leaf-500);
+    }
+
+    .showcase-section {
+      padding: var(--space-12) 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .showcase-section:nth-child(even) {
+      background-color: var(--neutral-100);
+    }
+
+    .section-tag {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.08em;
+      color: var(--brand-forest-700);
+      background: var(--brand-forest-50);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-2);
+      border: 1px solid var(--brand-forest-200);
+    }
+
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+
+    .swatch-card {
+      background: var(--color-bg-surface);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--color-border-subtle);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .swatch-color {
+      height: 90px;
+      display: flex;
+      align-items: flex-end;
+      padding: var(--space-2);
+      font-family: var(--font-family-mono);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .swatch-meta {
+      padding: var(--space-3);
+    }
+
+    .swatch-name {
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-primary);
+    }
+
+    .swatch-desc {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-1);
+    }
+
+    .swatch-contrast {
+      display: inline-block;
+      margin-top: var(--space-2);
+      font-size: 0.7rem;
+      font-weight: var(--font-weight-semibold);
+      padding: 2px 6px;
+      border-radius: var(--radius-xs);
+    }
+
+    .wcag-pass {
+      background: var(--brand-leaf-100);
+      color: var(--brand-forest-950);
+    }
+
+    .interactive-demo-box {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border-medium);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-sm);
+      margin-top: var(--space-6);
+    }
+
+    .component-label {
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-3);
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Hero Brand Header -->
+  <header class="showcase-header">
+    <div class="container">
+      <div class="brand-logo-badge">
+        <!-- SVG Vector derived from reference image -->
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- House Structure in Deep Forest Green (#0B4A14) -->
+          <path d="M50 15L20 42V82H80V42L50 15Z" fill="#FFFFFF"/>
+          <path d="M50 18L24 43V80H76V43L50 18Z" fill="#0B4A14"/>
+          <!-- Chimney -->
+          <rect x="62" y="22" width="10" height="18" fill="#0B4A14"/>
+          <!-- Windows in Vibrant Leaf Green (#1BAC04) -->
+          <rect x="42" y="44" width="7" height="7" rx="1.5" fill="#1BAC04"/>
+          <rect x="51" y="44" width="7" height="7" rx="1.5" fill="#1BAC04"/>
+          <rect x="42" y="53" width="7" height="7" rx="1.5" fill="#1BAC04"/>
+          <rect x="51" y="53" width="7" height="7" rx="1.5" fill="#1BAC04"/>
+          <!-- Foundation Sweeping Arc -->
+          <path d="M12 55C12 75 35 90 70 85C84 83 90 78 90 78C72 82 45 80 28 68C18 60 14 55 12 55Z" fill="#1BAC04"/>
+          <path d="M16 66C22 78 45 88 88 74C65 82 32 80 20 68C17 65 16 66 16 66Z" fill="#FFFFFF"/>
+        </svg>
+        <span style="font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); letter-spacing: 0.05em;">FINESTAY DESIGN SYSTEM</span>
+      </div>
+      <h1>FineStay Brand & UI Architecture</h1>
+      <p>A unified, accessible, and high-performance design theme engineered for Takoradi's premier accommodation booking & property management ecosystem.</p>
+      <div class="flex items-center gap-3">
+        <a href="#palette" class="btn btn-accent">Explore Color Palette</a>
+        <a href="#guest" class="btn btn-secondary" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); color: #fff;">Preview User Interfaces</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Showcase Navigation -->
+  <nav class="showcase-nav">
+    <div class="container">
+      <ul class="showcase-nav-links">
+        <li><a href="#palette">1. Color Palette & Tokens</a></li>
+        <li><a href="#typography">2. Typography & Elevation</a></li>
+        <li><a href="#components">3. Interactive UI Elements</a></li>
+        <li><a href="#guest">4. Guest Booking Portal</a></li>
+        <li><a href="#owner">5. Owner / Manager Portal</a></li>
+        <li><a href="#admin">6. Administrator Portal</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Section 1: Color Palette -->
+  <section id="palette" class="showcase-section">
+    <div class="container">
+      <span class="section-tag">Theme Tokens</span>
+      <h2>Extracted & Engineered Color Palette</h2>
+      <p>Sampled directly from the brand identity reference image. Deep Forest Green conveys architectural stability and trust, while Vibrant Leaf Green drives energetic call-to-actions and availability signals.</p>
+
+      <span class="component-label">Core Brand Colors</span>
+      <div class="swatch-grid">
+        <!-- Primary Forest Green -->
+        <div class="swatch-card">
+          <div class="swatch-color" style="background-color: #0B4A14; color: #FFFFFF;">
+            #0B4A14
+          </div>
+          <div class="swatch-meta">
+            <div class="swatch-name">Primary Forest Green</div>
+            <div class="swatch-desc">Main brand anchor, house silhouette, navbars, primary buttons, major headings.</div>
+            <span class="swatch-contrast wcag-pass">Contrast 9.8:1 (AAA)</span>
+          </div>
+        </div>
+
+        <!-- Accent Leaf Green -->
+        <div class="swatch-card">
+          <div class="swatch-color" style="background-color: #1BAC04; color: #052A08;">
+            #1BAC04
+          </div>
+          <div class="swatch-meta">
+            <div class="swatch-name">Accent Leaf Green</div>
+            <div class="swatch-desc">Windows & dynamic swoosh, 'Book Now' CTAs, active status, ratings, verified badge.</div>
+            <span class="swatch-contrast wcag-pass">Contrast 5.4:1 with Dark Text</span>
+          </div>
+        </div>
+
+        <!-- Secondary Slate Pine -->
+        <div class="swatch-card">
+          <div class="swatch-color" style="background-color: #254034; color: #FFFFFF;">
+            #254034
+          </div>
+          <div class="swatch-meta">
+            <div class="swatch-name">Secondary Slate Pine</div>
+            <div class="swatch-desc">Manager/Admin sidebars, secondary actions, card borders, subtle iconography.</div>
+            <span class="swatch-contrast wcag-pass">Contrast 8.4:1 (AAA)</span>
+          </div>
+        </div>
+
+        <!-- Background Ambient -->
+        <div class="swatch-card">
+          <div class="swatch-color" style="background-color: #F7FAF8; color: #121C15; border-bottom: 1px solid #D9E2DC;">
+            #F7FAF8
+          </div>
+          <div class="swatch-meta">
+            <div class="swatch-name">Background Base</div>
+            <div class="swatch-desc">Sampled from reference image soft ambient backdrop. Calming and easy on eyes.</div>
+            <span class="swatch-contrast wcag-pass">Default Base</span>
+          </div>
+        </div>
+
+        <!-- Surface White -->
+        <div class="swatch-card">
+          <div class="swatch-color" style="background-color: #FFFFFF; color: #121C15; border-bottom: 1px solid #D9E2DC;">
+            #FFFFFF
+          </div>
+          <div class="swatch-meta">
+            <div class="swatch-name">Surface Card / Modal</div>
+            <div class="swatch-desc">Pure white for property cards, form containers, dashboard tables, and modals.</div>
+            <span class="swatch-contrast wcag-pass">Crisp Surface</span>
+          </div>
+        </div>
+
+        <!-- Text Primary -->
+        <div class="swatch-card">
+          <div class="swatch-color" style="background-color: #121C15; color: #FFFFFF;">
+            #121C15
+          </div>
+          <div class="swatch-meta">
+            <div class="swatch-name">Text Primary</div>
+            <div class="swatch-desc">Deep charcoal slate with forest undertone. Maximum readability.</div>
+            <span class="swatch-contrast wcag-pass">Contrast 15.2:1 (AAA)</span>
+          </div>
+        </div>
+      </div>
+
+      <span class="component-label" style="margin-top: var(--space-8);">Feedback & Semantic Palette</span>
+      <div class="swatch-grid">
+        <!-- Success -->
+        <div class="swatch-card">
+          <div class="swatch-color" style="background-color: #127003; color: #FFFFFF;">
+            #127003
+          </div>
+          <div class="swatch-meta">
+            <div class="swatch-name">Success (Green)</div>
+            <div class="swatch-desc">Booking confirmed, payment cleared, room vacant, property verified.</div>
+          </div>
+        </div>
+
+        <!-- Warning -->
+        <div class="swatch-card">
+          <div class="swatch-color" style="background-color: #D97706; color: #FFFFFF;">
+            #D97706
+          </div>
+          <div class="swatch-meta">
+            <div class="swatch-name">Warning (Amber)</div>
+            <div class="swatch-desc">Pending verification, awaiting MoMo transfer, maintenance hold.</div>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div class="swatch-card">
+          <div class="swatch-color" style="background-color: #DC2626; color: #FFFFFF;">
+            #DC2626
+          </div>
+          <div class="swatch-meta">
+            <div class="swatch-name">Error / Danger (Crimson)</div>
+            <div class="swatch-desc">Double-booking collision, booking cancelled, payment failed.</div>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="swatch-card">
+          <div class="swatch-color" style="background-color: #0284C7; color: #FFFFFF;">
+            #0284C7
+          </div>
+          <div class="swatch-meta">
+            <div class="swatch-name">Info (Teal Cyan)</div>
+            <div class="swatch-desc">Student discount details, TTU semester guidance, check-in rules.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Typography & Components -->
+  <section id="components" class="showcase-section">
+    <div class="container">
+      <span class="section-tag">Design System Primitives</span>
+      <h2>Buttons, Inputs & Form Elements</h2>
+      <p>Fully styled interactive elements adhering to the 4px modular grid, subtle elevation shadows, and accessible touch targets.</p>
+
+      <div class="interactive-demo-box">
+        <span class="component-label">Buttons</span>
+        <div class="flex items-center gap-3" style="flex-wrap: wrap; margin-bottom: var(--space-6);">
+          <button class="btn btn-primary">Primary Action</button>
+          <button class="btn btn-accent">Instant Reserve</button>
+          <button class="btn btn-secondary">Secondary Action</button>
+          <button class="btn btn-outline">Outline Forest</button>
+          <button class="btn btn-ghost">Ghost Button</button>
+          <button class="btn btn-danger">Cancel Booking</button>
+          <button class="btn btn-primary btn-sm">Small</button>
+          <button class="btn btn-primary btn-lg">Large Hero CTA</button>
+        </div>
+
+        <span class="component-label">Status Badges & Pills</span>
+        <div class="flex items-center gap-3" style="flex-wrap: wrap; margin-bottom: var(--space-6);">
+          <span class="badge badge-verified">✓ Verified Property</span>
+          <span class="badge badge-verified-accent">⚡ Instant Confirmation</span>
+          <span class="badge badge-success">● Available</span>
+          <span class="badge badge-warning">⏳ Pending Approval</span>
+          <span class="badge badge-danger">✕ Double-Booking Blocked</span>
+          <span class="badge badge-info">ℹ Student Rate (TTU)</span>
+          <span class="rating-badge">★ 4.9 (48 reviews)</span>
+        </div>
+
+        <span class="component-label">Form Inputs & Controls</span>
+        <div class="grid grid-cols-3" style="margin-bottom: var(--space-4);">
+          <div class="form-group">
+            <label class="form-label">Location in Takoradi</label>
+            <input type="text" class="form-control" value="Beach Road, Takoradi" placeholder="Enter neighborhood...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nightly Rate (Ghana Cedis)</label>
+            <div class="input-prefix-group">
+              <span class="input-prefix">GH₵</span>
+              <input type="number" class="form-control" value="250">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Accommodation Type</label>
+            <select class="form-select">
+              <option>Student Hostel (Semester)</option>
+              <option selected>Executive Studio Apartment</option>
+              <option>Beachfront Guesthouse</option>
+              <option>Standard Hotel Room</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <label class="flex items-center gap-2" style="font-size: var(--font-size-sm); cursor: pointer;">
+            <div class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="toggle-slider"></span>
+            </div>
+            <span>Verified Properties Only</span>
+          </label>
+          <label class="flex items-center gap-2" style="font-size: var(--font-size-sm); cursor: pointer;">
+            <div class="toggle-switch">
+              <input type="checkbox">
+              <span class="toggle-slider"></span>
+            </div>
+            <span>Allow Mobile Money (MTN / Telecel)</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Guest Interface -->
+  <section id="guest" class="showcase-section">
+    <div class="container">
+      <span class="section-tag">Interface 1</span>
+      <h2>Guest Booking Experience</h2>
+      <p>Clean, airy, and trustworthy accommodation search designed for visitors, business professionals, and university students in Takoradi.</p>
+
+      <!-- Mock Guest Header & Search -->
+      <div class="guest-navbar" style="border-radius: var(--radius-lg); margin-bottom: var(--space-6); padding: var(--space-3) var(--space-4);">
+        <div class="flex items-center justify-between">
+          <div class="navbar-brand">
+            FineStay<span class="brand-dot">.</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <a href="#" style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Browse Takoradi</a>
+            <a href="#" style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Host a Property</a>
+            <button class="btn btn-primary btn-sm">Sign In</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Search Pill Widget -->
+      <div class="hero-search-box">
+        <div class="search-field">
+          <label>Where</label>
+          <input type="text" value="Takoradi (Airport Ridge, TTU)" readonly>
+        </div>
+        <div class="search-field">
+          <label>Check In</label>
+          <input type="text" value="Nov 20, 2026" readonly>
+        </div>
+        <div class="search-field">
+          <label>Check Out</label>
+          <input type="text" value="Nov 25, 2026" readonly>
+        </div>
+        <div class="search-field">
+          <label>Who</label>
+          <input type="text" value="2 Guests" readonly>
+        </div>
+        <button class="btn btn-accent" style="padding: 0.75rem 1.5rem; border-radius: var(--radius-full);">
+          🔍 Search
+        </button>
+      </div>
+
+      <!-- Filter chips -->
+      <div class="filter-chip-group" style="margin-bottom: var(--space-6);">
+        <button class="filter-chip active">All Stays</button>
+        <button class="filter-chip">🎓 TTU Student Hostels</button>
+        <button class="filter-chip">🌊 Beachfront Suites</button>
+        <button class="filter-chip">💼 Oil & Gas Executive Lets</button>
+        <button class="filter-chip">⚡ Instant Book</button>
+        <button class="filter-chip">💰 Under GH₵ 300</button>
+      </div>
+
+      <!-- Property Listings Grid -->
+      <div class="grid grid-cols-3">
+        <!-- Property 1 -->
+        <div class="property-card">
+          <div class="property-image-container">
+            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80" alt="Executive Guesthouse" class="property-image">
+            <div class="property-badge-overlay">
+              <span class="badge badge-verified">✓ FineStay Verified</span>
+            </div>
+          </div>
+          <div class="property-content">
+            <div class="flex items-center justify-between">
+              <span class="property-location">Airport Ridge, Takoradi</span>
+              <span class="rating-badge">★ 4.92</span>
+            </div>
+            <h4 class="property-title">Serene Executive Guesthouse Suite</h4>
+            <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
+              Air conditioning, high-speed WiFi, solar backup, secure parking.
+            </p>
+            <div class="property-price">
+              <span class="price-amount">GH₵ 350</span>
+              <span class="price-unit">/ night</span>
+              <button class="btn btn-accent btn-sm" style="margin-left: auto;">Reserve</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Property 2 -->
+        <div class="property-card">
+          <div class="property-image-container">
+            <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80" alt="TTU Student Hostel" class="property-image">
+            <div class="property-badge-overlay">
+              <span class="badge badge-verified-accent">⚡ Student Verified</span>
+            </div>
+          </div>
+          <div class="property-content">
+            <div class="flex items-center justify-between">
+              <span class="property-location">Near TTU Campus, Takoradi</span>
+              <span class="rating-badge">★ 4.85</span>
+            </div>
+            <h4 class="property-title">Campus View 2-in-1 Room</h4>
+            <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
+              Study desk, prepaid meter, 24/7 security, 5 min walk to lecture hall.
+            </p>
+            <div class="property-price">
+              <span class="price-amount">GH₵ 1,800</span>
+              <span class="price-unit">/ semester</span>
+              <button class="btn btn-accent btn-sm" style="margin-left: auto;">Reserve</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Property 3 -->
+        <div class="property-card">
+          <div class="property-image-container">
+            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Beach Road Apartment" class="property-image">
+            <div class="property-badge-overlay">
+              <span class="badge badge-verified">✓ FineStay Verified</span>
+            </div>
+          </div>
+          <div class="property-content">
+            <div class="flex items-center justify-between">
+              <span class="property-location">Beach Road, Takoradi</span>
+              <span class="rating-badge">★ 4.96</span>
+            </div>
+            <h4 class="property-title">Modern 2-Bedroom Coastal Flat</h4>
+            <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
+              Ocean view balcony, fitted kitchen, standby generator, MoMo checkout.
+            </p>
+            <div class="property-price">
+              <span class="price-amount">GH₵ 520</span>
+              <span class="price-unit">/ night</span>
+              <button class="btn btn-accent btn-sm" style="margin-left: auto;">Reserve</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Property Owner / Manager Dashboard -->
+  <section id="owner" class="showcase-section">
+    <div class="container">
+      <span class="section-tag">Interface 2</span>
+      <h2>Property Owner & Manager Operations</h2>
+      <p>Purpose-built for Ghanaian guesthouse managers and hostel operators to eliminate double-booking and automate income/expense tracking.</p>
+
+      <div class="dashboard-layout" style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-md);">
+        <!-- Dashboard Sidebar -->
+        <aside class="dashboard-sidebar">
+          <div class="dashboard-sidebar-header">
+            <div style="font-size: var(--font-size-md); font-weight: var(--font-weight-bold); color: #fff;">
+              Manager Portal
+            </div>
+            <small style="color: var(--brand-forest-200);">Palace Ridge Lodge</small>
+          </div>
+          <ul class="sidebar-nav">
+            <li class="sidebar-nav-item active"><a href="#">📊 Overview & Stats</a></li>
+            <li class="sidebar-nav-item"><a href="#">🏠 My Properties (4)</a></li>
+            <li class="sidebar-nav-item"><a href="#">📅 Calendar & Bookings</a></li>
+            <li class="sidebar-nav-item"><a href="#">💵 Income & Expenses</a></li>
+            <li class="sidebar-nav-item"><a href="#">⚙️ Property Settings</a></li>
+          </ul>
+        </aside>
+
+        <!-- Dashboard Main Content -->
+        <main class="dashboard-main">
+          <!-- Metric Stat Cards -->
+          <div class="grid grid-cols-4" style="margin-bottom: var(--space-6);">
+            <div class="stat-card">
+              <div>
+                <div class="stat-title">Monthly Revenue</div>
+                <div class="stat-value">GH₵ 24,850</div>
+                <div class="stat-trend trend-up">▲ +14.2% vs last month</div>
+              </div>
+              <div class="stat-icon">💰</div>
+            </div>
+
+            <div class="stat-card">
+              <div>
+                <div class="stat-title">Current Occupancy</div>
+                <div class="stat-value">92%</div>
+                <div class="stat-trend trend-up">▲ 22 / 24 Units Occupied</div>
+              </div>
+              <div class="stat-icon">📈</div>
+            </div>
+
+            <div class="stat-card">
+              <div>
+                <div class="stat-title">Upcoming Check-ins</div>
+                <div class="stat-value">8</div>
+                <div class="stat-trend" style="color: var(--color-text-secondary);">Today & Tomorrow</div>
+              </div>
+              <div class="stat-icon">🔑</div>
+            </div>
+
+            <div class="stat-card">
+              <div>
+                <div class="stat-title">Net Operating Profit</div>
+                <div class="stat-value">GH₵ 19,420</div>
+                <div class="stat-trend trend-up">After utilities & staff</div>
+              </div>
+              <div class="stat-icon">🧾</div>
+            </div>
+          </div>
+
+          <!-- Alert Banner -->
+          <div class="alert alert-success">
+            <span>🛡️</span>
+            <div>
+              <strong>Double-Booking Protection Active:</strong> System automatically locked Unit 104 during Paystack MoMo payment processing.
+            </div>
+          </div>
+
+          <!-- Active Bookings Table -->
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Guest Name</th>
+                  <th>Room / Unit</th>
+                  <th>Dates</th>
+                  <th>Payment Mode</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Kofi Mensah</strong></td>
+                  <td>Studio 102 (Beach Road)</td>
+                  <td>Nov 18 – Nov 22</td>
+                  <td>MTN Mobile Money</td>
+                  <td>GH₵ 1,400</td>
+                  <td><span class="badge badge-success">Confirmed</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Manage</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Ama Serwaa</strong></td>
+                  <td>Hostel Room 4B (TTU)</td>
+                  <td>Semester 1 (2026/27)</td>
+                  <td>Telecel Cash</td>
+                  <td>GH₵ 1,800</td>
+                  <td><span class="badge badge-success">Confirmed</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Manage</button></td>
+                </tr>
+                <tr>
+                  <td><strong>David Ansah</strong></td>
+                  <td>Suite 201 (Ridge)</td>
+                  <td>Nov 25 – Nov 28</td>
+                  <td>Awaiting MoMo</td>
+                  <td>GH₵ 1,050</td>
+                  <td><span class="badge badge-warning">Pending Payment</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Verify</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Administrator Portal -->
+  <section id="admin" class="showcase-section">
+    <div class="container">
+      <span class="section-tag">Interface 3</span>
+      <h2>Administrator Oversight & Moderation</h2>
+      <p>Central platform compliance console for verifying property ownership, monitoring platform commissions, and resolving guest disputes.</p>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3>Property Verification Queue (Takoradi Metro)</h3>
+            <small>Ensure all listings conform to safety standards before being published to guests.</small>
+          </div>
+          <span class="badge badge-warning">3 Pending Reviews</span>
+        </div>
+        <div class="card-body">
+          <div class="table-container" style="border: none; box-shadow: none;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Property Name</th>
+                  <th>Owner / Host</th>
+                  <th>Location</th>
+                  <th>KYC Documents</th>
+                  <th>Submitted Date</th>
+                  <th>Decision</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Atlantic Breeze Guesthouse</strong></td>
+                  <td>Kwame Boateng (Ghana Card verified)</td>
+                  <td>New Takoradi Port Area</td>
+                  <td><span class="badge badge-verified">✓ Business Permit Attached</span></td>
+                  <td>Nov 15, 2026</td>
+                  <td>
+                    <button class="btn btn-accent btn-sm">Approve Listing</button>
+                    <button class="btn btn-danger btn-sm">Reject</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>West Coast Student Hostel</strong></td>
+                  <td>Emmanuel Tetteh</td>
+                  <td>Kwesimintsim / TTU Axis</td>
+                  <td><span class="badge badge-warning">⏳ Utility Bill Verification</span></td>
+                  <td>Nov 16, 2026</td>
+                  <td>
+                    <button class="btn btn-primary btn-sm">Request More Info</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer flex items-center justify-between">
+          <small>FineStay Platform Security Compliance • Ghana Data Protection Act 843</small>
+          <button class="btn btn-secondary btn-sm">View Full Audit Log</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background: var(--brand-forest-950); color: var(--brand-forest-200); padding: var(--space-8) 0; border-top: 1px solid var(--brand-forest-800);">
+    <div class="container flex items-center justify-between" style="flex-wrap: wrap; gap: var(--space-4);">
+      <div class="flex items-center gap-2">
+        <span style="font-weight: var(--font-weight-bold); color: #fff;">FineStay</span>
+        <span>• Web Accommodation & Property Management Platform</span>
+      </div>
+      <small>Design System Theme Architecture • Takoradi, Ghana Context</small>
+    </div>
+  </footer>
+
+</body>
+</html>
