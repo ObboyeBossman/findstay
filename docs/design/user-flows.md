@@ -68,7 +68,7 @@ This document is the screen-to-screen blueprint for Sprint 1 and the direct inpu
 | **SCR-27** | Confirm Booking `[Sprint 2+]` | `S2+` | Sprint 2+ | `POST /api/v1/bookings` `[Sprint 2+]` | `booking.created` `[Sprint 2+]` | Summary + confirm CTA (mobile & desktop) | Review booking summary and confirm reservation/payment. |
 | **SCR-28** | Booking Confirmation `[Sprint 2+]` | `S2+` | Sprint 2+ | `GET /api/v1/bookings/{id}` `[Sprint 2+]` | — | Confirmation card + receipt download (mobile & desktop) | Display confirmed booking reference and summary. |
 | **SCR-29** | 404 Not Found | `S1-03` | Sprint 1 | — | — | Centered icon + `[Go Home]` (mobile & desktop) | Shown when a route or property ID does not exist. |
-| **SCR-ERR** | Global Offline / Server Error | `S1-03` | Sprint 1 | — | — | Centered icon + plain-language message + `[Retry]` | Shown when offline or API returns `5xx`. |
+| **SCR-ERR** | Global Offline / Server Error | `S1-03` | Sprint 1 | — | — | Centered icon + clear, simple message + `[Retry]` | Shown when offline or API returns `5xx`. |
 
 ---
 
@@ -429,7 +429,7 @@ flowchart TD
 
 - **Mobile-First Responsive (`NFR-09`):** Every screen supports `360px+` mobile viewports first, scaling cleanly to tablet and desktop.
 - **Icon-Driven Navigation (`NFR-05`):** Primary navigation and status cards pair clear icons with short text labels.
-- **Low-Literacy & Colour-Vision Safety (`NFR-07`):** Never rely on colour alone for status (e.g., Calendar `Available` vs `Owner-Blocked`, Verification `Approved` vs `Rejected`)—always pair colour with icons, patterns, and plain-language labels.
+- **Low-Literacy & Colour-Vision Safety (`NFR-07`):** Never rely on colour alone for status (e.g., Calendar `Available` vs `Owner-Blocked`, Verification `Approved` vs `Rejected`)—always pair colour with icons, patterns, and clear, simple labels.
 - **Currency & Time (`NFR-08`, `NFR-52`):** Display GHS (`GH₵`) / store integer pesewas; store UTC / display `Africa/Accra`.
 
 ---
