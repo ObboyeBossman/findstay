@@ -28,10 +28,10 @@ package and keeps its entities, repositories, and services inside `internal`
 | # | Module (`com.findstay.*`) | Public seam | Stories | Tables owned (R1) |
 | :--- | :--- | :--- | :--- | :--- |
 | 1 | `shared` | `OrgScope`, `Money`, `Clock`, event bus | `S1-01` | *(kernel only — no tables)* |
-| 2 | `identity` | — | `S1-04`, `S1-05`, `S1-06` | `user_account`, `role` |
+| 2 | `identity` | — | `S1-04`, `S1-05`, `S1-06` | `user_account`, `user_profile`, `role`, `permission`, `role_permission` |
 | 3 | `organization` | `OrgScope` filter implementation | `S1-07` | `organization`, `membership`, `membership_permission` |
 | 4 | `verification` | — | `S1-11`, `S1-12` | `verification_case`, `verification_document`, `review_decision`, `consent_record` |
-| 5 | `listing` | `CatalogQuery` (published listing/unit projections) | `S1-13`, `S1-15` | `property`, `unit`, `amenity`, `rate_plan`, `listing`, `listing_status_history` |
+| 5 | `listing` | `CatalogQuery` (published listing/unit projections) | `S1-13`, `S1-15` | `property`, `unit`, `amenity`, `rate_plan`, `listing`, `listing_status_history`, `area` |
 | 6 | `availability` | `AvailabilityGate` | `S1-14` | `availability_block` |
 | 7 | `media` | — | `S1-09` | `media_asset`, `document` |
 | 8 | `audit` | `AuditRecorder` | `S1-08` | `audit_log` |
@@ -50,6 +50,17 @@ Notes:
 - `notification` also owns `notification_delivery` — the per-channel
   delivery/retry log S1-10-T2 creates (acceptance: failed deliveries are
   logged and retried, adapters swappable — `FR-68`–`FR-71`, `P-08`).
+- `identity` owns five tables, not two: S1-04/S1-05 name `user_profile`
+  (name, phone, avatar_url, preferred_language) and S1-06 names `permission`
+  and `role_permission` alongside `user_account` and `role`.
+- `listing` also owns `area` — the Takoradi area reference data S1-13-T2
+  creates (destination taxonomy for search and the location fields).
+- **Open ownership point (T8):** S1-11's acceptance criteria name
+  `identity.consent_record` (user_id, policy_version, consented_at,
+  ip_address), while this map places `consent_record` in `verification`
+  because the consent endpoints (`GET /consents/latest`, `POST /consents`)
+  and Act 843 handling (`P-12`) live there. Flagged in §8 for sign-off —
+  either home is workable; the map's recommendation is `verification`.
 - A dash ("—") in the seam column means "no rule-02-named seam interface"; every
   module still has a public `api` package, and any cross-module call must go
   through the callee's public `api` package, a published domain event, or one of
@@ -76,6 +87,13 @@ audit           ← shared                 (entity_type/entity_id — generic, n
 notification    ← shared, identity
 admin           ← shared, identity, organization, verification, listing, audit
 ```
+
+One **event edge** the table does not show: `verification` → `listing`.
+The public Verified Owner badge (SCR-24/SCR-25) means `listing` must know the
+organisation's verification state; the plan is the loosest coupling available —
+`verification` publishes `VerificationApproved(orgId)` on the shared event bus
+and `listing` denormalises `owner_verified` onto its published projections. No
+query dependency, no FK; T8 draws it as a dashed event arrow.
 
 > **Open point for T8 (DEC-S1-01/B):** the S1-13/S1-15 acceptance criteria mention
 > database schemas as `catalog.property`, `catalog.listing_status_history`. T8
@@ -105,6 +123,7 @@ flowchart LR
     subgraph SUPA["Supabase Auth (Auth only — TA-01, TA-02)"]
         SA["supabase.auth.*<br/>sign-up · OTP · email link · password reset<br/>1-hour JWT + refresh rotation (P-09)"]
         JWKS["JWKS endpoint"]
+        SADM["Admin API (service role)<br/>invite · revoke sessions — server-side only"]
     end
 
     subgraph API["Spring Boot 3 — Java 21 · Spring Modulith · Render — /api/v1"]
@@ -139,6 +158,7 @@ flowchart LR
     SCR_AUTH -- "7 POST /auth/provision · GET /me<br/>Bearer JWT (DEC-S1-01/A)" --> MOD_ID
 
     API -- "2 validate every Bearer JWT<br/>(TA-08, P-09)" --> JWKS
+    MOD_ID -- "15 suspend → revoke sessions +<br/>admin-create → invite (service role)" --> SADM
 
     MOD_LST -. "8 photo upload: presign via media" .-> MED
     MOD_VER -. "8 document upload: presign via media" .-> MED
@@ -170,7 +190,12 @@ suspension) leaves through the swappable adapter behind `NotificationSender`
 (`P-08`) — Supabase sends only the auth emails (OTP, reset links). The remaining
 dashed edges are cross-module reads inside the API: `admin`'s review queue
 merges verification cases and listing submissions, and its audit-log screen
-reads `audit` through that module's public `api` package (`C6`).
+reads `audit` through that module's public `api` package (`C6`). Flow (15):
+`identity` talks to Supabase's **service-role Admin API** — server-to-server,
+never from the browser — for two Sprint 1 actions: revoking a suspended
+user's sessions (so suspension is immediate, not on the JWT's 1-hour coat-tails,
+S1-16 AC 2) and sending admin-created account invites (S1-16-T3). Operationally
+the API is CORS-locked to the web origin and TLS 1.2+ everywhere (`NFR-21`).
 
 ---
 
@@ -248,11 +273,11 @@ sequenceDiagram
 | Notification preferences (`SCR-06`) | `GET/PUT /me/notifications/preferences` | `notification` |
 | Notification bell & inbox (S1-10-T1/T6 — screen designed in S1-10-T1) | `GET /me/notifications`, `POST /me/notifications/{id}/read`, `POST /me/notifications/read-all` | `notification` |
 | Consent gate (`SCR-06C`) | `GET /consents/latest`, `POST /consents` | `verification` |
-| Owner dashboard & org (`SCR-07`, `SCR-08`, `SCR-08B`) | `/owner/dashboard`, `/owner/org`, `/owner/invitations`, `/invitations/{token}` | `organization` |
+| Owner dashboard & org (`SCR-07`, `SCR-08`, `SCR-08B`) | `/owner/dashboard`, `/owner/org`, `/owner/members`, `/owner/members/{id}` (role + property scope), `/owner/invitations`, `/invitations/{token}` | `organization` |
 | Owner verification (`SCR-09`, `SCR-10`) | `/owner/verification*` (presign, submit, status) | `verification` (presign via `media`) |
 | Properties, units, photos (`SCR-07B`, `SCR-11`–`SCR-14`) | `/owner/properties*` (+ units, photos/presign, preview, submit) | `listing` (photos via `media`) |
 | Availability calendar (`SCR-15`, `SCR-16`) | `/owner/units/{unitId}/availability`, `/owner/units/{unitId}/blocks` | `availability` |
-| Admin review & platform (`SCR-17`–`SCR-21C`) | `/admin/*` (dashboard, reviews, users, settings, audit-logs) | `admin` |
+| Admin review & platform (`SCR-17`–`SCR-21C`) | `/admin/*` (dashboard, reviews, decision, users incl. create, suspend/restore, listing suspend/restore, settings, audit-logs) | `admin` |
 | Public guest (`SCR-22`–`SCR-25`, `SCR-29`) | `/properties/featured`, `/properties/search`, `/properties/{id}` | `listing` (public `CatalogQuery` reads) |
 | Guest session & history (`SCR-25A`) | `/visitor-sessions*`, `/me/recently-viewed*` | **Sprint 2+ — excluded from R1** |
 
@@ -281,6 +306,7 @@ sequenceDiagram
     O->>R2: PUT document bytes (never through the API)
     O->>VER: POST /owner/verification/submit
     VER->>AUD: verification.submitted
+    VER--)NOT: VERIFICATION_SUBMITTED event → admins (in-app + email, T3 §8)
     Note over A,ADM: SCR-17 review queue merges verification cases<br/>and listing submissions (read via public api packages)
     A->>ADM: POST /admin/reviews/{id}/decision — approve
     ADM->>VER: record decision (public api package)
@@ -352,6 +378,14 @@ never trusted as authority (`J-06`, `BRL-04`). Owner A can never read or mutate
 Owner B's records. Owner-scoped reads of another organisation's data return
 `404`, not `403` (no existence leak).
 
+**Suspension is immediate** (S1-16 AC 2): JWKS validation alone cannot achieve
+that — a token stays cryptographically valid for up to an hour. So the
+suspension flow does two things: `identity` calls Supabase's service-role Admin
+API to revoke the account's sessions, and every request re-checks the account
+status after JWT validation. A request bearing a not-yet-expired token from a
+suspended account is rejected at once (`401 UNAUTHENTICATED`), never waiting
+out the token lifetime.
+
 ### 4.5 Audit — append-only trail (T7 `AuditRecorder` seam)
 
 Sensitive actions write an immutable record via `audit.audit_log`:
@@ -363,8 +397,13 @@ Sensitive actions write an immutable record via `audit.audit_log`:
 `listing.photos_updated` / `listing.approved` / `listing.corrections_requested` /
 `listing.rejected` · `unit.created` / `unit.updated` ·
 `availability.block_created` / `availability.block_removed` · `user.suspended` /
-`user.restored` · `platform.setting_updated` (`BRL-13`, `BRL-16`, `NFR-66`).
-Rows are never updated or deleted.
+`user.restored` / `user.admin_created` (admin-provisioned account, S1-16-T3) ·
+`listing.suspended` / `listing.restored` (admin moderation takedown, S1-15-T3) ·
+`auth.admin_login` (session whose first `/me` resolves an Admin membership,
+SCR-17) · `platform.setting_updated` (`BRL-13`, `BRL-16`, `NFR-66`).
+Rows are never updated or deleted. T3 also names Supabase-side events
+(`auth.login_failed`, `auth.account_verified`, `auth.password_reset_*`) — those
+are not ours to log in R1 (`DEC-S1-01/A-F1`).
 
 ### 4.6 Media — two-step uploads (T7 kernel, `media` module)
 
@@ -384,9 +423,12 @@ appears in API responses.
 adapter plugged in behind the same interface when the Ghana sender-ID keys land.
 Templates are keyed by event type (`LISTING_APPROVED`, `BOOKING_CONFIRMED`, …)
 in `notification_template` and added by seed data, not code changes. Triggers
-follow the T3 notification matrix (sign-up verification, resets, staff invites,
-verification/listing decisions, suspension/restore). The inbox reads the
-`notification` table through `GET /me/notifications` (S1-10-T5; polling in R1).
+follow the T3 notification matrix: sign-up verification, resets, staff invites,
+verification/listing decisions, suspension/restore — **and the two admin-bound
+rows**: verification submitted and listing submitted alert the *platform
+admins* (in-app + email), because the review queue is the admin's work list.
+The inbox reads the `notification` table through `GET /me/notifications`
+(S1-10-T5; polling in R1).
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
@@ -429,12 +471,12 @@ carries extensions for traceability:
 | `identity` | `POST /auth/provision`, `GET /me`, `PATCH /me` | Bearer JWT |
 | `notification` | `GET/PUT /me/notifications/preferences`, `GET /me/notifications`, `POST /me/notifications/{id}/read`, `POST /me/notifications/read-all` | Bearer JWT |
 | `verification` | `GET /consents/latest`, `POST /consents`, `GET /owner/verification`, `POST /owner/verification/presign`, `POST /owner/verification/submit` | Bearer JWT · OrgScope on `/owner/*` |
-| `organization` | `GET /owner/dashboard`, `GET/PATCH /owner/org`, `POST /owner/invitations`, `GET /invitations/{token}`, `POST /invitations/{token}/accept` | Bearer JWT · OrgScope on `/owner/*`; invitation endpoints are token-authorised |
+| `organization` | `GET /owner/dashboard`, `GET/PATCH /owner/org`, `GET /owner/members`, `PATCH /owner/members/{id}`, `GET/POST /owner/invitations`, `GET /invitations/{token}`, `POST /invitations/{token}/accept` | Bearer JWT · OrgScope on `/owner/*`; invitation endpoints are token-authorised |
 | `listing` | `GET/POST /owner/properties`, `GET/PATCH/… /owner/properties/{id}` (+ `/units`, `/photos/presign`, `/photos`, `/preview`, `/submit`), `GET /properties/featured`, `GET /properties/search`, `GET /properties/{id}` | Bearer JWT · OrgScope on `/owner/*`; the three public reads are anonymous |
 | `availability` | `GET /owner/units/{unitId}/availability`, `POST /owner/units/{unitId}/blocks`, `DELETE /owner/units/{unitId}/blocks/{blockId}` | Bearer JWT · OrgScope |
 | `media` | *(no direct REST — serves verification & listing through its public `api` package)* | — |
 | `audit` | *(no direct REST — `AuditRecorder` seam; viewed through `admin`)* | — |
-| `admin` | `GET /admin/dashboard`, `GET /admin/reviews`, `GET /admin/reviews/{id}`, `POST /admin/reviews/{id}/decision`, `GET /admin/users`, `POST /admin/users/{id}/suspend`, `POST /admin/users/{id}/restore`, `GET/PATCH /admin/settings`, `GET /admin/audit-logs` | Bearer JWT · Admin role |
+| `admin` | `GET/POST /admin/users`, `POST /admin/users/{id}/suspend`, `POST /admin/users/{id}/restore`, `POST /admin/listings/{id}/suspend`, `POST /admin/listings/{id}/restore`, `GET /admin/dashboard`, `GET /admin/reviews`, `GET /admin/reviews/{id}`, `POST /admin/reviews/{id}/decision`, `GET/PATCH /admin/settings`, `GET /admin/audit-logs` | Bearer JWT · Admin role |
 | `shared` | *(no endpoints)* | — |
 
 ---
@@ -465,6 +507,10 @@ decision introduces), **Refined** (T3 or story shorthand given a precise path),
 | `GET/PATCH /api/v1/me` | Defined | `identity` — session context, profile update |
 | `GET/PUT /api/v1/me/notifications/preferences` | Defined | `notification` |
 | `GET /api/v1/notifications` · mark-as-read *(S1-10-T5, not in T3)* | **Story-level**, Refined | `GET /me/notifications` + `POST /me/notifications/{id}/read` + `POST /me/notifications/read-all` — nested under `/me` like the preferences path; the bell badge reads `unreadCount` |
+| *(grant/revoke staff permissions — S1-07 AC, not in T3 §9)* | **Story-level**, Added | `GET /owner/members`, `PATCH /owner/members/{userId}` (role + property scope, `org.staff_role_updated`) — SCR-08's staff list and its role updates had no read or write path |
+| *(outstanding invitations list — SCR-08 staff list)* | **Story-level**, Added | `GET /owner/invitations` — the screen shows invite status; T3 §9 listed only the POST |
+| *(admin user create — S1-16-T3 "search, create, suspend, restore", no T3 screen)* | **Story-level**, Added | `POST /admin/users` — provisions via Supabase service-role Admin API, invite email, `user.admin_created` |
+| *(listing suspend/restore — S1-15-T3 decision surface)* | **Story-level**, Added | `POST /admin/listings/{propertyId}/suspend` + `/restore` — moderation takedown distinct from owner pause; `listing.suspended`/`listing.restored` audit |
 | `GET /api/v1/consents/latest` · `POST /api/v1/consents` | Defined | `verification` |
 | `GET /api/v1/owner/dashboard` | Defined | `organization` |
 | `GET/PATCH /api/v1/owner/org` | Defined | `organization` |
@@ -516,11 +562,17 @@ NOT_FOUND` (cross-org access, unknown property), `403 FORBIDDEN` (non-admin on
    `currency = 'GHS'`; timestamps `TIMESTAMPTZ` UTC; `audit_log` append-only as
    `(actor_id, org_id, action, entity_type, entity_id, metadata_json,
    created_at)`; Ghana Card numbers encrypted at rest (AES-256).
-4. **Three tables the sign-off checklists name explicitly** —
-   `notification_preference` and `consent_record` (T3's checklist), and
-   `notification_delivery` (S1-10-T2's per-channel delivery/retry log) — all
-   present in §1 (`notification` ×2, `verification`).
-5. The **open point**: PostgreSQL schema naming (`catalog` vs `listing`) —
+4. **Tables the sign-off checklists name explicitly** — `notification_preference`
+   and `consent_record` (T3's checklist); `notification_delivery` (S1-10-T2's
+   per-channel delivery/retry log); `user_profile`, `permission`,
+   `role_permission` (S1-04/05/06 identity tables); `area` (S1-13-T2 Takoradi
+   reference data). All present in §1. `consent_record`'s home module is the
+   one open ownership call (§8, item 11).
+5. **Column hints the stories pin down** — `consent_record` as (user_id,
+   policy_version, consented_at, ip_address) per S1-11; `audit_log` is
+   append-only with the application DB role holding INSERT and SELECT only
+   (S1-08) — no UPDATE/DELETE grant exists to abuse.
+6. The **open point**: PostgreSQL schema naming (`catalog` vs `listing`) —
    DEC-S1-01/B leaves this to T8.
 
 ---
@@ -555,6 +607,19 @@ confirm-or-adjust:
    preferences path); polling on app start and bell open, no SSE/WebSocket in
    R1; `POST …/{id}/read` marks one, `read-all` marks every unread entry.
    Confirm with frontend (T5 / S1-10-T6).
+10. **Amenity & area option lists** — SCR-11's form and SCR-23's destination
+    filter need the seeded option lists (`amenity`, `area` tables). Options:
+    (a) reference endpoints (`GET /areas` public for search, `GET /owner/amenities`
+    for the form) or (b) build-time constants. Recommendation: (a) — no drift
+    between seed and UI.
+11. **`consent_record` ownership** — S1-11's AC says `identity.consent_record`;
+    this map recommends `verification` (the `/consents` endpoints and `P-12`
+    Act 843 handling live there). T8 + backend confirm the home; the column
+    shape (user_id, policy_version, consented_at, ip_address) is agreed either
+    way.
+12. **Search sort default** — `newest` as drafted (`price_asc`/`price_desc`
+    available), and the map pins (latitude/longitude) now on every public read
+    for the SCR-24 map view. Confirm.
 
 **Reviewers:** @maskkuratahiru-wq (frontend, T5) · @joseibonsu206-gif (backend,
 T7) · @fummey (database, T8) · Product Owner sign-off (@ObboyeBossman).
