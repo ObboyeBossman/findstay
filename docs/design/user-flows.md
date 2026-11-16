@@ -77,6 +77,7 @@ This document is the screen-to-screen blueprint for Sprint 1 and the direct inpu
 Covers **`S1-04`**, **`S1-05`**, **`S1-06`**, **`S1-10`**, **`S1-11`**. Drawn once and referenced by all portals.
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
 flowchart TD
     AuthEntry(["Entry: Auth Required /<br/>Session Expired (SCR-06D)"]) --> NetCheck{"Internet & Server<br/>Reachable?"}
     NetCheck -- "No (Offline / 5xx)" --> SCRERR["SCR-ERR: Offline / Server Down<br/>[Retry]"]
@@ -161,6 +162,7 @@ flowchart TD
 Covers inviting staff, accepting an invitation at `/owner/invitations`, setting a password, and entering the owner portal scoped to assigned properties `[OrgScope]`.
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
 flowchart TD
     Owner(["Owner on SCR-08:<br/>Organisation & Staff Setup [OrgScope]"]) --> InviteForm["Enter Staff Email, Role &<br/>Assigned Property IDs"]
     InviteForm --> SendInvite{"Invitation Valid &<br/>Sent?"}
@@ -189,6 +191,7 @@ flowchart TD
 All `/owner/*` routes enforce **`[OrgScope]`** (`organization_id` tenant isolation).
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
 flowchart TD
     Start(["Open Owner Portal (/owner)"]) --> AuthCheck{"Signed In as<br/>Owner / Staff?"}
     AuthCheck -- "No" --> SharedAuth(["Shared Auth Flow (SCR-01..SCR-06D)"]) --> SCR07
@@ -270,6 +273,7 @@ flowchart TD
 Covers **Admin Review Queue** (with 3-way **Approve / Request Corrections / Reject** and **Per-Document Verification**), **User Management (Suspend/Restore)**, **Platform Settings**, and **Audit Log Viewer**.
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
 flowchart TD
     Start(["Open Admin Portal (/admin)"]) --> AuthCheck{"Signed In as<br/>Admin?"}
     AuthCheck -- "No" --> SCR17["SCR-17: Admin Sign In (via Shared Auth)"]
@@ -332,6 +336,7 @@ flowchart TD
 Covers **Browse & Search (`SCR-22` – `SCR-25`)** in Sprint 1 (including **Verified Owner badge** on `SCR-25` and **Save/Share `[Sprint 3]`** stub), **Shared Auth (`SCR-01` – `SCR-06D`)**, and **`[Sprint 2+]` Booking**.
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
 flowchart TD
     Start(["1. Open Application"]) --> NetCheck{"Internet & Server<br/>Reachable?"}
     NetCheck -- "No (Offline / 5xx)" --> SCRERR["SCR-ERR: Offline / Server Down [Retry]"]
