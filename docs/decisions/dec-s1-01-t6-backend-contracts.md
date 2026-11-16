@@ -170,6 +170,68 @@ the SMS adapter (`P-08`).
 
 ---
 
+## DEC-S1-01/E — Second review pass: story-level contract gaps closed
+
+**What happened.** After DEC-S1-01/D, the contract was audited once more — this
+time against *every* sprint story's acceptance criteria and task list, not just
+T3's flows. That pass found that T3's endpoint appendix is not the complete
+picture: several story documents name endpoints and tables T3 never drew. All
+gaps below are closed in `api/openapi.yaml` (44 paths / 53 operations) and the
+architecture map.
+
+**Endpoints added (all story-level, none in T3 §9).**
+
+| Endpoint | Why it had to exist |
+| :--- | :--- |
+| `GET /owner/members` · `PATCH /owner/members/{userId}` | S1-07 AC: "An owner can invite staff and **grant or revoke per-property permissions**." SCR-08's staff list and T3's `org.staff_role_updated` audit event had no read or write path at all. |
+| `GET /owner/invitations` | SCR-08 shows invitation status ("already invited" check, expiry); T3 listed only the POST. |
+| `POST /admin/users` | S1-16-T3 is titled "search, **create**, suspend, restore" and the AC names "user create/suspend/restore APIs". No T3 screen — flagged for UI in the review agenda. |
+| `POST /admin/listings/{propertyId}/suspend` + `/restore` | S1-15-T3: "approve/reject/request-corrections/**suspend/restore** with mandatory reason". Admin moderation takedown, distinct from the owner's own pause; new `SUSPENDED` listing status. |
+
+**Flows fixed.**
+
+- **Suspension is immediate (S1-16 AC 2).** JWKS validation alone cannot do
+  this — a token stays valid up to an hour. Now specified: `identity` calls
+  Supabase's *service-role Admin API* (server-to-server, never from the
+  browser) to revoke sessions, and every request re-checks account status
+  after JWT validation. The backend map gains this as flow 15.
+- **Photo upload lifecycle was broken.** The photo presign returned no id, and
+  nothing ever created the photo record. Now: presign creates the photo row and
+  returns `photoId`; `PUT …/photos` (reorder + cover) commits it;
+  `DELETE …/photos/{photoId}` removes it. No extra confirm call.
+- **Search got `sort` and `minPricePesewas`** (SCR-24 sort control; price
+  *range*), a `429` on the anonymous surface (NFR-23), and **map coordinates**
+  (`latitude`/`longitude`) on every public read — SCR-24 has a map view and no
+  output schema exposed location before.
+- **`preferredLanguage`** added to `GET/PATCH /me` (S1-05's `user_profile`
+  column).
+- **Admin-bound notifications made explicit**: verification submitted and
+  listing submitted alert the platform admins (in-app + email) — T3's §8
+  notification matrix rows the map's trigger list had dropped.
+- **Audit taxonomy extended (additive)**: `auth.admin_login` (SCR-17),
+  `user.admin_created`, `listing.suspended` / `listing.restored`.
+
+**Canonical table corrections (§1 — what T8 builds from).**
+
+- `identity` owns **five** tables: `user_account`, `user_profile`, `role`,
+  `permission`, `role_permission` (S1-04/05/06) — previously two.
+- `listing` also owns **`area`** (Takoradi reference data, S1-13-T2).
+- **Open point for T8:** S1-11's AC says `identity.consent_record`, while this
+  map places `consent_record` in `verification` (where the `/consents`
+  endpoints and Act 843 handling live). Recommendation: `verification`; the
+  column shape (user_id, policy_version, consented_at, ip_address) is agreed
+  either way. Review agenda item 11.
+- **Event edge added:** `verification` → `listing` — the Verified Owner badge
+  (SCR-24/25) is fed by a `VerificationApproved(orgId)` domain event that
+  denormalises `owner_verified` onto published projections. Event, not a query
+  dependency; no FK.
+
+**Deliberately NOT decided unilaterally** (review agenda items 10–12): the
+amenity/area option-list read path (reference endpoints vs build-time
+constants), `consent_record`'s final home, and the search sort default.
+
+---
+
 ## Review trail
 
 - Decisions made and recorded during the S1-01-T6 working session (2026-11-17).

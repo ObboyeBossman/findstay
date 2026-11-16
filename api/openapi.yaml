@@ -383,6 +383,102 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
+    get:
+      tags: [organization]
+      operationId: listInvitations
+      summary: List the organisation's outstanding staff invitations with status
+      description: |
+        Feeds the SCR-08 staff list: pending and expired invitations with
+        status and expiry, alongside members (S1-07 "invite staff and grant or
+        revoke per-property permissions" — the owner must see current state).
+      security:
+        - bearerAuth: []
+      x-module: organization
+      x-org-scope: true
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Offset"
+      responses:
+        "200":
+          description: Invitation page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvitationList"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/owner/members:
+    get:
+      tags: [organization]
+      operationId: listMembers
+      summary: List the organisation's members with roles and property scopes
+      description: |
+        The SCR-08 staff list ("No staff invited yet" empty state). Each member
+        carries their role and the properties their membership is scoped to
+        (`membership_permission`, UR-PS01).
+      security:
+        - bearerAuth: []
+      x-module: organization
+      x-org-scope: true
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Offset"
+      responses:
+        "200":
+          description: Member page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberList"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/owner/members/{userId}:
+    patch:
+      tags: [organization]
+      operationId: updateMember
+      summary: Update a member's role and assigned properties (grant/revoke access)
+      description: |
+        S1-07 acceptance: "An owner can invite staff and grant or revoke
+        per-property permissions." `propertyIds` is a replace operation — the
+        complete new scope. Only the primary Owner can change members
+        (BRL-05). Produces the `org.staff_role_updated` audit event T3 names
+        on SCR-08.
+      security:
+        - bearerAuth: []
+      x-module: organization
+      x-org-scope: true
+      x-audit-event: org.staff_role_updated
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberUpdate"
+      responses:
+        "200":
+          description: Updated member.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422":
+          description: Cannot change the organisation's primary owner (BUSINESS_RULE_VIOLATION).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 
   /api/v1/invitations/{token}:
     get:
@@ -1118,12 +1214,55 @@ paths:
                 $ref: "#/components/schemas/AdminUserList"
         "401": { $ref: "#/components/responses/Unauthenticated" }
         "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      tags: [admin]
+      operationId: createUser
+      summary: Create a user account (admin-provisioned) and send the invite email
+      description: |
+        S1-16-T3: "search, create, suspend, restore". The API provisions the
+        account server-side through Supabase's service-role Admin API (invite
+        email), creates the `user_account` + role membership, and records
+        `user.admin_created` with the mandatory reason. T3 draws no screen for
+        this — story-level addition (see cross-check §6).
+      security:
+        - bearerAuth: []
+      x-module: admin
+      x-audit-event: user.admin_created
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminUserCreate"
+      responses:
+        "201":
+          description: Account created; invite email sent.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUser"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409":
+          description: Email already registered (CONFLICT).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 
   /api/v1/admin/users/{userId}/suspend:
     post:
       tags: [admin]
       operationId: suspendUser
       summary: Suspend an account and revoke its sessions
+      description: |
+        Immediate effect (S1-16 AC 2): (1) identity calls Supabase's
+        service-role Admin API to revoke the user's sessions and block new
+        sign-ins; (2) the account status flips to SUSPENDED, and every request
+        re-checks status after JWT validation — a not-yet-expired token from a
+        suspended account is rejected at once, never waiting out the 1-hour
+        JWT lifetime; (3) the user is notified by email (BRL-16, FR-87).
       security:
         - bearerAuth: []
       x-module: admin
@@ -1147,6 +1286,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AdminUser"
+        "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthenticated" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
@@ -1162,6 +1302,9 @@ paths:
       tags: [admin]
       operationId: restoreUser
       summary: Restore a suspended account
+      description: Clears the suspension, re-allows sign-in, and notifies the
+        user by email. Access is restored even though any pre-suspension JWT
+        was revoked — the user signs in again.
       security:
         - bearerAuth: []
       x-module: admin
@@ -1184,6 +1327,76 @@ paths:
         "404": { $ref: "#/components/responses/NotFound" }
         "422":
           description: User is not suspended (BUSINESS_RULE_VIOLATION).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/admin/listings/{propertyId}/suspend:
+    post:
+      tags: [admin]
+      operationId: suspendListing
+      summary: Suspend a published listing (moderation takedown)
+      description: |
+        S1-15-T3: "approve/reject/request-corrections/suspend/restore".
+        Takes an ACTIVE listing down for cause (distinct from the owner's own
+        PAUSED). Mandatory reason, owner notified (email + in-app), audited.
+        A suspended property disappears from public reads (404, like any
+        unpublished listing).
+      security:
+        - bearerAuth: []
+      x-module: admin
+      x-audit-event: listing.suspended
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SuspendRequest"
+      responses:
+        "200":
+          description: Listing suspended; owner notified.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyDetail"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422":
+          description: Listing is not published (BUSINESS_RULE_VIOLATION).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/admin/listings/{propertyId}/restore:
+    post:
+      tags: [admin]
+      operationId: restoreListing
+      summary: Restore a suspended listing to published
+      description: Returns a SUSPENDED listing to ACTIVE. Owner notified.
+      security:
+        - bearerAuth: []
+      x-module: admin
+      x-audit-event: listing.restored
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      responses:
+        "200":
+          description: Listing restored; owner notified.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyDetail"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422":
+          description: Listing is not suspended (BUSINESS_RULE_VIOLATION).
           content:
             application/json:
               schema:
@@ -1339,6 +1552,19 @@ paths:
           schema:
             type: integer
             minimum: 0
+        - name: minPricePesewas
+          in: query
+          description: Nightly rate floor in integer pesewas.
+          schema:
+            type: integer
+            minimum: 0
+        - name: sort
+          in: query
+          description: Result ordering (SCR-24 sort control). Default newest.
+          schema:
+            type: string
+            enum: [newest, price_asc, price_desc]
+            default: newest
         - $ref: "#/components/parameters/Limit"
         - $ref: "#/components/parameters/Offset"
       responses:
@@ -1348,6 +1574,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PropertySummaryList"
+        "429": { $ref: "#/components/responses/RateLimited" }
 
   /api/v1/properties/{propertyId}:
     get:
@@ -1541,6 +1768,10 @@ components:
           description: Ghana phone number in E.164 (`+233…`), or null.
         avatarUrl:
           type: [string, "null"]
+        preferredLanguage:
+          type: [string, "null"]
+          description: BCP-47 tag; `en` is the only supported value in R1
+            (`user_profile.preferred_language`, S1-05).
         createdAt: { $ref: "#/components/schemas/Timestamp" }
 
     ProfileUpdate:
@@ -1550,6 +1781,9 @@ components:
         phone:
           type: [string, "null"]
           pattern: '^\+233\d{9}$'
+        preferredLanguage:
+          type: [string, "null"]
+          description: BCP-47 tag; `en` only in R1.
         avatarUrl:
           type: [string, "null"]
 
@@ -1803,6 +2037,14 @@ components:
           description: Short-lived pre-signed PUT URL for R2.
         expiresAt: { $ref: "#/components/schemas/Timestamp" }
         objectKey: { type: string }
+        photoId:
+          allOf:
+            - $ref: "#/components/schemas/UUID"
+          description: |
+            Photo presigns only: the photo row created at presign time. The
+            browser uploads the bytes, then `PUT …/photos` (reorder + cover)
+            commits it and `DELETE …/photos/{photoId}` removes it — there is
+            no separate confirm call.
 
     VerificationSubmit:
       type: object
@@ -1859,9 +2101,11 @@ components:
 
     ListingStatus:
       type: string
-      enum: [DRAFT, PENDING_REVIEW, CORRECTIONS_REQUESTED, ACTIVE, PAUSED, REJECTED]
+      enum: [DRAFT, PENDING_REVIEW, CORRECTIONS_REQUESTED, ACTIVE, PAUSED, SUSPENDED, REJECTED]
       description: Draft → Pending Review → (Corrections Requested → edit →
         resubmit) → Active ⇄ Paused, or Rejected (FR-13, T3 SCR-13).
+        SUSPENDED is the admin moderation takedown of a published listing
+        (S1-15-T3) — restore returns it to ACTIVE; owners cannot set it.
 
     PropertyList:
       type: object
@@ -1896,6 +2140,11 @@ components:
         status:
           $ref: "#/components/schemas/ListingStatus"
         coverPhotoUrl: { type: string }
+        latitude:
+          type: number
+          description: Map pin (SCR-24 map view). WGS-84 decimal degrees.
+        longitude:
+          type: number
         fromPricePesewas:
           type: integer
           description: Lowest nightly rate across units, integer pesewas.
@@ -1994,6 +2243,11 @@ components:
         area:
           type: [string, "null"]
         address: { type: string }
+        latitude:
+          type: number
+          description: Map pin (WGS-84 decimal degrees).
+        longitude:
+          type: number
         accommodationType: { type: string }
         amenities:
           type: array
@@ -2277,6 +2531,74 @@ components:
       type: object
       required: [reason]
       properties:
+        reason: { type: string, minLength: 3 }
+
+    Member:
+      type: object
+      description: One organisation member with their role and property scope
+        (`membership` + `membership_permission`, S1-07).
+      required: [userId, fullName, email, role, propertyIds]
+      properties:
+        userId: { $ref: "#/components/schemas/UUID" }
+        fullName: { type: string }
+        email: { type: string, format: email }
+        role:
+          type: string
+          enum: [OWNER, STAFF]
+          description: Org-level role (platform roles live in `identity`).
+        propertyIds:
+          type: array
+          description: Properties this member may act on (empty for the owner).
+          items:
+            $ref: "#/components/schemas/UUID"
+        joinedAt: { $ref: "#/components/schemas/Timestamp" }
+
+    MemberList:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Member"
+        total: { type: integer, minimum: 0 }
+
+    MemberUpdate:
+      type: object
+      description: Replace-semantics update — `propertyIds` is the complete new
+        scope (grant + revoke in one call, S1-07 AC 2).
+      required: [role, propertyIds]
+      properties:
+        role:
+          type: string
+          enum: [STAFF]
+          description: Only STAFF can be reassigned; the primary owner is fixed.
+        propertyIds:
+          type: array
+          items:
+            $ref: "#/components/schemas/UUID"
+
+    InvitationList:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Invitation"
+        total: { type: integer, minimum: 0 }
+
+    AdminUserCreate:
+      type: object
+      description: Admin-provisioned account (S1-16-T3). Invite email is sent
+        server-side via Supabase's service-role Admin API.
+      required: [email, fullName, role, reason]
+      properties:
+        email: { type: string, format: email }
+        fullName: { type: string, minLength: 1 }
+        role:
+          type: string
+          enum: [GUEST, OWNER, STAFF, ADMIN]
         reason: { type: string, minLength: 3 }
 
     PlatformSettings:
