@@ -17,7 +17,7 @@ Nobody owns this story alone. Its 16 tasks are shared completely across the nine
 
 | Task ID | Task | Tag | Depends On | Role | Assignee | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :---: |
-| [`S1-01-T1`](./tasks/S1-01-T1.md) | Confirm the Sprint 1 work list — what we build first, agreed by everyone | `requirements` | — | Product & Requirements | @kwesipaa643-sys | Todo |
+| [`S1-01-T1`](./tasks/S1-01-T1.md) | Confirm the Sprint 1 work list — what we build first, agreed by everyone | `requirements` | — | Product & Requirements | @kwesipaa643-sys | In Review |
 | [`S1-01-T2`](./tasks/S1-01-T2.md) | Pick FindStay's colors, fonts & spacing (one style file, swappable) | `ui-ux` | [`S1-01-T1`](./tasks/S1-01-T1.md) | UI/UX Design | @maskkuratahiru-wq | Todo |
 | [`S1-01-T3`](./tasks/S1-01-T3.md) | Draw the user flow diagrams — every screen-to-screen path | `ui-ux` | [`S1-01-T1`](./tasks/S1-01-T1.md) | UI/UX Design | @dztrb | Todo |
 | [`S1-01-T4`](./tasks/S1-01-T4.md) | Sketch every Sprint 1 screen (wireframes, phone-first) | `ui-ux` | [`S1-01-T2`](./tasks/S1-01-T2.md), [`S1-01-T3`](./tasks/S1-01-T3.md) | UI/UX Design | @surnuel | Todo |
