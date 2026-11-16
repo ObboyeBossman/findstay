@@ -175,6 +175,71 @@ paths:
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthenticated" }
 
+  /api/v1/me/notifications:
+    get:
+      tags: [notification]
+      operationId: listMyNotifications
+      summary: List the signed-in user's in-app notifications (inbox + bell badge)
+      description: |
+        Serves the Notification Bell & Inbox (S1-10-T1/T6, FR-71). The bell
+        badge reads `unreadCount`; the inbox lists newest-first. Polling in
+        R1 — no push channel (SSE/WebSocket) before Sprint 3 (review agenda §8).
+      security:
+        - bearerAuth: []
+      x-module: notification
+      parameters:
+        - $ref: "#/components/parameters/UnreadOnly"
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Offset"
+      responses:
+        "200":
+          description: Notification page plus the bell's unread count.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationPage"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+
+  /api/v1/me/notifications/{notificationId}/read:
+    post:
+      tags: [notification]
+      operationId: markNotificationRead
+      summary: Mark one in-app notification as read
+      security:
+        - bearerAuth: []
+      x-module: notification
+      parameters:
+        - $ref: "#/components/parameters/NotificationId"
+      responses:
+        "200":
+          description: The updated notification.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/me/notifications/read-all:
+    post:
+      tags: [notification]
+      operationId: markAllNotificationsRead
+      summary: Mark every unread in-app notification as read (inbox "mark all")
+      security:
+        - bearerAuth: []
+      x-module: notification
+      responses:
+        "200":
+          description: Summary of the bulk update.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [markedRead]
+                properties:
+                  markedRead: { type: integer, minimum: 0 }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+
   /api/v1/consents/latest:
     get:
       tags: [verification]
@@ -1339,6 +1404,12 @@ components:
       required: true
       schema:
         $ref: "#/components/schemas/UUID"
+    NotificationId:
+      name: notificationId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
     InvitationToken:
       name: token
       in: path
@@ -1362,6 +1433,14 @@ components:
         type: integer
         minimum: 0
         default: 0
+    UnreadOnly:
+      name: unreadOnly
+      in: query
+      description: When true, return only unread entries (bell badge can pass
+        limit=1 and still read unreadCount).
+      schema:
+        type: boolean
+        default: false
 
   responses:
     Unauthenticated:
@@ -1514,6 +1593,42 @@ components:
               email: { type: boolean }
               sms: { type: boolean }
               inApp: { type: boolean }
+
+    Notification:
+      type: object
+      description: One in-app inbox entry, created by the NotificationSender
+        when a domain event fires (P-08). Rows are per recipient; email/SMS
+        attempts for the same event are logged in `notification_delivery`.
+      required: [id, eventType, title, body, readAt, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        eventType:
+          type: string
+          description: Template key from `notification_template` — e.g.
+            VERIFICATION_APPROVED, LISTING_APPROVED, STAFF_INVITE.
+        title: { type: string }
+        body: { type: string }
+        readAt:
+          type: [string, "null"]
+          format: date-time
+        createdAt: { type: string, format: date-time }
+        data:
+          type: [object, "null"]
+          description: Optional deep-link payload (e.g. propertyId,
+            verificationCaseId) so the inbox can route on tap.
+
+    NotificationPage:
+      type: object
+      description: Inbox page — the standard `{ items, total }` envelope (§4.8)
+        plus `unreadCount` for the bell badge.
+      required: [items, total, unreadCount]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Notification"
+        total: { type: integer, minimum: 0 }
+        unreadCount: { type: integer, minimum: 0 }
 
     ConsentState:
       type: object

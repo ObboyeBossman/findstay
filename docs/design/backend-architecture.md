@@ -35,7 +35,7 @@ package and keeps its entities, repositories, and services inside `internal`
 | 6 | `availability` | `AvailabilityGate` | `S1-14` | `availability_block` |
 | 7 | `media` | — | `S1-09` | `media_asset`, `document` |
 | 8 | `audit` | `AuditRecorder` | `S1-08` | `audit_log` |
-| 9 | `notification` | `NotificationSender` | `S1-10` | `notification`, `notification_template`, `notification_preference` |
+| 9 | `notification` | `NotificationSender` | `S1-10` | `notification`, `notification_template`, `notification_preference`, `notification_delivery` |
 | 10 | `admin` | — | `S1-15`, `S1-16` | `platform_setting` |
 
 Notes:
@@ -47,6 +47,9 @@ Notes:
 - `organization`, `audit`, and `media` are legitimate Sprint 1 modules that the
   original rules row missed; the rules file has been patched to list all ten
   ([`DEC-S1-01/B`](../decisions/dec-s1-01-t6-backend-contracts.md)).
+- `notification` also owns `notification_delivery` — the per-channel
+  delivery/retry log S1-10-T2 creates (acceptance: failed deliveries are
+  logged and retried, adapters swappable — `FR-68`–`FR-71`, `P-08`).
 - A dash ("—") in the seam column means "no rule-02-named seam interface"; every
   module still has a public `api` package, and any cross-module call must go
   through the callee's public `api` package, a published domain event, or one of
@@ -123,11 +126,13 @@ flowchart LR
         PRIV["findstay-verification-docs<br/>private · short-lived pre-signed URLs"]
     end
 
+    MAIL["Email provider<br/>(swappable adapter — P-08)"]
+
     subgraph DB["PostgreSQL 16 — Render · Flyway V1_01…V1_19"]
         TBL["Tables owned module by module<br/>user_account · organization · membership ·<br/>verification_case · property · unit · rate_plan ·<br/>availability_block · media_asset · audit_log ·<br/>notification · platform_setting …"]
     end
 
-    SCR_AUTH -- "1 sign-up · OTP · reset<br/>(supabase.auth.* — never /api/v1)" --> SA
+    SCR_AUTH -- "1 sign-up · OTP · reset<br/>(supabase.auth.* — never /api/v1;<br/>Supabase sends those emails)" --> SA
     SCR_G -- "4 public reads<br/>/properties/featured · /search · /{id}" --> MOD_LST
     SCR_OWN -- "5 owner APIs [OrgScope]<br/>/owner/**" --> API
     SCR_ADM -- "6 admin APIs<br/>/admin/**" --> ADM
@@ -137,11 +142,17 @@ flowchart LR
 
     MOD_LST -. "8 photo upload: presign via media" .-> MED
     MOD_VER -. "8 document upload: presign via media" .-> MED
+    ADM -. "review queue: verification cases" .-> MOD_VER
+    ADM -. "review queue: listing submissions" .-> MOD_LST
+    ADM -. "audit-log reads" .-> AUD
     MED -- "9 issue short-lived<br/>pre-signed PUT/GET" --> PRIV
     MED -- "10 promote optimised WebP" --> PUB
     BROWSER -. "11 upload bytes straight to R2<br/>with pre-signed URL · serve via CDN" .-> R2
 
     API -- "12 one database ·<br/>OrgScope on every owner query" --> DB
+
+    BROWSER -- "13 inbox reads · bell badge<br/>GET /me/notifications (polling, R1)" --> NOT
+    NOT -- "14 transactional email<br/>(invites · decisions · suspension)" --> MAIL
     MOD_ID & MOD_ORG & MOD_VER & MOD_LST & MOD_AVL & MED & AUD & NOT & ADM -.-> SHARED
 ```
 
@@ -152,7 +163,14 @@ through `/api/v1` — the browser never touches the database or R2 directly;
 (4)–(7) screen groups map to module-owned endpoint groups; (8)–(11) uploads are
 two-step — the API authorises and issues a short-lived pre-signed URL, then the
 browser uploads the bytes straight to R2; (12) every owner-scoped read/write is
-filtered by `organization_id` (`OrgScope`, `J-06`).
+filtered by `organization_id` (`OrgScope`, `J-06`); (13) the notification bell
+and inbox poll `GET /me/notifications` — there is no push channel in R1;
+(14) transactional email (staff invites, verification and listing decisions,
+suspension) leaves through the swappable adapter behind `NotificationSender`
+(`P-08`) — Supabase sends only the auth emails (OTP, reset links). The remaining
+dashed edges are cross-module reads inside the API: `admin`'s review queue
+merges verification cases and listing submissions, and its audit-log screen
+reads `audit` through that module's public `api` package (`C6`).
 
 ---
 
@@ -228,6 +246,7 @@ sequenceDiagram
 | :--- | :--- | :--- |
 | Auth & profile (`SCR-01`–`SCR-06D`) | `supabase.auth.*`, then `POST /auth/provision`, `GET/PATCH /me` | `identity` (Supabase for auth itself) |
 | Notification preferences (`SCR-06`) | `GET/PUT /me/notifications/preferences` | `notification` |
+| Notification bell & inbox (S1-10-T1/T6 — screen designed in S1-10-T1) | `GET /me/notifications`, `POST /me/notifications/{id}/read`, `POST /me/notifications/read-all` | `notification` |
 | Consent gate (`SCR-06C`) | `GET /consents/latest`, `POST /consents` | `verification` |
 | Owner dashboard & org (`SCR-07`, `SCR-08`, `SCR-08B`) | `/owner/dashboard`, `/owner/org`, `/owner/invitations`, `/invitations/{token}` | `organization` |
 | Owner verification (`SCR-09`, `SCR-10`) | `/owner/verification*` (presign, submit, status) | `verification` (presign via `media`) |
@@ -236,6 +255,47 @@ sequenceDiagram
 | Admin review & platform (`SCR-17`–`SCR-21C`) | `/admin/*` (dashboard, reviews, users, settings, audit-logs) | `admin` |
 | Public guest (`SCR-22`–`SCR-25`, `SCR-29`) | `/properties/featured`, `/properties/search`, `/properties/{id}` | `listing` (public `CatalogQuery` reads) |
 | Guest session & history (`SCR-25A`) | `/visitor-sessions*`, `/me/recently-viewed*` | **Sprint 2+ — excluded from R1** |
+
+### 3.4 The most cross-module flow: verification documents → admin decision → owner notified
+
+§3.2's worked example stays inside one module. This one — the Ghana Card
+upload → admin review → notification chain — crosses more modules than any
+other R1 flow: `verification`, `media`, R2, `admin`, `notification`, `audit`,
+and the shared event bus. S1-11/S1-12 build the left half, S1-15 the right
+half, S1-10 the bottom edge.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
+sequenceDiagram
+    participant O as SCR-09/10 (owner browser)
+    participant VER as verification
+    participant MED as media
+    participant R2 as R2 private bucket
+    participant A as SCR-17/18 (admin browser)
+    participant ADM as admin
+    participant NOT as notification (NotificationSender)
+    participant AUD as audit (AuditRecorder)
+    O->>VER: POST /owner/verification/presign + Bearer JWT (OrgScope)
+    VER->>MED: authorise upload (MIME, ≤ 5 MB — NFR-17)
+    MED-->>O: short-lived pre-signed PUT URL
+    O->>R2: PUT document bytes (never through the API)
+    O->>VER: POST /owner/verification/submit
+    VER->>AUD: verification.submitted
+    Note over A,ADM: SCR-17 review queue merges verification cases<br/>and listing submissions (read via public api packages)
+    A->>ADM: POST /admin/reviews/{id}/decision — approve
+    ADM->>VER: record decision (public api package)
+    VER->>AUD: verification.approved
+    ADM-->>A: 200 OK — ReviewDecision
+    VER--)NOT: VERIFICATION_APPROVED domain event (shared bus)
+    NOT->>NOT: template lookup (notification_template)<br/>+ per-recipient preference check (P-08)
+    NOT--)O: in-app inbox row + email via adapter
+```
+
+Two details worth pinning: the admin's `200 OK` returns **before** any
+notification is delivered — `NotificationSender` runs off the domain event,
+async, and its per-channel attempts (and retries, S1-10-T7) are logged in
+`notification_delivery`; and the owner's document bytes never pass through
+the API at all — only the pre-signed URL does (`§4.6`).
 
 ---
 
@@ -325,7 +385,24 @@ adapter plugged in behind the same interface when the Ghana sender-ID keys land.
 Templates are keyed by event type (`LISTING_APPROVED`, `BOOKING_CONFIRMED`, …)
 in `notification_template` and added by seed data, not code changes. Triggers
 follow the T3 notification matrix (sign-up verification, resets, staff invites,
-verification/listing decisions, suspension/restore).
+verification/listing decisions, suspension/restore). The inbox reads the
+`notification` table through `GET /me/notifications` (S1-10-T5; polling in R1).
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
+flowchart LR
+    EV["Domain event (shared bus)<br/>VERIFICATION_APPROVED · LISTING_APPROVED ·<br/>ORG_STAFF_INVITED · USER_SUSPENDED …"] --> SND["NotificationSender<br/>(P-08 seam — S1-10-T3)"]
+    SND --> TPL["notification_template<br/>keyed by event type (seed data)"]
+    SND --> PREF["notification_preference<br/>per recipient × channel"]
+    TPL --> R["render title/body per channel"]
+    PREF --> R
+    R --> INAPP["in-app: INSERT notification<br/>inbox + bell badge"]
+    R --> MAIL["email adapter (swappable)"]
+    R -.-> SMS["SMS adapter<br/>Sprint 3+ (Ghana sender-ID)"]
+    INAPP --> BELL["GET /me/notifications<br/>mark read (S1-10-T5)"]
+    INAPP --> DLV
+    MAIL --> DLV["notification_delivery<br/>per-channel log + retry (S1-10-T7)"]
+```
 
 ### 4.8 Pagination
 
@@ -350,7 +427,7 @@ carries extensions for traceability:
 | Module | Endpoints (path prefix) | Security |
 | :--- | :--- | :--- |
 | `identity` | `POST /auth/provision`, `GET /me`, `PATCH /me` | Bearer JWT |
-| `notification` | `GET/PUT /me/notifications/preferences` | Bearer JWT |
+| `notification` | `GET/PUT /me/notifications/preferences`, `GET /me/notifications`, `POST /me/notifications/{id}/read`, `POST /me/notifications/read-all` | Bearer JWT |
 | `verification` | `GET /consents/latest`, `POST /consents`, `GET /owner/verification`, `POST /owner/verification/presign`, `POST /owner/verification/submit` | Bearer JWT · OrgScope on `/owner/*` |
 | `organization` | `GET /owner/dashboard`, `GET/PATCH /owner/org`, `POST /owner/invitations`, `GET /invitations/{token}`, `POST /invitations/{token}/accept` | Bearer JWT · OrgScope on `/owner/*`; invitation endpoints are token-authorised |
 | `listing` | `GET/POST /owner/properties`, `GET/PATCH/… /owner/properties/{id}` (+ `/units`, `/photos/presign`, `/photos`, `/preview`, `/submit`), `GET /properties/featured`, `GET /properties/search`, `GET /properties/{id}` | Bearer JWT · OrgScope on `/owner/*`; the three public reads are anonymous |
@@ -365,11 +442,16 @@ carries extensions for traceability:
 ## 6. Cross-Check Against the T3 User Flows (Checklist Item 4)
 
 T3's API-contract appendix (`docs/design/user-flows.md` §9) listed every endpoint
-the flows need. Each one is accounted for below — **nothing a Sprint 1 flow needs
-is missing from the contract**. Dispositions: **Defined** (in `api/openapi.yaml`),
-**Supabase-side** (handled by `supabase.auth.*` in the browser — `DEC-S1-01/A`),
-**Added** (new endpoint this decision introduces), **Refined** (T3 shorthand
-given a precise path), **Sprint 2+** (explicitly excluded from R1).
+the flows need, and the sprint story tasks were checked as a second pass. Each
+one is accounted for below. The second pass caught what T3 missed — the in-app
+inbox endpoints S1-10-T5 demands ("GET /api/v1/notifications & mark-as-read",
+bell badge + inbox screen in the S1-10 acceptance criteria) — now added as
+`GET /me/notifications` plus the two mark-read operations. Dispositions:
+**Defined** (in `api/openapi.yaml`), **Supabase-side** (handled by
+`supabase.auth.*` in the browser — `DEC-S1-01/A`), **Added** (new endpoint this
+decision introduces), **Refined** (T3 or story shorthand given a precise path),
+**Story-level** (demanded by a sprint story task, absent from T3), **Sprint 2+**
+(explicitly excluded from R1).
 
 | T3 endpoint | Disposition | In the contract as |
 | :--- | :--- | :--- |
@@ -382,6 +464,7 @@ given a precise path), **Sprint 2+** (explicitly excluded from R1).
 | *(new — `DEC-S1-01/A`)* | **Added** | `POST /api/v1/auth/provision` (idempotent account provisioning) |
 | `GET/PATCH /api/v1/me` | Defined | `identity` — session context, profile update |
 | `GET/PUT /api/v1/me/notifications/preferences` | Defined | `notification` |
+| `GET /api/v1/notifications` · mark-as-read *(S1-10-T5, not in T3)* | **Story-level**, Refined | `GET /me/notifications` + `POST /me/notifications/{id}/read` + `POST /me/notifications/read-all` — nested under `/me` like the preferences path; the bell badge reads `unreadCount` |
 | `GET /api/v1/consents/latest` · `POST /api/v1/consents` | Defined | `verification` |
 | `GET /api/v1/owner/dashboard` | Defined | `organization` |
 | `GET/PATCH /api/v1/owner/org` | Defined | `organization` |
@@ -433,9 +516,10 @@ NOT_FOUND` (cross-org access, unknown property), `403 FORBIDDEN` (non-admin on
    `currency = 'GHS'`; timestamps `TIMESTAMPTZ` UTC; `audit_log` append-only as
    `(actor_id, org_id, action, entity_type, entity_id, metadata_json,
    created_at)`; Ghana Card numbers encrypted at rest (AES-256).
-4. **Two tables T3's sign-off checklist names explicitly** —
-   `notification_preference` and `consent_record` — both present in §1
-   (`notification` and `verification` respectively).
+4. **Three tables the sign-off checklists name explicitly** —
+   `notification_preference` and `consent_record` (T3's checklist), and
+   `notification_delivery` (S1-10-T2's per-channel delivery/retry log) — all
+   present in §1 (`notification` ×2, `verification`).
 5. The **open point**: PostgreSQL schema naming (`catalog` vs `listing`) —
    DEC-S1-01/B leaves this to T8.
 
@@ -466,6 +550,11 @@ confirm-or-adjust:
 7. **Invitation acceptance for existing accounts** — sign in then accept, as
    drafted?
 8. **DB schema naming** — `catalog` or `listing` (T8 decides, DEC-S1-01/B).
+9. **Inbox mechanics (added during review)** — path refined from S1-10-T5's
+   `/notifications` shorthand to `/me/notifications` (consistency with the
+   preferences path); polling on app start and bell open, no SSE/WebSocket in
+   R1; `POST …/{id}/read` marks one, `read-all` marks every unread entry.
+   Confirm with frontend (T5 / S1-10-T6).
 
 **Reviewers:** @maskkuratahiru-wq (frontend, T5) · @joseibonsu206-gif (backend,
 T7) · @fummey (database, T8) · Product Owner sign-off (@ObboyeBossman).

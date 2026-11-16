@@ -130,6 +130,46 @@ item 5). The hand-off is:
 
 ---
 
+## DEC-S1-01/D — Amendment during review: the in-app inbox endpoints and `notification_delivery`
+
+**What happened.** While PR #39 was in review, the contract was re-checked — this
+time against the sprint story task documents, not only against T3's endpoint
+appendix. That second pass found two things T3's appendix had missed but the
+S1-10 story demands:
+
+1. **In-app inbox endpoints.** Task `S1-10-T5` is titled "Build
+   `GET /api/v1/notifications` & mark-as-read endpoints", and the S1-10 acceptance
+   criteria name the Notification Bell & Inbox screen with `GET /api/v1/notifications`
+   as a system action. Without these endpoints the bell badge and inbox screen
+   (`S1-10-T1`/`T6`, `FR-71`) would have nothing to read.
+2. **The `notification_delivery` table.** Task `S1-10-T2` creates *four* tables —
+   notification, template, preference **and delivery** — and acceptance criterion 2
+   ("failed deliveries are logged and retried") depends on the delivery log. The
+   canonical module table previously listed only three.
+
+**What changed (additive only).** `api/openapi.yaml` grew three operations —
+`GET /api/v1/me/notifications` (returns the page plus an `unreadCount` the bell
+badge reads), `POST /api/v1/me/notifications/{id}/read`, and
+`POST /api/v1/me/notifications/read-all` — with `Notification` and
+`NotificationPage` schemas. The canonical module table now lists
+`notification_delivery` under the `notification` module. The backend map gained
+the notification outflow edges (inbox reads, transactional email via the
+swappable adapter, Supabase's own auth emails) and the admin review-queue edges;
+two new diagrams were added — the verification→decision→notification sequence
+(§3.4) and the event→template→channel fan-out (§4.7).
+
+**One naming refinement.** S1-10-T5's shorthand path `/api/v1/notifications` was
+nested as `/api/v1/me/notifications`, because T3 had already put the preferences
+at `/api/v1/me/notifications/preferences` — the caller's own resources live under
+`/me`. The story task's intent (list + mark read) is unchanged. This refinement is
+on the review agenda (§8, item 9) for the frontend to confirm.
+
+**Scope note.** Delivery in R1 is **polling** (app start + bell open); no
+SSE/WebSocket push — a push channel would be a Sprint 3+ additive change, like
+the SMS adapter (`P-08`).
+
+---
+
 ## Review trail
 
 - Decisions made and recorded during the S1-01-T6 working session (2026-11-17).
