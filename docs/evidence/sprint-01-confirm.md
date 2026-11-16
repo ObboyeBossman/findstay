@@ -84,4 +84,4 @@ Please review and confirm these 6 defaults so no teammate is blocked during `S1-
    * **Proposed Answer:** Seed one default Admin account via environment variables during initial database setup (`S1-01-T9` / `T15`) so admins can log in immediately without needing public admin sign-up.
 
 ---
-**Next Step:** Team members, please review this list and reply with ✅ (or note any changes) so we can mark **S1-01-T1** complete and begin **S1-01-T14 (Kickoff)**.
+**Status:** Confirmed by the project lead (Bossman) on 2026-11-17 — **S1-01-T1** is done ([issue #18](https://github.com/ObboyeBossman/findstay/issues/18) closed); **S1-01-T14 (Kickoff)** proceeds.
