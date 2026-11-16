@@ -103,7 +103,7 @@ R5 = S1..S4 + S5 suites + full security re-test
 | Sprint | May use | Must not touch |
 |:------:|---------|----------------|
 | 1 | Shared kernel only | Nothing earlier exists |
-| 2 | S1 public APIs and events: catalog, availability, organisation, identity, media, notification, audit | S1 internals |
+| 2 | S1 public APIs and events: listing, availability, organisation, identity, media, notification, audit | S1 internals |
 | 3 | S1 and S2 public APIs and the frozen event catalogue | S1 and S2 internals; no new booking states |
 | 4 | Phase 1 public APIs, events and seams (availability reasons, charges, roles, audit entity types, documents, notification registry) | Any Phase 1 module's internals |
 | 5 | Phase 1 and Sprint 4 public APIs | Any earlier module's internals |
@@ -205,7 +205,7 @@ IDs are from the phased plan (Section 6). **Needed by** is the sprint day on whi
 **S2-01 Search, location and campus search, sorting** (Pri M, track A, D1 to D3)
 
 - *Done when:* A guest finds approved listings by keyword, town, area, campus or distance, sorted, with a helpful message when nothing matches.
-- *Database:* Search read model over catalog (read-only), including nullable rating columns.
+- *Database:* Search read model over listing (read-only), including nullable rating columns.
 - *API:* Search endpoint with pagination and sorting; reads only `CatalogQuery` and the availability read API.
 - *UI:* Guest search page and results list.
 - *Tests:* Only Published listings appear; empty-result message; response time measured.
