@@ -22,7 +22,7 @@ Nobody owns this story alone. Its 16 tasks are shared completely across the nine
 | [`S1-01-T3`](./tasks/S1-01-T3.md) | Draw the user flow diagrams — every screen-to-screen path | `ui-ux` | [`S1-01-T1`](./tasks/S1-01-T1.md) | UI/UX Design | @dztrb | Todo |
 | [`S1-01-T4`](./tasks/S1-01-T4.md) | Sketch every Sprint 1 screen (wireframes, phone-first) | `ui-ux` | [`S1-01-T2`](./tasks/S1-01-T2.md), [`S1-01-T3`](./tasks/S1-01-T3.md) | UI/UX Design | @surnuel | Todo |
 | [`S1-01-T5`](./tasks/S1-01-T5.md) | Build the empty starter website — guest, owner & admin areas wired | `frontend` | [`S1-01-T2`](./tasks/S1-01-T2.md), [`S1-01-T10`](./tasks/S1-01-T10.md) | Frontend Development | @maskkuratahiru-wq | Todo |
-| [`S1-01-T6`](./tasks/S1-01-T6.md) | Draw the backend map & data-flow diagram, agree the API contracts | `backend` | [`S1-01-T1`](./tasks/S1-01-T1.md) | Backend Development | @ObboyeBossman | Todo |
+| [`S1-01-T6`](./tasks/S1-01-T6.md) | Draw the backend map & data-flow diagram, agree the API contracts | `backend` | [`S1-01-T1`](./tasks/S1-01-T1.md) | Backend Development | @ObboyeBossman | In Review |
 | [`S1-01-T7`](./tasks/S1-01-T7.md) | Set up the empty server app with the shared pieces ready | `backend` | [`S1-01-T6`](./tasks/S1-01-T6.md), [`S1-01-T10`](./tasks/S1-01-T10.md) | Backend Development | @joseibonsu206-gif | Todo |
 | [`S1-01-T8`](./tasks/S1-01-T8.md) | Draw the database diagram (ERD) — every table & how it connects | `database` | [`S1-01-T1`](./tasks/S1-01-T1.md), [`S1-01-T6`](./tasks/S1-01-T6.md) | Database & Data | @fummey | Todo |
 | [`S1-01-T9`](./tasks/S1-01-T9.md) | Build the real database from the ERD with numbered scripts | `database` | [`S1-01-T8`](./tasks/S1-01-T8.md) | Database & Data | @fummey | Todo |

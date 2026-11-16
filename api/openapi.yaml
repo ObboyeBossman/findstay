@@ -1,0 +1,2226 @@
+openapi: 3.1.0
+info:
+  title: FindStay API
+  version: 1.0.0-draft
+  summary: FindStay Sprint 1 (Release R1) API contract for guests, owners/staff, and admins.
+  description: |
+    The Sprint 1 API agreement for FindStay — the contract frontend and backend
+    build against (task `S1-01-T6`). Human-readable companion:
+    `docs/design/backend-architecture.md`. Decisions: `DEC-S1-01/A/B/C` in
+    `docs/decisions/dec-s1-01-t6-backend-contracts.md`.
+
+    **Status of this file (DEC-S1-01/C):** hand-authored design contract while the
+    API modules are placeholders. Once controllers exist, this file becomes the
+    generated output of the `springdoc-openapi-maven-plugin`
+    (`mvn springdoc-openapi:generate`) and is committed on every release tag so
+    CI can diff tag-to-tag (`C3`). Hand-authoring stops at that point.
+
+    Conventions every operation follows:
+
+    * **Auth (TA-01, TA-02, P-09):** the browser signs in only through Supabase
+      Auth; every business-data call carries `Authorization: Bearer <Supabase
+      JWT>`, validated via JWKS. Sign-up, OTP, and password reset are NOT API
+      endpoints (see DEC-S1-01/A).
+    * **Provisioning (DEC-S1-01/A):** after account confirmation the client calls
+      `POST /auth/provision` (idempotent) to create the local account record.
+    * **OrgScope (J-06, BRL-04):** operations tagged `x-org-scope: true` enforce
+      `organization_id` isolation derived from the caller's membership — never
+      from a client-supplied identifier. Cross-organisation reads return 404.
+    * **Money:** integer pesewas (`250000` = GH₵2,500.00), currency always GHS.
+      No decimal money anywhere (NFR-08).
+    * **Time:** all timestamps are ISO-8601 UTC; screens display Africa/Accra
+      (NFR-52).
+    * **Errors:** one shape (`ApiError`), stable `code` values — see
+      `ErrorCode` in the shared kernel (T7, PR #37). Clients switch on `code`.
+    * **Pagination:** `limit` (default 20, max 100) + `offset`; lists return
+      `{ items, total }`.
+    * **Audit:** operations tagged `x-audit-event` write an append-only
+      `audit.audit_log` record (BRL-13, BRL-16, NFR-66).
+    * **Compatibility (C3):** additive only — endpoints and fields are never
+      removed or renamed once released.
+servers:
+  - url: https://findstay-api.onrender.com
+    description: Staging (Render). Resolve the production URL at release.
+  - url: http://localhost:8080
+    description: Local development.
+security:
+  - bearerAuth: []
+tags:
+  - name: identity
+    description: Account provisioning, session context, and profile (module `identity`).
+  - name: notification
+    description: Per-user notification channel preferences (module `notification`).
+  - name: verification
+    description: Privacy consent and owner verification (module `verification`).
+  - name: organization
+    description: Owner organisation, staff invitations, dashboard (module `organization`).
+  - name: listing-owner
+    description: Owner-side property, unit, and photo management (module `listing`).
+  - name: availability
+    description: Unit availability calendar and owner date blocks (module `availability`).
+  - name: admin
+    description: Platform administration — review queue, users, settings, audit (module `admin`).
+  - name: listing-public
+    description: Anonymous guest reads — featured, search, details (module `listing`).
+
+paths:
+  /api/v1/auth/provision:
+    post:
+      tags: [identity]
+      operationId: provisionAccount
+      summary: Provision the local account for the authenticated user (idempotent)
+      description: |
+        Called by the React client immediately after Supabase confirms sign-up
+        (OTP or email link), and safely retryable at any time. Creates the
+        `user_account` row (plus the default Guest role membership) for the
+        JWT subject if it does not exist; returns the session context either
+        way. Records `user.registered` on first creation (DEC-S1-01/A).
+      security:
+        - bearerAuth: []
+      x-module: identity
+      x-audit-event: user.registered
+      responses:
+        "200":
+          description: Account provisioned (or already existed) — session context returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionContext"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+
+  /api/v1/me:
+    get:
+      tags: [identity]
+      operationId: getSessionContext
+      summary: Load session context — profile, roles, memberships, consent state
+      description: |
+        The app-start bootstrap after Supabase sign-in. Auto-provisions a missing
+        account (idempotent, DEC-S1-01/A), reports whether the privacy policy
+        version requires re-consent (NFR-36), and returns the role memberships
+        used by the portal picker (BRL-02, P-04). Records `auth.login_success`
+        for the first call of a session.
+      security:
+        - bearerAuth: []
+      x-module: identity
+      x-audit-event: auth.login_success
+      responses:
+        "200":
+          description: Session context.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionContext"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+    patch:
+      tags: [identity]
+      operationId: updateProfile
+      summary: Update the signed-in user's profile
+      security:
+        - bearerAuth: []
+      x-module: identity
+      x-audit-event: user.profile_updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+      responses:
+        "200":
+          description: Updated profile.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+
+  /api/v1/me/notifications/preferences:
+    get:
+      tags: [notification]
+      operationId: getNotificationPreferences
+      summary: Read the signed-in user's notification channel preferences
+      security:
+        - bearerAuth: []
+      x-module: notification
+      responses:
+        "200":
+          description: Current preferences (email, sms, in-app) per notification kind.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationPreferences"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+    put:
+      tags: [notification]
+      operationId: replaceNotificationPreferences
+      summary: Replace the signed-in user's notification channel preferences
+      security:
+        - bearerAuth: []
+      x-module: notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotificationPreferences"
+      responses:
+        "200":
+          description: Stored preferences.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationPreferences"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+
+  /api/v1/consents/latest:
+    get:
+      tags: [verification]
+      operationId: getLatestConsentState
+      summary: Latest privacy policy version and the user's acceptance of it
+      description: |
+        Drives the re-consent gate (SCR-06C, NFR-36). Returns the current policy
+        version and `acceptedAt: null` when the user must re-consent.
+      security:
+        - bearerAuth: []
+      x-module: verification
+      responses:
+        "200":
+          description: Latest consent state.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsentState"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+
+  /api/v1/consents:
+    post:
+      tags: [verification]
+      operationId: recordConsent
+      summary: Record acceptance of a privacy policy version (Ghana Act 843)
+      security:
+        - bearerAuth: []
+      x-module: verification
+      x-audit-event: consent.recorded
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsentAcceptance"
+      responses:
+        "201":
+          description: Consent recorded.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsentRecord"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+
+  /api/v1/owner/dashboard:
+    get:
+      tags: [organization]
+      operationId: getOwnerDashboard
+      summary: Owner/staff dashboard — verification status, listing counts, alerts
+      security:
+        - bearerAuth: []
+      x-module: organization
+      x-org-scope: true
+      responses:
+        "200":
+          description: Dashboard summary for the caller's active organisation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OwnerDashboard"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/owner/org:
+    get:
+      tags: [organization]
+      operationId: getOrganization
+      summary: Read the caller's organisation profile
+      security:
+        - bearerAuth: []
+      x-module: organization
+      x-org-scope: true
+      responses:
+        "200":
+          description: Organisation profile.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    patch:
+      tags: [organization]
+      operationId: updateOrganization
+      summary: Update the caller's organisation profile
+      security:
+        - bearerAuth: []
+      x-module: organization
+      x-org-scope: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationUpdate"
+      responses:
+        "200":
+          description: Updated organisation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/owner/invitations:
+    post:
+      tags: [organization]
+      operationId: inviteStaff
+      summary: Invite a staff member by email with a role and assigned properties
+      description: |
+        Sends the invitation email containing `/owner/invitations?token=…`
+        (BRL-17). Only the primary Owner can invite (settled answer to T1 open
+        decision 2).
+      security:
+        - bearerAuth: []
+      x-module: organization
+      x-org-scope: true
+      x-audit-event: org.staff_invited
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvitationCreate"
+      responses:
+        "201":
+          description: Invitation created and sent.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invitation"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422":
+          description: Email already a member or already invited (BUSINESS_RULE_VIOLATION).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/invitations/{token}:
+    get:
+      tags: [organization]
+      operationId: viewInvitation
+      summary: View an invitation by token (org, assigned properties, role)
+      description: Token-authorised — no bearer JWT required. 422 when the token is known but expired or revoked.
+      security: []
+      x-module: organization
+      parameters:
+        - $ref: "#/components/parameters/InvitationToken"
+      responses:
+        "200":
+          description: Invitation details for the acceptance screen (SCR-08B).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvitationView"
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422":
+          description: Invitation expired or revoked (BUSINESS_RULE_VIOLATION).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/invitations/{token}/accept:
+    post:
+      tags: [organization]
+      operationId: acceptInvitation
+      summary: Accept a staff invitation and join the organisation
+      description: |
+        The invitee authenticates through Supabase first (sign in or set
+        password), then calls this endpoint with their bearer JWT. Membership is
+        created scoped to the assigned properties (UR-PS01).
+      security:
+        - bearerAuth: []
+      x-module: organization
+      x-audit-event: org.staff_invite_accepted
+      parameters:
+        - $ref: "#/components/parameters/InvitationToken"
+      responses:
+        "200":
+          description: Accepted — returns the organisation and the new memberships.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvitationAccepted"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422":
+          description: Invitation expired, revoked, or already accepted (BUSINESS_RULE_VIOLATION).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/owner/verification/presign:
+    post:
+      tags: [verification]
+      operationId: presignVerificationDocument
+      summary: Authorise and issue a short-lived upload URL for a verification document
+      description: |
+        Two-step upload step 1 (DEC §4.6): the API validates document type,
+        MIME type, and size (<= 5 MB, NFR-17, TA-13), then returns a short-lived
+        pre-signed PUT URL for the private R2 bucket `findstay-verification-docs`
+        (NFR-24). The browser uploads the bytes straight to R2 (step 2).
+        Ghana Card numbers are never uploaded as documents metadata — they are
+        submitted encrypted with `verification/submit`.
+      security:
+        - bearerAuth: []
+      x-module: verification
+      x-org-scope: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentPresignRequest"
+      responses:
+        "201":
+          description: Pre-signed upload URL issued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PresignResponse"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/owner/verification/submit:
+    post:
+      tags: [verification]
+      operationId: submitVerification
+      summary: Submit the organisation's verification case for admin review
+      description: |
+        Submits Ghana Card, ownership proof, and GTA licence (P-12). Rejected
+        documents can be re-uploaded and re-submitted individually. Notifies the
+        admin review queue (BRL-17). Only the primary Owner can submit.
+      security:
+        - bearerAuth: []
+      x-module: verification
+      x-org-scope: true
+      x-audit-event: verification.submitted
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerificationSubmit"
+      responses:
+        "202":
+          description: Case submitted — per-document status now Pending.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerificationCase"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409":
+          description: Case already under active review (CONFLICT).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "422":
+          description: Required document missing or already approved (BUSINESS_RULE_VIOLATION).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/owner/verification:
+    get:
+      tags: [verification]
+      operationId: getVerificationStatus
+      summary: Read the organisation's verification case with per-document status
+      security:
+        - bearerAuth: []
+      x-module: verification
+      x-org-scope: true
+      responses:
+        "200":
+          description: Verification case (overall + per-document status with fix notes).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerificationCase"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/owner/properties:
+    get:
+      tags: [listing-owner]
+      operationId: listOwnerProperties
+      summary: List the organisation's properties with status badges
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      parameters:
+        - name: status
+          in: query
+          description: Filter by listing status.
+          schema:
+            $ref: "#/components/schemas/ListingStatus"
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Offset"
+      responses:
+        "200":
+          description: Property list for the organisation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyList"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      tags: [listing-owner]
+      operationId: createProperty
+      summary: Create a property draft
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      x-audit-event: listing.draft_saved
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PropertyCreate"
+      responses:
+        "201":
+          description: Draft property created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyDetail"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/owner/properties/{propertyId}:
+    get:
+      tags: [listing-owner]
+      operationId: getOwnerProperty
+      summary: Read one property with units, photos, and submission status
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      responses:
+        "200":
+          description: Property detail.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyDetail"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      tags: [listing-owner]
+      operationId: updateProperty
+      summary: Update a property draft (auto-save) or pause/reactivate the listing
+      description: |
+        Field updates auto-save drafts. Setting `status` to `PAUSED` or `ACTIVE`
+        pauses or reactivates a published listing (FR-13).
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      x-audit-event: listing.draft_saved, listing.paused, listing.reactivated
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PropertyUpdate"
+      responses:
+        "200":
+          description: Updated property.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyDetail"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Listing locked under active admin review — edits rejected (CONFLICT).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/owner/properties/{propertyId}/preview:
+    get:
+      tags: [listing-owner]
+      operationId: previewProperty
+      summary: Preview the property exactly as guests will see it
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      responses:
+        "200":
+          description: Guest-view of the property (same shape as the public detail).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyPublicDetail"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/owner/properties/{propertyId}/submit:
+    post:
+      tags: [listing-owner]
+      operationId: submitProperty
+      summary: Submit the property for admin review
+      description: Notifies the admin review queue (BRL-17). Minimum listing
+        information must be complete (BRL-06).
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      x-audit-event: listing.submitted
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      responses:
+        "202":
+          description: Submitted — status now Pending Review.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyDetail"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Property locked under active review (CONFLICT).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "422":
+          description: Minimum listing information incomplete (BUSINESS_RULE_VIOLATION, BRL-06).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/owner/properties/{propertyId}/units:
+    post:
+      tags: [listing-owner]
+      operationId: addUnit
+      summary: Add a bookable unit (room, apartment, suite) with its own rate
+      description: Every unit is individually tracked with its own rate and
+        calendar (P-02). Rates are integer pesewas.
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      x-audit-event: unit.created
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitInput"
+      responses:
+        "201":
+          description: Unit created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unit"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/owner/properties/{propertyId}/units/{unitId}:
+    patch:
+      tags: [listing-owner]
+      operationId: updateUnit
+      summary: Update a unit (rate, capacity, billing period, category)
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      x-audit-event: unit.updated
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+        - $ref: "#/components/parameters/UnitId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitInput"
+      responses:
+        "200":
+          description: Updated unit.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unit"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [listing-owner]
+      operationId: deleteUnit
+      summary: Remove a unit
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+        - $ref: "#/components/parameters/UnitId"
+      responses:
+        "204": { description: Unit removed. }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Unit has availability blocks or future bookings attached (CONFLICT).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/owner/properties/{propertyId}/photos/presign:
+    post:
+      tags: [listing-owner]
+      operationId: presignPropertyPhoto
+      summary: Authorise and issue a short-lived upload URL for a property photo
+      description: |
+        Validates MIME type and size (<= 5 MB) and enforces the 10-photo cap
+        (FR-14). Upload goes to the public R2 bucket `findstay-property-images`
+        and is served as optimised WebP via the CDN (TA-13).
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PhotoPresignRequest"
+      responses:
+        "201":
+          description: Pre-signed upload URL issued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PresignResponse"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422":
+          description: Photo cap of 10 already reached (BUSINESS_RULE_VIOLATION, FR-14).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/owner/properties/{propertyId}/photos:
+    put:
+      tags: [listing-owner]
+      operationId: reorderPhotos
+      summary: Reorder photos and set the cover photo
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      x-audit-event: listing.photos_updated
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PhotoOrder"
+      responses:
+        "200":
+          description: Stored photo order; first item is the cover.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Photo"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/owner/properties/{propertyId}/photos/{photoId}:
+    delete:
+      tags: [listing-owner]
+      operationId: deletePhoto
+      summary: Delete a photo (and promote the next one to cover if needed)
+      security:
+        - bearerAuth: []
+      x-module: listing
+      x-org-scope: true
+      x-audit-event: listing.photos_updated
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+        - $ref: "#/components/parameters/PhotoId"
+      responses:
+        "204": { description: Photo removed. }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/owner/units/{unitId}/availability:
+    get:
+      tags: [availability]
+      operationId: getUnitAvailability
+      summary: Month calendar for a unit — Available / Owner-Blocked (Booked is Sprint 2+)
+      security:
+        - bearerAuth: []
+      x-module: availability
+      x-org-scope: true
+      parameters:
+        - $ref: "#/components/parameters/UnitId"
+        - name: month
+          in: query
+          required: true
+          description: Calendar month in Ghana time, `YYYY-MM`.
+          schema:
+            type: string
+            pattern: '^\d{4}-(0[1-9]|1[0-2])$'
+            examples: ["2026-11"]
+      responses:
+        "200":
+          description: Day-by-day availability for the month.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvailabilityCalendar"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/owner/units/{unitId}/blocks:
+    post:
+      tags: [availability]
+      operationId: createDateBlock
+      summary: Block a date range on a unit (owner block)
+      description: |
+        Dates are interpreted as `Africa/Accra` days and stored as a UTC
+        `tstzrange`. PostgreSQL's `btree_gist` exclusion constraint rejects
+        overlapping blocks at the database level (P-02) — the API surfaces that
+        as 409 CONFLICT.
+      security:
+        - bearerAuth: []
+      x-module: availability
+      x-org-scope: true
+      x-audit-event: availability.block_created
+      parameters:
+        - $ref: "#/components/parameters/UnitId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AvailabilityBlockInput"
+      responses:
+        "201":
+          description: Block created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvailabilityBlock"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Dates overlap an existing block (CONFLICT).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/owner/units/{unitId}/blocks/{blockId}:
+    delete:
+      tags: [availability]
+      operationId: deleteDateBlock
+      summary: Remove an owner date block
+      security:
+        - bearerAuth: []
+      x-module: availability
+      x-org-scope: true
+      x-audit-event: availability.block_removed
+      parameters:
+        - $ref: "#/components/parameters/UnitId"
+        - $ref: "#/components/parameters/BlockId"
+      responses:
+        "204": { description: Block removed. }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/admin/dashboard:
+    get:
+      tags: [admin]
+      operationId: getAdminDashboard
+      summary: Admin dashboard — queue sizes, user stats, recent alerts
+      security:
+        - bearerAuth: []
+      x-module: admin
+      responses:
+        "200":
+          description: Admin dashboard summary.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminDashboard"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/admin/reviews:
+    get:
+      tags: [admin]
+      operationId: listReviewQueue
+      summary: Review queue — pending owner verifications and property submissions
+      security:
+        - bearerAuth: []
+      x-module: admin
+      parameters:
+        - name: status
+          in: query
+          description: Filter the queue; defaults to pending.
+          schema:
+            type: string
+            enum: [pending, decided]
+            default: pending
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Offset"
+      responses:
+        "200":
+          description: Review queue page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewQueueList"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/admin/reviews/{reviewId}:
+    get:
+      tags: [admin]
+      operationId: getReviewDetail
+      summary: Inspect one review — listing details, photos, per-document verification
+      description: Verification documents are read through short-lived pre-signed
+        GET URLs issued after authorisation (NFR-24).
+      security:
+        - bearerAuth: []
+      x-module: admin
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: Review detail.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewDetail"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/admin/reviews/{reviewId}/decision:
+    post:
+      tags: [admin]
+      operationId: decideReview
+      summary: Approve, request corrections, or reject a review item
+      description: |
+        Three-way decision (FR-88). Corrections require a fix list; rejection
+        requires a reason (both validated, else 422). Notifies the owner by
+        email + in-app (BRL-17).
+      security:
+        - bearerAuth: []
+      x-module: admin
+      x-audit-event: verification.approved, verification.rejected, listing.approved, listing.corrections_requested, listing.rejected
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewDecisionRequest"
+      responses:
+        "200":
+          description: Decision recorded; owner notified.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewDetail"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Already reviewed by another admin (CONFLICT) — refresh the queue.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "422":
+          description: Corrections fix list or rejection reason missing (BUSINESS_RULE_VIOLATION).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/admin/users:
+    get:
+      tags: [admin]
+      operationId: listUsers
+      summary: Search platform users with roles and account status
+      security:
+        - bearerAuth: []
+      x-module: admin
+      parameters:
+        - name: q
+          in: query
+          description: Search by name or email.
+          schema:
+            type: string
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Offset"
+      responses:
+        "200":
+          description: User page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUserList"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/admin/users/{userId}/suspend:
+    post:
+      tags: [admin]
+      operationId: suspendUser
+      summary: Suspend an account and revoke its sessions
+      security:
+        - bearerAuth: []
+      x-module: admin
+      x-audit-event: user.suspended
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SuspendRequest"
+      responses:
+        "200":
+          description: User suspended; email notice sent (BRL-16, FR-87).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUser"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422":
+          description: User already suspended (BUSINESS_RULE_VIOLATION).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/admin/users/{userId}/restore:
+    post:
+      tags: [admin]
+      operationId: restoreUser
+      summary: Restore a suspended account
+      security:
+        - bearerAuth: []
+      x-module: admin
+      x-audit-event: user.restored
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: User restored; email notice sent.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUser"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422":
+          description: User is not suspended (BUSINESS_RULE_VIOLATION).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /api/v1/admin/settings:
+    get:
+      tags: [admin]
+      operationId: getPlatformSettings
+      summary: Read platform settings, policy version, and feature flags
+      security:
+        - bearerAuth: []
+      x-module: admin
+      responses:
+        "200":
+          description: Platform settings.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformSettings"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    patch:
+      tags: [admin]
+      operationId: updatePlatformSettings
+      summary: Update platform settings, policy version, or feature flags
+      description: Feature flags default to false in production (C7 dark launches).
+      security:
+        - bearerAuth: []
+      x-module: admin
+      x-audit-event: platform.setting_updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlatformSettingsUpdate"
+      responses:
+        "200":
+          description: Updated settings.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformSettings"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/admin/audit-logs:
+    get:
+      tags: [admin]
+      operationId: listAuditLogs
+      summary: Read the immutable audit trail (append-only, filterable)
+      description: Read-only viewer for `audit.audit_log` (SCR-21C). Timestamps
+        returned in UTC; the screen displays Ghana time.
+      security:
+        - bearerAuth: []
+      x-module: admin
+      parameters:
+        - name: action
+          in: query
+          description: Filter by audit action, e.g. `listing.approved`.
+          schema:
+            type: string
+        - name: actorId
+          in: query
+          schema:
+            $ref: "#/components/schemas/UUID"
+        - name: entityType
+          in: query
+          schema:
+            type: string
+        - name: from
+          in: query
+          description: UTC start of the window (inclusive).
+          schema:
+            $ref: "#/components/schemas/Timestamp"
+        - name: to
+          in: query
+          description: UTC end of the window (inclusive).
+          schema:
+            $ref: "#/components/schemas/Timestamp"
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Offset"
+      responses:
+        "200":
+          description: Audit log page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuditLogList"
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/properties/featured:
+    get:
+      tags: [listing-public]
+      operationId: listFeaturedProperties
+      summary: Featured published properties for the homepage (anonymous)
+      security: []
+      x-module: listing
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: Featured property cards.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertySummaryList"
+
+  /api/v1/properties/search:
+    get:
+      tags: [listing-public]
+      operationId: searchProperties
+      summary: Search published properties by destination, dates, guests, filters (anonymous)
+      description: |
+        Sprint 1 search filters by destination (town/area), stay dates (excludes
+        owner-blocked units via `AvailabilityGate`), guests, accommodation type,
+        and price range. Results show GHS price and the Verified Owner badge.
+      security: []
+      x-module: listing
+      parameters:
+        - name: destination
+          in: query
+          description: Town or area name (Ghana).
+          schema:
+            type: string
+        - name: checkIn
+          in: query
+          description: First night, `YYYY-MM-DD` (Africa/Accra day).
+          schema:
+            type: string
+            format: date
+        - name: checkOut
+          in: query
+          description: Morning of departure, `YYYY-MM-DD` (Africa/Accra day).
+          schema:
+            type: string
+            format: date
+        - name: guests
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+        - name: accommodationType
+          in: query
+          schema:
+            type: string
+        - name: maxPricePesewas
+          in: query
+          description: Nightly rate ceiling in integer pesewas.
+          schema:
+            type: integer
+            minimum: 0
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Offset"
+      responses:
+        "200":
+          description: Matching available properties.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertySummaryList"
+
+  /api/v1/properties/{propertyId}:
+    get:
+      tags: [listing-public]
+      operationId: getPropertyPublic
+      summary: Published property details for guests (anonymous)
+      description: Photos (WebP via CDN), GHS price range, facilities, house
+        rules, location, and the Verified Owner badge. 404 when the property is
+        unknown or not published.
+      security: []
+      x-module: listing
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      responses:
+        "200":
+          description: Property detail.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyPublicDetail"
+        "404": { $ref: "#/components/responses/NotFound" }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase-issued 1-hour access JWT (P-09). Verified by the API
+        against Supabase JWKS (TA-08).
+
+  parameters:
+    PropertyId:
+      name: propertyId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
+    UnitId:
+      name: unitId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
+    PhotoId:
+      name: photoId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
+    BlockId:
+      name: blockId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/UUID"
+    InvitationToken:
+      name: token
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 20
+    Limit:
+      name: limit
+      in: query
+      description: Page size (default 20, max 100).
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    Offset:
+      name: offset
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+
+  responses:
+    Unauthenticated:
+      description: Missing or invalid bearer JWT (UNAUTHENTICATED).
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    Forbidden:
+      description: Authenticated but not allowed (FORBIDDEN).
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    NotFound:
+      description: Resource unknown, or belongs to another organisation (NOT_FOUND).
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    ValidationError:
+      description: Request body failed validation (VALIDATION_FAILED).
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    RateLimited:
+      description: Too many attempts (RATE_LIMITED, NFR-23).
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+
+  schemas:
+    UUID:
+      type: string
+      format: uuid
+      description: UUIDv7 identifier (T7 `IdGenerator`).
+    Timestamp:
+      type: string
+      format: date-time
+      description: ISO-8601 UTC instant (`2026-11-17T09:30:00Z`). Screens
+        display Africa/Accra (NFR-52).
+    ApiError:
+      type: object
+      description: The one error shape (T7 shared kernel). `details` is omitted
+        when empty. Clients switch on `code`, never on `message`.
+      required: [code, message, status, timestamp, path]
+      properties:
+        code:
+          type: string
+          enum: [BAD_REQUEST, VALIDATION_FAILED, UNAUTHENTICATED, FORBIDDEN, NOT_FOUND, METHOD_NOT_ALLOWED, CONFLICT, UNSUPPORTED_MEDIA_TYPE, BUSINESS_RULE_VIOLATION, RATE_LIMITED, INTERNAL_ERROR]
+        message:
+          type: string
+        status:
+          type: integer
+        timestamp:
+          $ref: "#/components/schemas/Timestamp"
+        path:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field: { type: string }
+              message: { type: string }
+
+    RoleMembership:
+      type: object
+      description: A role the account holds, possibly scoped to an organisation
+        or property (P-04, BRL-02).
+      required: [role, organizationId]
+      properties:
+        role:
+          type: string
+          enum: [GUEST, OWNER, STAFF, ADMIN]
+        organizationId:
+          $ref: "#/components/schemas/UUID"
+        organizationName: { type: string }
+        propertyIds:
+          description: Present (possibly empty) for STAFF — the properties the
+            staff member may work on (UR-PS01).
+          type: array
+          items:
+            $ref: "#/components/schemas/UUID"
+
+    Profile:
+      type: object
+      required: [id, fullName, email, phone, createdAt]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        fullName: { type: string }
+        email: { type: string, format: email }
+        phone:
+          type: [string, "null"]
+          description: Ghana phone number in E.164 (`+233…`), or null.
+        avatarUrl:
+          type: [string, "null"]
+        createdAt: { $ref: "#/components/schemas/Timestamp" }
+
+    ProfileUpdate:
+      type: object
+      properties:
+        fullName: { type: string, minLength: 1 }
+        phone:
+          type: [string, "null"]
+          pattern: '^\+233\d{9}$'
+        avatarUrl:
+          type: [string, "null"]
+
+    SessionContext:
+      type: object
+      description: |
+        Everything the app needs after sign-in — profile, role memberships
+        (drives the portal picker, SCR-06B), consent state, and the active
+        organisation.
+      required: [profile, memberships, consent]
+      properties:
+        profile:
+          $ref: "#/components/schemas/Profile"
+        memberships:
+          type: array
+          items:
+            $ref: "#/components/schemas/RoleMembership"
+        consent:
+          $ref: "#/components/schemas/ConsentState"
+        activeOrganizationId:
+          description: When the account belongs to exactly one organisation.
+          type: [string, "null"]
+
+    NotificationPreferences:
+      type: object
+      description: Per-channel opt-ins per notification kind. Kinds follow the
+        T3 notification matrix (account, verification, listing decisions,
+        account status). SMS honours P-08 (email-only fallback until the Ghana
+        sender-ID is approved).
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [kind, email, sms, inApp]
+            properties:
+              kind:
+                type: string
+                enum: [ACCOUNT, VERIFICATION, LISTING_DECISIONS, ACCOUNT_STATUS, MARKETING]
+              email: { type: boolean }
+              sms: { type: boolean }
+              inApp: { type: boolean }
+
+    ConsentState:
+      type: object
+      description: |
+        Latest privacy policy (Ghana Act 843) and the user's acceptance.
+        An `acceptedAt` of null means the re-consent gate (SCR-06C) must
+        show (NFR-36).
+      required: [policyVersion, acceptedAt]
+      properties:
+        policyVersion: { type: string }
+        policyUrl: { type: string }
+        acceptedAt:
+          type: [string, "null"]
+          format: date-time
+
+    ConsentAcceptance:
+      type: object
+      required: [policyVersion]
+      properties:
+        policyVersion:
+          type: string
+          description: The version being accepted — must match the latest.
+
+    ConsentRecord:
+      type: object
+      required: [policyVersion, acceptedAt]
+      properties:
+        policyVersion: { type: string }
+        acceptedAt: { $ref: "#/components/schemas/Timestamp" }
+
+    Organization:
+      type: object
+      required: [id, name, verificationStatus, createdAt]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        name: { type: string }
+        displayName: { type: string }
+        contactEmail: { type: string, format: email }
+        contactPhone:
+          type: [string, "null"]
+        verificationStatus:
+          $ref: "#/components/schemas/VerificationOverallStatus"
+        createdAt: { $ref: "#/components/schemas/Timestamp" }
+
+    OrganizationUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        displayName: { type: string }
+        contactEmail: { type: string, format: email }
+        contactPhone:
+          type: [string, "null"]
+
+    InvitationCreate:
+      type: object
+      required: [email, role, propertyIds]
+      properties:
+        email: { type: string, format: email }
+        role:
+          type: string
+          enum: [STAFF]
+          description: R1 invites staff only (owners self-register organisations).
+        propertyIds:
+          type: array
+          description: Properties the staff member is scoped to.
+          items:
+            $ref: "#/components/schemas/UUID"
+
+    Invitation:
+      type: object
+      required: [id, email, role, status, expiresAt]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        email: { type: string, format: email }
+        role: { type: string }
+        propertyIds:
+          type: array
+          items:
+            $ref: "#/components/schemas/UUID"
+        status:
+          type: string
+          enum: [PENDING, ACCEPTED, EXPIRED, REVOKED]
+        expiresAt: { $ref: "#/components/schemas/Timestamp" }
+
+    InvitationView:
+      type: object
+      description: What the acceptance screen shows before joining (SCR-08B).
+      required: [organizationName, role, propertyNames, expiresAt]
+      properties:
+        organizationName: { type: string }
+        role: { type: string }
+        propertyNames:
+          type: array
+          items: { type: string }
+        expiresAt: { $ref: "#/components/schemas/Timestamp" }
+
+    InvitationAccepted:
+      type: object
+      required: [organization, memberships]
+      properties:
+        organization:
+          $ref: "#/components/schemas/Organization"
+        memberships:
+          type: array
+          items:
+            $ref: "#/components/schemas/RoleMembership"
+
+    OwnerDashboard:
+      type: object
+      description: KPI summary for SCR-07. Field set proposed for review
+        (backend map §8, point 6).
+      required: [verificationStatus, listingCounts, alerts]
+      properties:
+        verificationStatus:
+          $ref: "#/components/schemas/VerificationOverallStatus"
+        listingCounts:
+          type: object
+          required: [total, active, paused, pendingReview]
+          properties:
+            total: { type: integer }
+            active: { type: integer }
+            paused: { type: integer }
+            pendingReview: { type: integer }
+        alerts:
+          type: array
+          items:
+            type: object
+            required: [kind, message]
+            properties:
+              kind: { type: string }
+              message: { type: string }
+
+    VerificationOverallStatus:
+      type: string
+      enum: [NOT_SUBMITTED, PENDING, PARTIALLY_REJECTED, REJECTED, APPROVED]
+
+    DocumentType:
+      type: string
+      enum: [GHANA_CARD, OWNERSHIP_PROOF, GTA_LICENCE]
+
+    DocumentPresignRequest:
+      type: object
+      required: [documentType, contentType, sizeBytes]
+      properties:
+        documentType:
+          $ref: "#/components/schemas/DocumentType"
+        contentType:
+          type: string
+          enum: [image/jpeg, image/png, application/pdf]
+        sizeBytes:
+          type: integer
+          maximum: 5242880
+          description: At most 5 MB (NFR-17, TA-13).
+
+    PhotoPresignRequest:
+      type: object
+      required: [contentType, sizeBytes]
+      properties:
+        contentType:
+          type: string
+          enum: [image/jpeg, image/png, image/webp]
+        sizeBytes:
+          type: integer
+          maximum: 5242880
+
+    PresignResponse:
+      type: object
+      required: [uploadUrl, expiresAt, objectKey]
+      properties:
+        uploadUrl:
+          type: string
+          description: Short-lived pre-signed PUT URL for R2.
+        expiresAt: { $ref: "#/components/schemas/Timestamp" }
+        objectKey: { type: string }
+
+    VerificationSubmit:
+      type: object
+      required: [documents]
+      properties:
+        documents:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [documentType, objectKey]
+            properties:
+              documentType:
+                $ref: "#/components/schemas/DocumentType"
+              objectKey: { type: string }
+        ghanaCardNumberEncrypted:
+          type: string
+          description: Ghana Card number, client-encrypted per NFR-28/TA-09.
+            Never returned by any endpoint.
+
+    VerificationDocument:
+      type: object
+      required: [documentType, status]
+      properties:
+        documentType:
+          $ref: "#/components/schemas/DocumentType"
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED]
+        fixNote:
+          type: [string, "null"]
+          description: Present when the document was rejected — what to fix.
+        submittedAt:
+          type: [string, "null"]
+          format: date-time
+
+    VerificationCase:
+      type: object
+      required: [status, documents]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        status:
+          $ref: "#/components/schemas/VerificationOverallStatus"
+        documents:
+          type: array
+          items:
+            $ref: "#/components/schemas/VerificationDocument"
+        submittedAt:
+          type: [string, "null"]
+          format: date-time
+        decidedAt:
+          type: [string, "null"]
+          format: date-time
+
+    ListingStatus:
+      type: string
+      enum: [DRAFT, PENDING_REVIEW, CORRECTIONS_REQUESTED, ACTIVE, PAUSED, REJECTED]
+      description: Draft → Pending Review → (Corrections Requested → edit →
+        resubmit) → Active ⇄ Paused, or Rejected (FR-13, T3 SCR-13).
+
+    PropertyList:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PropertySummary"
+        total: { type: integer }
+
+    PropertySummaryList:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PropertySummary"
+        total: { type: integer }
+
+    PropertySummary:
+      type: object
+      required: [id, name, town, accommodationType, status, coverPhotoUrl, fromPricePesewas]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        name: { type: string }
+        town: { type: string }
+        area:
+          type: [string, "null"]
+        accommodationType: { type: string }
+        status:
+          $ref: "#/components/schemas/ListingStatus"
+        coverPhotoUrl: { type: string }
+        fromPricePesewas:
+          type: integer
+          description: Lowest nightly rate across units, integer pesewas.
+        currency:
+          type: string
+          const: GHS
+        verifiedOwner: { type: boolean }
+
+    PropertyCreate:
+      type: object
+      required: [name, accommodationType, town]
+      properties:
+        name: { type: string, minLength: 3 }
+        description: { type: string }
+        accommodationType: { type: string }
+        town: { type: string }
+        area:
+          type: [string, "null"]
+        address: { type: string }
+        latitude:
+          type: [number, "null"]
+        longitude:
+          type: [number, "null"]
+        amenities:
+          type: array
+          items: { type: string }
+        houseRules: { type: string }
+
+    PropertyUpdate:
+      type: object
+      description: Partial update; also carries the pause/reactivate switch.
+      minProperties: 1
+      properties:
+        name: { type: string, minLength: 3 }
+        description: { type: string }
+        accommodationType: { type: string }
+        town: { type: string }
+        area:
+          type: [string, "null"]
+        address: { type: string }
+        amenities:
+          type: array
+          items: { type: string }
+        houseRules: { type: string }
+        status:
+          type: string
+          enum: [PAUSED, ACTIVE]
+          description: |
+            Only these two transitions are allowed via PATCH (FR-13);
+            submissions go through the /submit endpoint.
+
+    PropertyDetail:
+      type: object
+      required: [id, name, accommodationType, town, status, units, photos, createdAt, updatedAt]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        name: { type: string }
+        description:
+          type: [string, "null"]
+        accommodationType: { type: string }
+        town: { type: string }
+        area:
+          type: [string, "null"]
+        address:
+          type: [string, "null"]
+        amenities:
+          type: array
+          items: { type: string }
+        houseRules:
+          type: [string, "null"]
+        status:
+          $ref: "#/components/schemas/ListingStatus"
+        units:
+          type: array
+          items:
+            $ref: "#/components/schemas/Unit"
+        photos:
+          type: array
+          items:
+            $ref: "#/components/schemas/Photo"
+        correctionsRequested:
+          type: array
+          description: The fix list from the admin when status is CORRECTIONS_REQUESTED.
+          items: { type: string }
+        createdAt: { $ref: "#/components/schemas/Timestamp" }
+        updatedAt: { $ref: "#/components/schemas/Timestamp" }
+
+    PropertyPublicDetail:
+      type: object
+      required: [id, name, description, town, accommodationType, units, photos, fromPricePesewas, currency, verifiedOwner, houseRules, amenities]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        name: { type: string }
+        description: { type: string }
+        town: { type: string }
+        area:
+          type: [string, "null"]
+        address: { type: string }
+        accommodationType: { type: string }
+        amenities:
+          type: array
+          items: { type: string }
+        houseRules: { type: string }
+        units:
+          type: array
+          items:
+            $ref: "#/components/schemas/UnitPublic"
+        photos:
+          type: array
+          items:
+            $ref: "#/components/schemas/Photo"
+        fromPricePesewas:
+          type: integer
+          description: Lowest nightly rate, integer pesewas (250000 = GH₵2,500.00).
+        currency:
+          type: string
+          const: GHS
+        verifiedOwner:
+          type: boolean
+          description: Verified Owner badge (T3 SCR-25).
+
+    Unit:
+      type: object
+      required: [id, name, ratePesewas, billingPeriod, maxGuests]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        name: { type: string }
+        category:
+          type: [string, "null"]
+          description: Optional unit grouping (P-02).
+        ratePesewas:
+          type: integer
+          minimum: 0
+          description: Rate in integer pesewas.
+        currency:
+          type: string
+          const: GHS
+        billingPeriod:
+          type: string
+          enum: [NIGHTLY]
+          description: NIGHTLY is the only active billing period in R1
+            (billing-period seam).
+        maxGuests:
+          type: integer
+          minimum: 1
+        quantity:
+          type: integer
+          minimum: 1
+          description: Number of identical units this record represents.
+
+    UnitPublic:
+      type: object
+      required: [id, name, ratePesewas, billingPeriod, maxGuests]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        name: { type: string }
+        category:
+          type: [string, "null"]
+        ratePesewas: { type: integer, minimum: 0 }
+        currency:
+          type: string
+          const: GHS
+        billingPeriod:
+          type: string
+          enum: [NIGHTLY]
+        maxGuests: { type: integer, minimum: 1 }
+
+    UnitInput:
+      type: object
+      required: [name, ratePesewas, billingPeriod, maxGuests]
+      properties:
+        name: { type: string, minLength: 1 }
+        category:
+          type: [string, "null"]
+        ratePesewas: { type: integer, minimum: 0 }
+        billingPeriod:
+          type: string
+          enum: [NIGHTLY]
+        maxGuests: { type: integer, minimum: 1 }
+        quantity: { type: integer, minimum: 1, default: 1 }
+
+    Photo:
+      type: object
+      required: [id, url, isCover]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        url:
+          type: string
+          description: Optimised WebP served via the Cloudflare CDN.
+        isCover: { type: boolean }
+        position: { type: integer }
+
+    PhotoOrder:
+      type: object
+      required: [photoIds]
+      properties:
+        photoIds:
+          type: array
+          description: Complete photo id list in display order; the first is
+            the cover photo.
+          items:
+            $ref: "#/components/schemas/UUID"
+
+    AvailabilityCalendar:
+      type: object
+      required: [unitId, month, days]
+      properties:
+        unitId: { $ref: "#/components/schemas/UUID" }
+        month: { type: string, examples: ["2026-11"] }
+        days:
+          type: array
+          items:
+            type: object
+            required: [date, state]
+            properties:
+              date:
+                type: string
+                format: date
+                description: Africa/Accra calendar day.
+              state:
+                type: string
+                enum: [AVAILABLE, OWNER_BLOCKED]
+                description: BOOKED arrives with Sprint 2 bookings.
+
+    AvailabilityBlock:
+      type: object
+      required: [id, unitId, start, end, reason, createdAt]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        unitId: { $ref: "#/components/schemas/UUID" }
+        start: { $ref: "#/components/schemas/Timestamp" }
+        end: { $ref: "#/components/schemas/Timestamp" }
+        reason:
+          type: string
+          enum: [OWNER_BLOCK]
+          description: HOLD and BOOKING reasons arrive via migration in
+            Sprint 2 (availability seam).
+        createdAt: { $ref: "#/components/schemas/Timestamp" }
+
+    AvailabilityBlockInput:
+      type: object
+      required: [start, end]
+      properties:
+        start:
+          type: string
+          format: date-time
+          description: UTC instant for the first blocked night.
+        end:
+          type: string
+          format: date-time
+          description: UTC instant for the end of the block (must follow start).
+
+    AdminDashboard:
+      type: object
+      description: KPI summary for SCR-18. Field set proposed for review
+        (backend map §8, point 6).
+      required: [pendingVerifications, pendingListings, totalUsers, suspendedUsers]
+      properties:
+        pendingVerifications: { type: integer }
+        pendingListings: { type: integer }
+        totalUsers: { type: integer }
+        suspendedUsers: { type: integer }
+        recentAlerts:
+          type: array
+          items:
+            type: object
+            properties:
+              kind: { type: string }
+              message: { type: string }
+              at: { $ref: "#/components/schemas/Timestamp" }
+
+    ReviewQueueList:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReviewQueueItem"
+        total: { type: integer }
+
+    ReviewQueueItem:
+      type: object
+      required: [id, kind, title, organisationName, submittedAt, status]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        kind:
+          type: string
+          enum: [VERIFICATION, LISTING]
+        title: { type: string }
+        organisationName: { type: string }
+        submittedAt: { $ref: "#/components/schemas/Timestamp" }
+        status:
+          type: string
+          enum: [PENDING, DECIDED]
+
+    ReviewDetail:
+      type: object
+      required: [id, kind, status, submittedAt]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        kind:
+          type: string
+          enum: [VERIFICATION, LISTING]
+        status:
+          type: string
+          enum: [PENDING, APPROVED, CORRECTIONS_REQUESTED, REJECTED]
+        organisationName: { type: string }
+        submittedAt: { $ref: "#/components/schemas/Timestamp" }
+        decidedAt:
+          type: [string, "null"]
+          format: date-time
+        listing:
+          $ref: "#/components/schemas/PropertyDetail"
+        verificationCase:
+          $ref: "#/components/schemas/VerificationCase"
+        documentUrls:
+          type: array
+          description: Short-lived pre-signed GET URLs for verification
+            documents (NFR-24) — present for VERIFICATION kinds.
+          items:
+            type: object
+            properties:
+              documentType:
+                $ref: "#/components/schemas/DocumentType"
+              url: { type: string }
+              expiresAt: { $ref: "#/components/schemas/Timestamp" }
+
+    ReviewDecisionRequest:
+      type: object
+      required: [decision]
+      properties:
+        decision:
+          type: string
+          enum: [APPROVE, REQUEST_CORRECTIONS, REJECT]
+        corrections:
+          type: array
+          description: Required fix list — required when decision is
+            REQUEST_CORRECTIONS.
+          items: { type: string }
+        rejectedDocumentTypes:
+          type: array
+          description: For per-document corrections on VERIFICATION kinds.
+          items:
+            $ref: "#/components/schemas/DocumentType"
+        reason:
+          type: string
+          description: Required when decision is REJECT.
+
+    AdminUserList:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminUser"
+        total: { type: integer }
+
+    AdminUser:
+      type: object
+      required: [id, fullName, email, status, roles, createdAt]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        fullName: { type: string }
+        email: { type: string, format: email }
+        status:
+          type: string
+          enum: [ACTIVE, SUSPENDED]
+        roles:
+          type: array
+          items: { type: string }
+        createdAt: { $ref: "#/components/schemas/Timestamp" }
+        suspendedAt:
+          type: [string, "null"]
+          format: date-time
+
+    SuspendRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason: { type: string, minLength: 3 }
+
+    PlatformSettings:
+      type: object
+      required: [settings, policyVersion]
+      properties:
+        settings:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlatformSetting"
+        policyVersion: { type: string }
+
+    PlatformSetting:
+      type: object
+      required: [key, value]
+      properties:
+        key: { type: string }
+        value: { type: string }
+        description: { type: string }
+        updatedAt: { $ref: "#/components/schemas/Timestamp" }
+
+    PlatformSettingsUpdate:
+      type: object
+      minProperties: 1
+      properties:
+        settings:
+          type: array
+          items:
+            type: object
+            required: [key, value]
+            properties:
+              key: { type: string }
+              value: { type: string }
+        policyVersion: { type: string }
+
+    AuditLogList:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/AuditLogEntry"
+        total: { type: integer }
+
+    AuditLogEntry:
+      type: object
+      description: One append-only `audit.audit_log` row (BRL-13, NFR-66).
+        Rendered read-only in SCR-21C with Ghana-time display.
+      required: [id, actorId, orgId, action, entityType, entityId, createdAt]
+      properties:
+        id: { $ref: "#/components/schemas/UUID" }
+        actorId: { $ref: "#/components/schemas/UUID" }
+        actorName: { type: string }
+        orgId: { $ref: "#/components/schemas/UUID" }
+        action: { type: string }
+        entityType: { type: string }
+        entityId: { type: string }
+        metadata:
+          type: object
+          additionalProperties: true
+        createdAt: { $ref: "#/components/schemas/Timestamp" }
