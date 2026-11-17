@@ -27,6 +27,8 @@ spring:
       add-mappings: false
 
 findstay:
+  cors:
+    allowed-origins: http://localhost:3000,https://findstay-web-staging.obboyebossman.workers.dev
   r2:
     endpoint: ${R2_ENDPOINT:}
     access-key-id: ${R2_ACCESS_KEY_ID:}
