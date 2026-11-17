@@ -19,7 +19,7 @@ const accounts = [
  * nav wraps on small screens, no JavaScript needed for the shell.
  */
 export const AppLayout: React.FC = () => (
-  <div className="flex min-h-screen flex-col bg-ivory text-earth">
+  <div className="flex min-h-screen flex-col bg-white text-earth">
     <header className="bg-olive text-ivory">
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
         <Link to="/" className="font-display text-label font-bold tracking-tight">

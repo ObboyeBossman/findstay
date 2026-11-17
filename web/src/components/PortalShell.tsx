@@ -84,7 +84,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
   };
 
   return (
-    <div className="flex min-h-screen w-full overflow-x-hidden bg-ivory text-earth">
+    <div className="flex min-h-screen w-full overflow-x-hidden bg-white text-earth">
       {/* Desktop persistent sidebar (240px) */}
       <aside
         aria-label={`${portalName} sidebar`}

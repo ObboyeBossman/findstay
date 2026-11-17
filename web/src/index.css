@@ -14,7 +14,7 @@
   --color-terracotta: #bc6746;     /* large accents & borders */
   --color-terracotta-dark: #964b2f;/* contrast-safe CTA & text (5.4:1 on Ivory/white) */
   --color-sand: #dccb91;           /* supporting accents, skeleton base */
-  --color-ivory: #f7f3ea;          /* warm page canvas */
+  --color-ivory: #f7f3ea;          /* warm supporting surface */
   --color-earth: #3e2f26;          /* primary text & dark surfaces (11.4:1 on Ivory) */
 
   /* Surfaces & borders */
@@ -42,7 +42,7 @@
 
 @layer base {
   body {
-    background-color: var(--color-ivory);
+    background-color: #ffffff;
     color: var(--color-earth);
   }
 
