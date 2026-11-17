@@ -98,6 +98,19 @@ Every environment starts with exactly these rows (fixed UUIDv7 ids and
 Future value changes are **new migrations** (`V1_14+`), never edits to
 `V1_13`. Admins manage the settings table at runtime from S1-16.
 
+## The public health surface (what CI and the website call)
+
+- `GET /api/v1/health` — the platform health under the API's own prefix
+  (TA-02); the website's footer SystemStatus and the CI deploy check call
+  this. `200 {"status":"UP","components":{…}}` when healthy, `503` with
+  `{"status":"DOWN"}` when not — statuses only, no details leaked.
+- `GET /actuator/health` and `GET /actuator/info` — public too (`info` carries
+  the build identity from the `build-info` plugin, so a deploy can be
+  verified as *the new build*, not the previous one).
+- Everything else requires a Supabase JWT (JWKS-validated) — one
+  `SecurityConfig` rule in `shared`, the business endpoints layer their
+  authorization on top of it.
+
 ## Tests — the throwaway database and the `@Req` rule (S1-01-T12)
 
 ```bash

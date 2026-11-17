@@ -129,6 +129,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <!-- build identity for /actuator/info — the CI deploy
+                         check (S1-01-T11) waits for the build time to change,
+                         proving staging runs the NEW jar, not the old one. -->
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
