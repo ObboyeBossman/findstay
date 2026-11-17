@@ -30,7 +30,7 @@ export const AdminLayout: React.FC = () => (
   <PortalShell
     portalName="Admin Portal"
     portalBadge="Admin"
-    headerClassName="bg-earth text-ivory"
+    badgeClassName="bg-earth text-ivory"
     contextLabel="Platform Governance"
     navItems={adminNavItems}
     secondaryItems={adminSecondaryItems}

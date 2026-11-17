@@ -20,6 +20,7 @@
   /* Surfaces & borders */
   --color-surface-card: #ffffff;
   --color-surface-muted: #efeae0;
+  --color-surface-hover: #f3f3f1;
   --color-border-subtle: #d6cdbd;
 
   /* Contrast-safe semantic status tokens (pair with icon + text label per NFR-07) */

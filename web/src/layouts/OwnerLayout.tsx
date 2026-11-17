@@ -32,7 +32,7 @@ export const OwnerLayout: React.FC = () => (
   <PortalShell
     portalName="Owner Portal"
     portalBadge="Owner"
-    headerClassName="bg-olive text-ivory"
+    badgeClassName="bg-olive text-ivory"
     contextLabel="OrgScope: Organization Space"
     navItems={ownerNavItems}
     secondaryItems={ownerSecondaryItems}

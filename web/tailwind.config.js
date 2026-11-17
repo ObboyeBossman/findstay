@@ -34,6 +34,7 @@ export default {
         surface: {
           card: 'var(--color-surface-card)',
           muted: 'var(--color-surface-muted)',
+          hover: 'var(--color-surface-hover)',
         },
         border: {
           subtle: 'var(--color-border-subtle)',
