@@ -20,6 +20,12 @@
         <java.version>21</java.version>
         <spring-modulith.version>1.2.5</spring-modulith.version>
         <aws-sdk.version>2.29.15</aws-sdk.version>
+        <!-- Testcontainers newer than the Boot-managed 1.19.x: current Docker
+             engines (incl. GitHub's ubuntu-26 runners) reject client API
+             versions older than 1.40, which 1.19.x/1.20.x's docker-java
+             requests by default. 1.21.x carries a docker-java that speaks to
+             modern daemons; CI additionally pins DOCKER_API_VERSION. -->
+        <testcontainers.version>1.21.4</testcontainers.version>
     </properties>
 
     <dependencyManagement>
@@ -129,6 +135,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <!-- build identity for /actuator/info — the CI deploy
+                         check (S1-01-T11) waits for the build time to change,
+                         proving staging runs the NEW jar, not the old one. -->
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

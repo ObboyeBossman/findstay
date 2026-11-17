@@ -1,0 +1,126 @@
+name: CI
+
+# The automatic checker (S1-01-T11): every proposal is built, tested and
+# boundary-checked before it can merge; every merge to `staging` is published
+# and verified. Green mark = safe; red mark = staging was protected.
+on:
+  pull_request:
+  push:
+    branches: [staging]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: web — typecheck & build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install (npm ci, workspaces)
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Production build
+        run: npm run build
+
+  api:
+    name: api — tests, @Req & module boundaries
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      # mvn test = unit tests + the Testcontainers suite on a real throwaway
+      # PostgreSQL (Docker is present on the runner) + the @Req tagging check
+      # + ApplicationModules.verify() (the module-boundary check, C5).
+      # DOCKER_API_VERSION: the runner's modern daemon rejects docker-java's
+      # legacy default (1.32 < minimum 1.40); pin a version every Docker 25+
+      # daemon speaks.
+      - name: Build & test (incl. Modulith boundary check)
+        working-directory: api
+        run: mvn -B test
+        env:
+          DOCKER_API_VERSION: '1.44'
+
+  publish-staging:
+    name: publish — staging, only on green
+    needs: [web, api]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Do we have the Cloudflare token?
+        id: cf-token
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::CLOUDFLARE_API_TOKEN is not set — the web deploy step will be skipped. Add the repo secret (or connect Cloudflare Workers Builds) to publish the website from CI. The API on Render publishes itself from this branch."
+          fi
+      - name: Install (npm ci, workspaces)
+        run: npm ci
+      - name: Build the website for staging
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: https://findstay-api-staging.onrender.com/api/v1
+      - name: Publish the website to Cloudflare Workers
+        if: steps.cf-token.outputs.present == 'true'
+        working-directory: web
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # The API publishes itself: the Render web service auto-deploys every
+      # push to `staging`. This step verifies the deployment landed and is
+      # healthy — a red build here means staging was NOT updated safely.
+      - name: Verify the API deployment on Render
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://findstay-api-staging.onrender.com"
+          echo "Waiting for Render to finish deploying this commit (cold starts are slow)…"
+          before=""
+          if curl -sf -m 90 "$base/actuator/info" > /tmp/info-before.json 2>/dev/null; then
+            before=$(grep -o '"time":"[^"]*"' /tmp/info-before.json || true)
+            echo "previous build: $before"
+          else
+            echo "no previous build info reachable (first deploy or sleeping service)"
+          fi
+          deadline=$(( $(date +%s) + 18 * 60 ))
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            if curl -sf -m 90 "$base/actuator/info" > /tmp/info-now.json 2>/dev/null; then
+              now=$(grep -o '"time":"[^"]*"' /tmp/info-now.json || true)
+              if [ -n "$now" ] && [ "$now" != "$before" ]; then
+                echo "new build detected: $now"
+                if curl -sf -m 90 "$base/actuator/health" | grep -q '"UP"'; then
+                  echo "staging API is healthy on the new build ✔"
+                  exit 0
+                fi
+              fi
+            fi
+            echo "… not yet (Render builds take minutes; retrying)"
+            sleep 30
+          done
+          echo "::error::The staging API did not become healthy on a new build within 18 minutes — check the Render dashboard."
+          exit 1

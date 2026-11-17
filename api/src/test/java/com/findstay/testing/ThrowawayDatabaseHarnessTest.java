@@ -50,7 +50,7 @@ class ThrowawayDatabaseHarnessTest extends AbstractIntegrationTest {
                 "expected at least the Sprint 1 baseline migrations, got " + history);
         assertTrue(history.stream().allMatch(r -> Boolean.TRUE.equals(r.get("success"))),
                 "a migration failed on the throwaway database: " + history);
-        assertTrue(history.stream().anyMatch(r -> "13".equals(String.valueOf(r.get("version")))),
+        assertTrue(history.stream().anyMatch(r -> "1.13".equals(String.valueOf(r.get("version")))),
                 "V1_13 (the T15 reference-list seeds) is part of every fresh database");
     }
 
@@ -92,38 +92,40 @@ class ThrowawayDatabaseHarnessTest extends AbstractIntegrationTest {
     @Req("S1-08-AC2")
     void auditRowsCannotBeEditedOrDeletedEvenAtTheDatabaseRoleLevel() throws SQLException {
         // A connection OUTSIDE the Spring-managed transaction: SET ROLE is
-        // session state, and everything it does here is rolled back by hand.
-        try (Connection c = dataSource.getConnection()) {
+        // session state, and everything here is rolled back by hand. In
+        // PostgreSQL an error (the denial itself) aborts the transaction, so
+        // each probe runs in its own transaction: insert, prove the denial,
+        // roll back.
+        try (Connection c = dataSource.getConnection(); Statement st = c.createStatement()) {
             c.setAutoCommit(false);
-            try (Statement st = c.createStatement()) {
-                st.execute("SET ROLE findstay_app");
 
-                // INSERT + SELECT are granted — the app can append:
-                st.executeUpdate("""
-                        INSERT INTO audit.audit_log (id, actor_id, org_id, action,
-                                                      entity_type, entity_id, metadata_json, created_at)
-                        VALUES ('00000000-0000-7000-8000-000000000001',
-                                '00000000-0000-7000-8000-000000000002',
-                                NULL, 'test.harness.probe', 'harness', 'probe', '{}', now())
-                        """);
+            st.execute("SET ROLE findstay_app");
+            appendAuditProbeRow(st); // INSERT + SELECT are granted — the app can append
+            expectPermissionDenied(st, "UPDATE audit.audit_log SET action = 'tampered'");
+            st.execute("ROLLBACK");
 
-                // UPDATE is NOT granted (S1-08 AC 2 / DEC-S1-01/K):
-                SQLException denied = assertThrows(SQLException.class,
-                        () -> st.executeUpdate("UPDATE audit.audit_log SET action = 'tampered'"));
-                assertEquals("42501", denied.getSQLState(),
-                        "permission denied expected, got: " + denied.getMessage());
-
-                // DELETE neither:
-                SQLException deniedToo = assertThrows(SQLException.class,
-                        () -> st.executeUpdate("DELETE FROM audit.audit_log"));
-                assertEquals("42501", deniedToo.getSQLState());
-            } finally {
-                try (Statement st = c.createStatement()) {
-                    st.execute("ROLLBACK"); // remove the probe row; keep the DB pristine
-                }
-                c.setAutoCommit(true);
-            }
+            st.execute("SET ROLE findstay_app");
+            appendAuditProbeRow(st);
+            expectPermissionDenied(st, "DELETE FROM audit.audit_log");
+            st.execute("ROLLBACK");
         }
+    }
+
+    private static void appendAuditProbeRow(Statement st) throws SQLException {
+        st.executeUpdate("""
+                INSERT INTO audit.audit_log (id, actor_id, org_id, action,
+                                              entity_type, entity_id, metadata_json, created_at)
+                VALUES ('00000000-0000-7000-8000-000000000001',
+                        '00000000-0000-7000-8000-000000000002',
+                        NULL, 'test.harness.probe', 'harness', 'probe', '{}', now())
+                """);
+    }
+
+    private static void expectPermissionDenied(Statement st, String sql) {
+        SQLException denied = assertThrows(SQLException.class, () -> st.executeUpdate(sql),
+                "expected permission denied for: " + sql);
+        assertEquals("42501", denied.getSQLState(),
+                "permission denied expected, got: " + denied.getMessage());
     }
 
     @Test
