@@ -342,6 +342,10 @@ Covers **Browse & Search (`SCR-22` – `SCR-25`)** in Sprint 1 (including **Veri
 > [!NOTE]
 > **Product Owner clarification (2026-11-16):** A person may browse public accommodations without registering or signing in. FindStay may keep low-risk browsing continuity in a temporary, first-party visitor session. If the person later authenticates, the system claims that session's recently viewed properties for the account and returns the person to the page or protected action they were using. Leaving or cancelling authentication creates no account, booking, or payment obligation.
 
+![FindStay guest journey: R1 public browsing and planned Sprint 2+ account handoff and booking](../diagrams/guest-journey.svg)
+
+Editable source: [guest-journey.drawio](../diagrams/guest-journey.drawio). The detailed Mermaid flow below remains the contract reference for individual branches and screen IDs.
+
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
 flowchart TD
@@ -350,9 +354,9 @@ flowchart TD
     SCRERR -- "Retry" --> NetCheck
 
     NetCheck -- "Yes" --> SignedAtEntry{"Already<br/>Signed In?"}
-    SignedAtEntry -- "No" --> VisitorSession["Create/Resume Temporary Visitor Session [Sprint 2+]<br/>(Secure First-Party Cookie · No Account)"]
-    VisitorSession --> SCR22
-    SignedAtEntry -- "Yes" --> SCR22["2. SCR-22: Homepage (Browse & Search)"]
+    SignedAtEntry -- "No (R1 browsing)" --> SCR22["2. SCR-22: Homepage (Browse & Search)"]
+    SignedAtEntry -- "Yes" --> SCR22
+    SignedAtEntry -. "Optional continuity [Sprint 2+]" .-> VisitorSession["Temporary Visitor Session<br/>(Secure First-Party Cookie · No Account)"]
     SCR22 --> HomeEmpty{"Any Published<br/>Properties?"}
     HomeEmpty -- "No" --> EmptyHome["Empty State: No Accommodations Listed Yet"]
     HomeEmpty -- "Yes" --> SCR23["3. SCR-23: Search Accommodation<br/>(Location, Dates, Guests, Filters)"]

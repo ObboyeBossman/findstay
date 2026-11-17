@@ -113,77 +113,16 @@ query dependency, no FK; T8 draws it as a dashed event arrow.
 
 ## 2. The Backend Map — One Picture
 
-The system in one picture: the React web app (screens for guests, owners/staff,
-admins), Supabase Auth (the only sign-up/sign-in/reset system the browser talks
-to), the Spring Boot API on Render (the ten modules behind `/api/v1`), Cloudflare
-R2 (photos public, verification documents private), and PostgreSQL on Render
-(one database, tables owned module by module, isolated by `organization_id`).
+The system in one picture: the React web app (guest, owner/staff, and admin
+screens), Supabase Auth (the only browser-facing authentication service), the
+Spring Boot API (ten modules behind `/api/v1`), Cloudflare R2 (public property
+photos and private verification documents), PostgreSQL, and the transactional
+email provider. This is the approved target architecture, not a claim that all
+of these capabilities are implemented.
 
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#ffffff', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'nodeBkg': '#ffffff', 'nodeBorder': '#000000', 'clusterBkg': '#ffffff', 'clusterBorder': '#000000', 'edgeLabelBackground': '#ffffff', 'textColor': '#000000' }}}%%
-flowchart LR
-    subgraph BROWSER["React Web App — Cloudflare Workers (screens)"]
-        SCR_G["Guest screens<br/>SCR-22…SCR-25, SCR-29"]
-        SCR_AUTH["Auth screens<br/>SCR-01…SCR-06D"]
-        SCR_OWN["Owner / Staff screens<br/>SCR-07…SCR-16"]
-        SCR_ADM["Admin screens<br/>SCR-17…SCR-21C"]
-    end
+![FindStay target architecture for Release R1](../diagrams/findstay-architecture.svg)
 
-    subgraph SUPA["Supabase Auth (Auth only — TA-01, TA-02)"]
-        SA["supabase.auth.*<br/>sign-up · OTP · email link · password reset<br/>1-hour JWT + refresh rotation (P-09)"]
-        JWKS["JWKS endpoint"]
-        SADM["Admin API (service role)<br/>invite · revoke sessions — server-side only"]
-    end
-
-    subgraph API["Spring Boot 3 — Java 21 · Spring Modulith · Render — /api/v1"]
-        direction TB
-        MOD_ID["identity"]
-        MOD_ORG["organization"]
-        MOD_VER["verification"]
-        MOD_LST["listing"]
-        MOD_AVL["availability"]
-        MED["media"]
-        AUD["audit"]
-        NOT["notification"]
-        ADM["admin"]
-        SHARED["shared kernel<br/>Money · Clock · OrgScope · events · jobs (T7)"]
-    end
-
-    subgraph R2["Cloudflare R2"]
-        PUB["findstay-property-images<br/>public · WebP via CDN"]
-        PRIV["findstay-verification-docs<br/>private · short-lived pre-signed URLs"]
-    end
-
-    MAIL["Email provider<br/>(swappable adapter — P-08)"]
-
-    subgraph DB["PostgreSQL 16 — Render · Flyway V1_01…V1_19"]
-        TBL["Tables owned module by module<br/>user_account · organization · membership ·<br/>verification_case · property · unit · rate_plan ·<br/>availability_block · media_asset · audit_log ·<br/>notification · platform_setting …"]
-    end
-
-    SCR_AUTH -- "1 sign-up · OTP · reset<br/>(supabase.auth.* — never /api/v1;<br/>Supabase sends those emails)" --> SA
-    SCR_G -- "4 public reads<br/>/properties/featured · /search · /{id}" --> MOD_LST
-    SCR_OWN -- "5 owner APIs [OrgScope]<br/>/owner/**" --> API
-    SCR_ADM -- "6 admin APIs<br/>/admin/**" --> ADM
-    SCR_AUTH -- "7 POST /auth/provision · GET /me<br/>Bearer JWT (DEC-S1-01/A)" --> MOD_ID
-
-    API -- "2 validate every Bearer JWT<br/>(TA-08, P-09)" --> JWKS
-    MOD_ID -- "15 suspend → revoke sessions +<br/>admin-create → invite (service role)" --> SADM
-
-    MOD_LST -. "8 photo upload: presign via media" .-> MED
-    MOD_VER -. "8 document upload: presign via media" .-> MED
-    ADM -. "review queue: verification cases" .-> MOD_VER
-    ADM -. "review queue: listing submissions" .-> MOD_LST
-    ADM -. "audit-log reads" .-> AUD
-    MED -- "9 issue short-lived<br/>pre-signed PUT/GET" --> PRIV
-    MED -- "10 promote optimised WebP" --> PUB
-    BROWSER -. "11 upload bytes straight to R2<br/>with pre-signed URL · serve via CDN" .-> R2
-
-    API -- "12 one database ·<br/>OrgScope on every owner query" --> DB
-
-    BROWSER -- "13 inbox reads · bell badge<br/>GET /me/notifications (polling, R1)" --> NOT
-    NOT -- "14 transactional email<br/>(invites · decisions · suspension)" --> MAIL
-    MOD_ID & MOD_ORG & MOD_VER & MOD_LST & MOD_AVL & MED & AUD & NOT & ADM -.-> SHARED
-```
+Editable source: [findstay-architecture.drawio](../diagrams/findstay-architecture.drawio).
 
 Reading the numbered flows: (1) the browser only ever authenticates against
 Supabase Auth; (2) every `/api/v1` request carries the Supabase-issued JWT, which
