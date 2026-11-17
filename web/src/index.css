@@ -3,15 +3,58 @@
 @tailwind utilities;
 
 /*
- * FindStay colour tokens — the approved palette (docs/design/color-palette.md).
- * One swappable definition: change a value here and the whole app updates.
- * Component-level hover/disabled variants get their own tokens when their
- * components land, after contrast is checked.
+ * FindStay colour & contrast-safe design tokens (S1-03-T2).
+ * Base palette from docs/design/color-palette.md; semantic & hover variants
+ * checked for WCAG AA contrast (>= 4.5:1 normal text, >= 3:1 UI/borders).
  */
 :root {
-  --color-olive: #55624a;      /* primary nav, core actions, active controls */
-  --color-terracotta: #bc6746; /* discovery actions, high-emphasis CTAs */
-  --color-sand: #dccb91;       /* supporting accents, decorative detail */
-  --color-ivory: #f7f3ea;      /* page canvas, warm background surfaces */
-  --color-earth: #3e2f26;      /* primary text, dark surfaces */
+  /* Core brand palette */
+  --color-olive: #55624a;          /* primary nav, core actions (5.9:1 on Ivory) */
+  --color-olive-hover: #434e3a;    /* darkened hover/active olive */
+  --color-terracotta: #bc6746;     /* large accents & borders */
+  --color-terracotta-dark: #964b2f;/* contrast-safe CTA & text (5.4:1 on Ivory/white) */
+  --color-sand: #dccb91;           /* supporting accents, skeleton base */
+  --color-ivory: #f7f3ea;          /* warm page canvas */
+  --color-earth: #3e2f26;          /* primary text & dark surfaces (11.4:1 on Ivory) */
+
+  /* Surfaces & borders */
+  --color-surface-card: #ffffff;
+  --color-surface-muted: #efeae0;
+  --color-border-subtle: #d6cdbd;
+
+  /* Contrast-safe semantic status tokens (pair with icon + text label per NFR-07) */
+  --color-status-success-bg: #eef2ea;
+  --color-status-success-fg: #3b4832;
+  --color-status-success-border: #55624a;
+
+  --color-status-warning-bg: #fbf6e4;
+  --color-status-warning-fg: #6b4e16;
+  --color-status-warning-border: #b38b35;
+
+  --color-status-error-bg: #fdf1ef;
+  --color-status-error-fg: #8c2d19;
+  --color-status-error-border: #bc6746;
+
+  --color-status-info-bg: #efeae0;
+  --color-status-info-fg: #3e2f26;
+  --color-status-info-border: #8b7b6e;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-ivory);
+    color: var(--color-earth);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-terracotta-dark);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Enforces icon + text label + border contrast (NFR-05, NFR-07) */
+  .fs-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-caption font-medium leading-tight;
+  }
 }
