@@ -10,13 +10,13 @@ The database schema is created **only** by the numbered Flyway scripts in
 [`src/main/resources/db/migration/`](./src/main/resources/db/migration/).
 Never change the database by hand; never edit a script that has already run
 anywhere (add a new one instead). Sprint 1 owns the `V1_01`–`V1_19` range;
-the next free version today is **`V1_13`** (T15's reference-list seeds).
+the next free version today is **`V1_14`**.
 
 | Script | Module / contents |
 | :--- | :--- |
 | `V1_01` | `btree_gist` extension (project setup) |
 | `V1_02` | Spring Modulith `event_publication` (project setup) |
-| `V1_03` | lookup tables: `listing.accommodation_type`, `listing.billing_period`, `admin.platform_setting` (structure; **values are T15's**, issue #24) |
+| `V1_03` | lookup tables: `listing.accommodation_type`, `listing.billing_period`, `admin.platform_setting` (structure; values are T15's, issue #24) |
 | `V1_04` | `identity` — accounts, profiles, RBAC catalogue + the 4 seeded platform roles |
 | `V1_05` | `organization` — companies, memberships, invitations |
 | `V1_06` | `media` — R2 asset registry + the single ownership link |
@@ -26,6 +26,7 @@ the next free version today is **`V1_13`** (T15's reference-list seeds).
 | `V1_10` | `audit` — the append-only trail |
 | `V1_11` | `notification` — inbox, templates, preferences, delivery log |
 | `V1_12` | the `findstay_app` DB role and all grants (grants last) |
+| `V1_13` | the starter reference values (T15): 7 accommodation types, 4 billing periods (only `NIGHTLY` active), 3 platform settings (`privacy.policy_version`, `flag.auth.sms_otp`, `flag.notifications.sms`) |
 
 ### Option A — let the app do it (recommended)
 
@@ -77,10 +78,30 @@ which bypasses grants — that is fine for everyday work; the grants are the
 staging/production guarantee and are exercised by T12's throwaway-database
 tests.
 
+## The starter reference values (T15, `V1_13`)
+
+Every environment starts with exactly these rows (fixed UUIDv7 ids and
+`ON CONFLICT DO NOTHING`, so re-running never duplicates — decision
+[`DEC-S1-01/L`](../docs/decisions/dec-s1-01-t15-reference-lists.md)):
+
+- `listing.accommodation_type` — the seven kickoff types, all active:
+  `Single Room`, `Double Room`, `Studio`, `Suite`, `1-Bedroom Apartment`,
+  `2-Bedroom Apartment`, `Entire House`.
+- `listing.billing_period` — `Per Night` (`NIGHTLY`) is the only active
+  Sprint 1 period; `MONTHLY`, `PER_TERM`, `ACADEMIC_YEAR` are seeded **off**
+  for the long-stay/hostel sprints. No weekly, ever.
+- `admin.platform_setting` — `privacy.policy_version` (`1`, the version
+  S1-11 consent records reference), `flag.auth.sms_otp` (off — email links
+  are the R1 method, kickoff decision 1), `flag.notifications.sms` (off —
+  In-App + Email first, kickoff decision 4).
+
+Future value changes are **new migrations** (`V1_14+`), never edits to
+`V1_13`. Admins manage the settings table at runtime from S1-16.
+
 ## Adding a migration (the rules)
 
-1. Next free version in the sprint's range (`V1_13` today), two underscores,
-   snake-case description: `V1_13__seed_reference_lists.sql`.
+1. Next free version in the sprint's range (`V1_14` today), two underscores,
+   snake-case description: `V1_14__your_change.sql`.
 2. Additive only: new tables, columns, indexes, grants, seed rows. Never
    edit an applied migration; never rename or drop what stories already use.
 3. Cross-module references are **logical uuid columns, not FKs** (ERD §5);
