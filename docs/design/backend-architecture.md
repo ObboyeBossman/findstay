@@ -61,6 +61,15 @@ Notes:
   because the consent endpoints (`GET /consents/latest`, `POST /consents`)
   and Act 843 handling (`P-12`) live there. Flagged in §8 for sign-off —
   either home is workable; the map's recommendation is `verification`.
+- **T8 amendment (DEC-S1-01/H):** the ERD analysis added six tables to this
+  canonical list — `organization.invitation` + `invitation_property` (the four
+  invitation endpoints had no storage), `listing.accommodation_type` +
+  `billing_period` (T15's V1_01 lookup tables, NFR-46),
+  `listing.property_amenity` (the amenities array ↔ the `amenity` table) and
+  `listing.property_photo` (photo order/cover next to media-owned bytes). The
+  canonical count T8 builds from is **34**; evidence per table in the
+  [ERD §7](./erd.md). The consent_record home is settled by DEC-S1-01/F
+  (stays in `verification`).
 - A dash ("—") in the seam column means "no rule-02-named seam interface"; every
   module still has a public `api` package, and any cross-module call must go
   through the callee's public `api` package, a published domain event, or one of
