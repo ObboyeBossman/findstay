@@ -4,7 +4,7 @@
 
 FindStay is a Ghana-focused accommodation marketplace and property-management system for guests, property owners/staff, and platform administrators. It supports local verification, availability, protected bookings, Mobile Money/card payments, and owner operations.
 
-This repository is a foundation, not a completed product: `web/src/App.tsx` is intentionally empty; API modules currently contain boundary placeholders; and `V1_01__init.sql` only enables `btree_gist`. Do not present planned features as implemented.
+This repository is a foundation, not a completed product: `web/src/App.tsx` is intentionally empty; API modules currently contain boundary placeholders. The database structure is real — `db/migration` builds all 34 Sprint 1 tables (`V1_03`–`V1_12`, from the approved ERD; lookup seed values are T15's) — but no story code uses it yet. Do not present planned features as implemented.
 
 ## Map
 
