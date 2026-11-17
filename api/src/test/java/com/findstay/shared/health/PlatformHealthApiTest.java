@@ -1,5 +1,6 @@
 package com.findstay.shared.health;
 
+import com.findstay.shared.security.CorsConfig;
 import com.findstay.shared.security.SecurityConfig;
 import com.findstay.shared.time.TimeConfig;
 import com.findstay.testing.Req;
@@ -15,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @Req("S1-01-AC1")
 @WebMvcTest(PlatformHealthController.class)
-@Import({SecurityConfig.class, TimeConfig.class})  // TimeConfig: the Clock behind GlobalExceptionHandler
+@Import({SecurityConfig.class, CorsConfig.class, TimeConfig.class})  // TimeConfig: the Clock behind GlobalExceptionHandler
 class PlatformHealthApiTest {
 
     @Autowired
@@ -59,6 +62,44 @@ class PlatformHealthApiTest {
         // chain is active in this slice.
         mockMvc.perform(get("/actuator/health/xyz-not-a-real-subpath"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Req("TA-02")
+    void browserOriginsAreAllowedToCallTheApi() throws Exception {
+        // The T16 staging proof caught the gap: 200 from the server but the
+        // browser refused the answer without CORS headers.
+        given(healthEndpoint.health()).willReturn(Health.up().build());
+        mockMvc.perform(get("/api/v1/health")
+                        .header("Origin", "https://findstay-web-staging.obboyebossman.workers.dev"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin",
+                        "https://findstay-web-staging.obboyebossman.workers.dev"));
+    }
+
+    @Test
+    @Req("TA-02")
+    void thePreflightFromTheWebsiteIsAnswered() throws Exception {
+        mockMvc.perform(options("/api/v1/health")
+                        .header("Origin", "https://findstay-web-staging.obboyebossman.workers.dev")
+                        .header("Access-Control-Request-Method", "GET"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin",
+                        "https://findstay-web-staging.obboyebossman.workers.dev"))
+                .andExpect(header().string("Access-Control-Allow-Methods",
+                        org.hamcrest.Matchers.containsString("GET")));
+    }
+
+    @Test
+    @Req("TA-02")
+    void unknownOriginsAreRejected() throws Exception {
+        // An origin outside findstay.cors.allowed-origins is refused by the
+        // CORS filter itself — the browser never sees an answer at all.
+        given(healthEndpoint.health()).willReturn(Health.up().build());
+        mockMvc.perform(get("/api/v1/health")
+                        .header("Origin", "https://evil.example"))
+                .andExpect(status().isForbidden())
+                .andExpect(header().doesNotExist("Access-Control-Allow-Origin"));
     }
 
     @Test

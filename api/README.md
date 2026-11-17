@@ -103,7 +103,13 @@ Future value changes are **new migrations** (`V1_14+`), never edits to
 - `GET /api/v1/health` — the platform health under the API's own prefix
   (TA-02); the website's footer SystemStatus and the CI deploy check call
   this. `200 {"status":"UP","components":{…}}` when healthy, `503` with
-  `{"status":"DOWN"}` when not — statuses only, no details leaked.
+  `{"status":"DOWN"}` when not — component statuses and the standard
+  actuator health details only (database product, disk space), never
+  application data.
+- **CORS** (TA-02): the browser is allowed to call `/api/v1/...` from
+  `findstay.cors.allowed-origins` (local dev + the staging website by
+  default; production adds its origin with the hosting story S1-02).
+  Credentials are never sent — the API is a bearer-token API.
 - `GET /actuator/health` and `GET /actuator/info` — public too (`info` carries
   the build identity from the `build-info` plugin, so a deploy can be
   verified as *the new build*, not the previous one).
