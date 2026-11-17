@@ -6,7 +6,7 @@ This file tracks the verification status, automated `@Req` test evidence, and Sp
 | :--- | :--- | :---: | :---: | :--- |
 | **S1-01** | Project setup & system design | M | `In Progress` | Clean `web/` & `api/` structure initialized (`6711648`); system design (ERD, API spec, Wireframes) in progress. |
 | **S1-02** | Live hosting & daily backups | M | `Ready` | Pending Cloudflare Workers, Render & PostgreSQL backup drill. |
-| **S1-03** | Mobile & desktop page layouts | M | `Ready` | Pending 360px mobile & desktop portal layout shells. |
+| **S1-03** | Mobile & desktop page layouts | M | `In Progress` | T1–T5 complete: portal-shell wireframes (`08fa286`), tokens, Owner/Admin shells, and shared UI states (`48fb79e`, `46c91f1`, `ff83d13`) merged to `dev`; `npm run typecheck` and `npm run build` pass. T6 browser checks and T7 accessibility/3G smoke test remain. |
 | **S1-04** | Sign-up, confirmation & sign-in | M | `Ready` | Pending Supabase Auth + Spring JWKS integration tests. |
 | **S1-05** | Password reset & user profile | M | `Backlog` | Pending `/api/v1/me` and password reset flow. |
 | **S1-06** | Role permissions & safe access | M | `Backlog` | Pending `@RequiresPermission` & RBAC matrix tests. |
