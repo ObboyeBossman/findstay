@@ -1,5 +1,7 @@
 package com.findstay.shared.error;
 
+import com.findstay.testing.Req;
+
 import com.findstay.shared.json.JacksonConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Runs the handler against a plain MockMvc, with no Spring context, so this test needs
  * no database, no JWT setup and no security filters.
  */
+@Req("S1-01-T7")
 class GlobalExceptionHandlerTest {
 
     private MockMvc mockMvc;

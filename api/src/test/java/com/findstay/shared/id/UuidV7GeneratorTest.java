@@ -1,5 +1,7 @@
 package com.findstay.shared.id;
 
+import com.findstay.testing.Req;
+
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
@@ -12,6 +14,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Req("S1-01-T7")
 class UuidV7GeneratorTest {
 
     private static final Instant MOMENT = Instant.parse("2026-11-15T21:17:00.123Z");

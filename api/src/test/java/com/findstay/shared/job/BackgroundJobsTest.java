@@ -1,5 +1,7 @@
 package com.findstay.shared.job;
 
+import com.findstay.testing.Req;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Req("S1-01-T7")
 class BackgroundJobsTest {
 
     private ThreadPoolTaskScheduler scheduler;
