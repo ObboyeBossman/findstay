@@ -29,7 +29,7 @@ Nobody owns this story alone. Its 16 tasks are shared completely across the nine
 | [`S1-01-T10`](./tasks/S1-01-T10.md) | Set up the code repo, branch rules, secrets & staging site | `devops` | — | Architecture, Cloud & Security | @ObboyeBossman | Done |
 | [`S1-01-T11`](./tasks/S1-01-T11.md) | Build the automatic checker — tests & publishes every change | `devops` | [`S1-01-T5`](./tasks/S1-01-T5.md), [`S1-01-T7`](./tasks/S1-01-T7.md), [`S1-01-T10`](./tasks/S1-01-T10.md) | Architecture, Cloud & Security | @ObboyeBossman | Done |
 | [`S1-01-T12`](./tasks/S1-01-T12.md) | Set up tests that run on a real throwaway database | `testing` | [`S1-01-T7`](./tasks/S1-01-T7.md), [`S1-01-T9`](./tasks/S1-01-T9.md) | QA & Testing | @badu12-png | Done |
-| [`S1-01-T13`](./tasks/S1-01-T13.md) | Write the acceptance walkthrough & repeat-test plan | `testing` | [`S1-01-T1`](./tasks/S1-01-T1.md) | QA & Testing | @fummey | Todo |
+| [`S1-01-T13`](./tasks/S1-01-T13.md) | Write the acceptance walkthrough & repeat-test plan | `testing` | [`S1-01-T1`](./tasks/S1-01-T1.md) | QA & Testing | @fummey | Done |
 | [`S1-01-T14`](./tasks/S1-01-T14.md) | Run the kickoff — hand out tasks, set the checkpoints | `lead-scrum` | — | Kickoff Facilitator | @dztrb | Done |
 | [`S1-01-T15`](./tasks/S1-01-T15.md) | Fill the starter reference lists (room types, billing periods, settings) | `database` | [`S1-01-T9`](./tasks/S1-01-T9.md) | Database & Data | @Ankomah959Julius | Done |
 | [`S1-01-T16`](./tasks/S1-01-T16.md) | Prove staging is alive — server healthy, website reaches the server | `testing` | [`S1-01-T5`](./tasks/S1-01-T5.md), [`S1-01-T7`](./tasks/S1-01-T7.md), [`S1-01-T11`](./tasks/S1-01-T11.md), [`S1-01-T15`](./tasks/S1-01-T15.md) | QA & Testing | @badu12-png | Todo |

@@ -48,6 +48,8 @@ A verified property owner can register, get their company space, invite staff, s
 ---
 
 ## 4. Sprint Review Demo Script (7 Steps)
+
+> The click-by-click execution checklist for this script — and the foundation checks before it — is [`docs/testing/acceptance-walkthrough-sprint-1.md`](../../testing/acceptance-walkthrough-sprint-1.md); what must keep passing after every change is [`docs/testing/regression-plan-r1.md`](../../testing/regression-plan-r1.md).
 1. An owner registers with email, confirms it, and signs in.
 2. Their company space is created automatically; they invite a staff member and grant permission for one property.
 3. The owner uploads their Ghana Card, ownership proof, and tourism licence; an admin sees the case in the approval queue.
