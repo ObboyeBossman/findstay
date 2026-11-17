@@ -1,5 +1,7 @@
 package com.findstay.shared.json;
 
+import com.findstay.testing.Req;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.findstay.shared.money.Money;
@@ -13,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /** Proves the JSON conventions in {@link JacksonConfig}: money as integers, UTC timestamps. */
+@Req("S1-01-T7")
 class JsonConventionsTest {
 
     public record Invoice(Money total, Instant issuedAt) {

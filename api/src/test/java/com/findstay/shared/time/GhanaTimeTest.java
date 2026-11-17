@@ -1,5 +1,7 @@
 package com.findstay.shared.time;
 
+import com.findstay.testing.Req;
+
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -9,6 +11,7 @@ import java.time.ZoneOffset;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Req("S1-01-T7")
 class GhanaTimeTest {
 
     private static final Instant MOMENT = Instant.parse("2026-11-15T21:17:00Z");

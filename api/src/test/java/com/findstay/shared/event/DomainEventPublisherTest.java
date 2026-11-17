@@ -1,5 +1,7 @@
 package com.findstay.shared.event;
 
+import com.findstay.testing.Req;
+
 import com.findstay.shared.id.IdGenerator;
 import com.findstay.shared.id.UuidV7Generator;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Req("S1-01-T7")
 class DomainEventPublisherTest {
 
     record OrderPlaced(EventMeta meta, UUID orderId) implements DomainEvent {

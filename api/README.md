@@ -98,6 +98,45 @@ Every environment starts with exactly these rows (fixed UUIDv7 ids and
 Future value changes are **new migrations** (`V1_14+`), never edits to
 `V1_13`. Admins manage the settings table at runtime from S1-16.
 
+## Tests — the throwaway database and the `@Req` rule (S1-01-T12)
+
+```bash
+mvn test        # everything: unit tests, the @Req check, the Modulith boundary check
+```
+
+**Integration tests run against a real PostgreSQL**, started per run in a
+Docker container, migrated from scratch by the real Flyway scripts, and
+thrown away afterwards — real DDL constraints, real grants, real SQL
+semantics; nothing mocked, nothing H2. To write one:
+
+```java
+@Req("S1-08-AC2")                       // the requirement this test proves
+class MyRuleIntegrationTest extends AbstractIntegrationTest {
+
+    @Autowired JdbcTemplate jdbc;       // real database access
+
+    @Test
+    void myRuleBites() { … }
+}
+```
+
+- Extend `com.findstay.testing.AbstractIntegrationTest` (base class javadoc
+  documents the lifecycle: one PostgreSQL 16 per run, fresh state per test
+  via `@Transactional` rollback, Ryuk cleans up, loud skip when Docker is
+  missing — CI always has Docker and runs the suite for real).
+- Label every test class (or each method) with `@Req("…")` — a requirement
+  id (`NFR-38`), decision id (`DEC-S1-01/L`), story AC (`S1-08-AC2`),
+  sprint invariant (`C5`) or foundation task (`S1-01-T7`). The convention and
+  accepted values are documented on the annotation.
+- `RequirementTaggingTest` enforces the rule and **fails the build on an
+  unlabelled or blank-labelled test** — the check carries its own proof
+  (a deliberately untagged sample class that the detector must flag).
+- The working example is `ThrowawayDatabaseHarnessTest`: it proves the
+  migrations apply cleanly on the throwaway DB, the T15 reference values are
+  present, real writes roll back per test, `audit.audit_log` is append-only
+  under `findstay_app` (S1-08 AC 2), and overlapping availability blocks are
+  rejected (S1-14 AC 2).
+
 ## Adding a migration (the rules)
 
 1. Next free version in the sprint's range (`V1_14` today), two underscores,
