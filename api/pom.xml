@@ -20,6 +20,11 @@
         <java.version>21</java.version>
         <spring-modulith.version>1.2.5</spring-modulith.version>
         <aws-sdk.version>2.29.15</aws-sdk.version>
+        <!-- Testcontainers newer than the Boot-managed 1.19.x: current Docker
+             engines (incl. the CI runners') reject API versions older than
+             1.40, which 1.19.x negotiates by default — 1.20+ negotiates
+             correctly. Override property of spring-boot-dependencies. -->
+        <testcontainers.version>1.20.4</testcontainers.version>
     </properties>
 
     <dependencyManagement>
