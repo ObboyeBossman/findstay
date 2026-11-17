@@ -644,6 +644,15 @@ The order below follows the module dependency order from the T6 map §1 —
 > only rule is: **lookup tables and seeds first, module DDL in the order above,
 > grants last**. The T6 map's "V1_01…V1_19" was the pre-analysis upper bound —
 > the concrete plan is these ten.
+>
+> **T9's final numbering (DEC-S1-01/J):** project setup had already claimed
+> `V1_01` (btree_gist) and `V1_02` (Modulith `event_publication`), so the ten
+> scripts above landed as **`V1_03`–`V1_12`** in exactly this order (lookups →
+> identity → organization → media → verification → listing → availability →
+> audit → notification → grants). Only the four platform roles are seeded by
+> T9 itself (`V1_04`, with fixed UUIDv7 ids so `user_account.role_id`'s GUEST
+> default has a stable target); every other seed value keeps its owning task
+> (T15, S1-06, S1-10, S1-13) and starts at `V1_13`.
 
 **Check against the backend map (checklist item 4):** all 28 canonical tables
 from map §1 appear (§8 proves it row by row), plus the six the analysis added
