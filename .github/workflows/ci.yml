@@ -45,9 +45,14 @@ jobs:
       # mvn test = unit tests + the Testcontainers suite on a real throwaway
       # PostgreSQL (Docker is present on the runner) + the @Req tagging check
       # + ApplicationModules.verify() (the module-boundary check, C5).
+      # DOCKER_API_VERSION: the runner's modern daemon rejects docker-java's
+      # legacy default (1.32 < minimum 1.40); pin a version every Docker 25+
+      # daemon speaks.
       - name: Build & test (incl. Modulith boundary check)
         working-directory: api
         run: mvn -B test
+        env:
+          DOCKER_API_VERSION: '1.44'
 
   publish-staging:
     name: publish — staging, only on green
