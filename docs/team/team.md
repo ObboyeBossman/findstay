@@ -2,6 +2,8 @@
 
 See [roles.md](./roles.md) for what each delivery category covers.
 
+**Team Lead & Scrum Master:** [Bossman Abraham N. O.](./members/bossman/README.md) (`@ObboyeBossman`).
+
 | # | Name | Preferred Stack | GitHub |
 | :-: | :--- | :--- | :--- |
 | 1 | [**Joseph Osei-Bonsu**](./members/joseph/README.md) | Backend *(Preference note only to inform task assignment; not a restriction.)* | `@joseibonsu206-gif` |
