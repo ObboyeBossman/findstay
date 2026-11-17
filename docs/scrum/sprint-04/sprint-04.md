@@ -103,7 +103,7 @@ R5 = S1..S4 + S5 suites + full security re-test
 | Sprint | May use | Must not touch |
 |:------:|---------|----------------|
 | 1 | Shared kernel only | Nothing earlier exists |
-| 2 | S1 public APIs and events: catalog, availability, organisation, identity, media, notification, audit | S1 internals |
+| 2 | S1 public APIs and events: listing, availability, organisation, identity, media, notification, audit | S1 internals |
 | 3 | S1 and S2 public APIs and the frozen event catalogue | S1 and S2 internals; no new booking states |
 | 4 | Phase 1 public APIs, events and seams (availability reasons, charges, roles, audit entity types, documents, notification registry) | Any Phase 1 module's internals |
 | 5 | Phase 1 and Sprint 4 public APIs | Any earlier module's internals |
@@ -143,7 +143,7 @@ IDs are from the phased plan (Section 6). **Needed by** is the sprint day on whi
 |---|---|
 | **Weeks** | Weeks 7-8 (example Mon 28 Dec 2026 to Fri 08 Jan 2027) |
 | **Phase and release** | Phase 2, release R4: Phase 2 release 1 (production) |
-| **Modules** | tenancy, rent, maintenance (Phase 2); extensions through seams to catalog, availability, payments, notification, media, finance, organization |
+| **Modules** | tenancy, rent, maintenance (Phase 2); extensions through seams to listing, availability, payments, notification, media, finance, organization |
 | **Requirement items accepted** | 18 |
 | **Decisions needed** | Before D1: Phase 1 exit checklist passed; Phase 2 ERD reviewed against the seams. By D8: hostel requirement set (Section 5.5 of the phased plan), J-04, J-05, P-11 decided for Sprint 5. |
 
@@ -209,7 +209,7 @@ IDs are from the phased plan (Section 6). **Needed by** is the sprint day on whi
 
 - *Done when:* Applicants browse vacant units, submit applications with documents and track status; managers screen applicants.
 - *Database:* applicant, application, application_document (generic documents).
-- *API:* Vacant units query via catalog and availability read APIs; application workflow; screening notes and decision.
+- *API:* Vacant units query via listing and availability read APIs; application workflow; screening notes and decision.
 - *UI:* Applicant portal pages; manager screening queue.
 - *Tests:* Only vacant units listed; documents private to applicant and authorised staff.
 

@@ -50,7 +50,7 @@
 | `UR-M02` | Update maintenance job statuses. | `maintenance` | P2 | S4 | S4-09 |
 | `UR-M03` | Upload maintenance photographs and submit invoices. | `maintenance` | P2 | S4 | S4-09 |
 | `UR-O01` | Register, complete onboarding and submit identity and property documents for verification; track approval status. | `verification` | P1 | S1 | S1-12 |
-| `UR-O02` | Create, edit, deactivate and manage property listings including photos, descriptions, units, prices, amenities, house rules and availability. | `catalog` | P1 | S1 | S1-14 |
+| `UR-O02` | Create, edit, deactivate and manage property listings including photos, descriptions, units, prices, amenities, house rules and availability. | `listing` | P1 | S1 | S1-14 |
 | `UR-O03` | Manage property and unit availability calendars. | `availability` | P1 | S1 | S1-14 |
 | `UR-O04` | Receive, review, accept or decline booking requests. | `booking` | P1 | S2 | S2-06 |
 | `UR-O05` | Modify or cancel bookings according to applicable policy. | `booking` | P1 | S3 | S3-01 |
@@ -89,18 +89,18 @@
 | `FR-08` | Allow owners/managers to submit identity and property-verification information for review. | `verification` | P1 | S1 | S1-12 |
 | `FR-09` | Support property-staff permissions explicitly granted by authorised owners/managers or administrators. | `organization` | P1 | S1 | S1-07 |
 | `FR-10` | Support optional two-factor authentication. | `identity` | P1 | S3 | S3-12 |
-| `FR-11` | Allow verified owners/managers to create property listings. | `catalog` | P1 | S1 | S1-13 |
-| `FR-12` | Allow owners/managers to update existing property listings. | `catalog` | P1 | S1 | S1-13 |
-| `FR-13` | Allow owners/managers to deactivate or pause property listings. | `catalog` | P1 | S1 | S1-13 |
-| `FR-14` | Allow owners/managers to upload property photographs and listing images. | `catalog` | P1 | S1 | S1-13 |
-| `FR-15` | Allow owners/managers to manage property descriptions, accommodation types, unit categories, capacity and quantities. | `catalog` | P1 | S1 | S1-13 |
-| `FR-16` | Allow owners/managers to manage property amenities, facilities and house rules. | `catalog` | P1 | S1 | S1-13 |
-| `FR-17` | Allow owners/managers to manage accommodation prices and rates. | `catalog` | P1 | S1 | S1-13 |
+| `FR-11` | Allow verified owners/managers to create property listings. | `listing` | P1 | S1 | S1-13 |
+| `FR-12` | Allow owners/managers to update existing property listings. | `listing` | P1 | S1 | S1-13 |
+| `FR-13` | Allow owners/managers to deactivate or pause property listings. | `listing` | P1 | S1 | S1-13 |
+| `FR-14` | Allow owners/managers to upload property photographs and listing images. | `listing` | P1 | S1 | S1-13 |
+| `FR-15` | Allow owners/managers to manage property descriptions, accommodation types, unit categories, capacity and quantities. | `listing` | P1 | S1 | S1-13 |
+| `FR-16` | Allow owners/managers to manage property amenities, facilities and house rules. | `listing` | P1 | S1 | S1-13 |
+| `FR-17` | Allow owners/managers to manage accommodation prices and rates. | `listing` | P1 | S1 | S1-13 |
 | `FR-18` | Allow owners/managers to manage property and unit availability. | `availability` | P1 | S1 | S1-14 |
 | `FR-19` | Support property status management including vacant, occupied and under-maintenance. | `availability` | P1+P2 | S2 | S2-08 |
 | `FR-20` | Display property and owner verification status to guests. | `verification` | P1 | S2 | S2-03 |
 | `FR-21` | Publish a listing only after it meets verification and approval requirements set by administrators. | `verification` | P1 | S1 | S1-15 |
-| `FR-22` | Validate required information before a listing is saved or published. | `catalog` | P1 | S1 | S1-13 |
+| `FR-22` | Validate required information before a listing is saved or published. | `listing` | P1 | S1 | S1-13 |
 | `FR-23` | Provide a searchable accommodation directory with keyword search and sorting. | `search` | P1 | S2 | S2-01 |
 | `FR-24` | Allow guests to search by geographical location, town, area, campus or neighbourhood. | `search` | P1 | S2 | S2-01 |
 | `FR-25` | Allow filtering by accommodation type. | `search` | P1 | S2 | S2-02 |

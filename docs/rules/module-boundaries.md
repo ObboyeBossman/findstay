@@ -6,7 +6,7 @@ Each module exposes a public `api` package and keeps its entities, repositories,
 
 | Caller Sprint / Module | Allowed Dependencies | Forbidden Dependencies |
 | :--- | :--- | :--- |
-| **Sprint 1** (`shared`, `identity`, `verification`, `listing`, `availability`, `notification`, `admin`) | `shared` kernel (`Money`, `OrgScope`, `Clock`, `AuditRecorder`, event bus) and earlier Sprint 1 `api` interfaces (`CatalogQuery`, `AvailabilityGate`, `NotificationSender`). | Any Sprint 2–5 module; any other module's `internal` package or JPA repositories. |
+| **Sprint 1** (`shared`, `identity`, `organization`, `verification`, `listing`, `availability`, `media`, `audit`, `notification`, `admin`) | `shared` kernel (`Money`, `OrgScope`, `Clock`, `AuditRecorder`, event bus) and earlier Sprint 1 `api` interfaces (`CatalogQuery`, `AvailabilityGate`, `NotificationSender`). | Any Sprint 2–5 module; any other module's `internal` package or JPA repositories. |
 | **Sprint 2** (`search`, `booking`, `payment`, `messaging`, `review`) | `shared` + Sprint 1 public `api` packages and domain events (`CatalogQuery`, `AvailabilityGate`, `NotificationSender`, `AuditRecorder`). | Sprint 1 `internal` packages; direct writes to `listing` or `identity` tables; Sprint 3–5 modules. |
 | **Sprint 3** (`payout`, `refund`, `dispute`, `reporting`, `hardening`) | `shared` + Sprint 1 & Sprint 2 public `api` packages and the frozen Sprint 2 domain event catalog. | Adding new booking states or mutating Sprint 1/2 internal repositories. |
 | **Sprint 4** (`tenancy`, `lease`, `rent`, `maintenance`) | `shared` + Phase 1 (Sprints 1–3) public `api` packages, events, and the 8 extension seams. | Modifying Phase 1 short-stay booking/payout internals; Sprint 5 modules. |

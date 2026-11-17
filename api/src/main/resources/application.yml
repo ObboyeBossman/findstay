@@ -20,6 +20,11 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${SUPABASE_JWKS_URI:http://localhost:9999/.well-known/jwks.json}
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 findstay:
   r2:
@@ -34,4 +39,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: health,info   # info = build identity, for deploy verification (S1-01-T11)
+  endpoint:
+    health:
+      show-components: always  # component statuses on /actuator/health; details stay private

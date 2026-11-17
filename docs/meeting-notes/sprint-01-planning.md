@@ -4,7 +4,7 @@
 
 | # | Name | Index Number | Role | GitHub Handle | Primary Track |
 | :-: | :--- | :--- | :--- | :--- | :--- |
-| 1 | **Joseph Osei-Bonsu** | BC/ITS/24/168 | Team Lead & Backend Developer | `@joseibonsu206-gif` | Track A (Backend & Identity) |
+| 1 | **Joseph Osei-Bonsu** | BC/ITS/24/168 | Backend Developer | `@joseibonsu206-gif` | Track A (Backend & Identity) |
 | 2 | **David Ofori** | BC/ITS/24/263 | Frontend Developer | `@KyleLion` | Track B (Frontend Shell & Catalog) |
 | 3 | **Sampson Badu** | BC/ITS/24/161 | Payment & Integration Developer | `@badu12-png` | Track A (Notifications & Integrations) |
 | 4 | **Seidu Afeadzi** | BC/ITS/24/152 | Backend Developer | `@seiduafeadzi` | Track A (Organisation & RBAC) |
@@ -13,7 +13,7 @@
 | 7 | **Emmanuel Rockson** | BC/ITN/24/153 | Database Designer | `@surnuel` | Track A/B (ERD, Schemas & Flyway `V1_01..V1_19`) |
 | 8 | **Solomon Fummey** | BC/ITD/24/014 | Quality Assurance & Testing | `@fummey` | Track A/B (`@Req` Tests, UAT & Regression `R1`) |
 | 9 | **Okyere Ankomah Julius** | BC/ITS/24/164 | UI/UX Designer | `@Ankomah959Julius` | Track B (Design System, Wireframes & Mobile 360px) |
-| 10 | **Bossman Abraham N. O.** | BC/ITS/24/197 | System Architecture & Security | `@ObboyeBossman` | Track A (Platform, Cloud, R2, Security & Audit) |
+| 10 | **Bossman Abraham N. O.** | BC/ITS/24/197 | Team Lead & Scrum Master; System Architecture & Security | `@ObboyeBossman` | Track A (Platform, Cloud, R2, Security & Audit) |
 | 11 | **Anthony Maclean** | BC/ITS/24/151 | Booking & Availability Specialist | `@dztrb` | Track B (Availability Calendar & Overlap Locks) |
 
 ---

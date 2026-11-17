@@ -1,0 +1,39 @@
+name: Issue Completion Guard & Story Roll-up
+
+on:
+  issues:
+    types: [closed, reopened]
+  issue_comment:
+    types: [created, edited]
+  workflow_dispatch:
+    inputs:
+      story_number:
+        description: Parent story issue number to build/refresh the achievement roll-up summary (e.g. 1)
+        required: true
+        default: '1'
+        type: string
+
+permissions:
+  issues: write
+
+jobs:
+  completion-summary-and-rollup:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'issues' ||
+      (github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request == null &&
+        github.event.comment.user.type != 'Bot')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Enforce completion summary and update story roll-up
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROJECT_SYNC_TOKEN: ${{ secrets.PROJECT_SYNC_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          STORY_NUMBER: ${{ inputs.story_number }}
+        run: node scripts/issue-completion-rollup.mjs

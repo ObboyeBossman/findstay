@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+ * FindStay colour tokens — the approved palette (docs/design/color-palette.md).
+ * One swappable definition: change a value here and the whole app updates.
+ * Component-level hover/disabled variants get their own tokens when their
+ * components land, after contrast is checked.
+ */
+:root {
+  --color-olive: #55624a;      /* primary nav, core actions, active controls */
+  --color-terracotta: #bc6746; /* discovery actions, high-emphasis CTAs */
+  --color-sand: #dccb91;       /* supporting accents, decorative detail */
+  --color-ivory: #f7f3ea;      /* page canvas, warm background surfaces */
+  --color-earth: #3e2f26;      /* primary text, dark surfaces */
+}

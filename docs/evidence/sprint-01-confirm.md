@@ -1,5 +1,7 @@
 # S1-01-T1: Agreed Sprint 1 (Release R1) Work List & Open Decisions — FindStay
 
+> **Deliverable of S1-01-T1** ([GitHub issue #18](https://github.com/ObboyeBossman/findstay/issues/18)) — owner @kwesipaa643-sys (Bright Afedi). First shared on the issue as “Sprit1-confirm”; moved here and aligned with the billing-period rule (`docs/rules/module-boundaries.md`) and `NFR-46`.
+
 ## 1. Story S1-01: Project Setup & System Design (16 Foundation Tasks)
 All 16 foundation tasks are **In Scope**, clear, and appropriately sized for our 9-person team. Together, they deliver our complete system design and put the empty app live on staging:
 
@@ -76,10 +78,10 @@ Please review and confirm these 6 defaults so no teammate is blocked during `S1-
    * **Proposed Answer:** Build a unified notification service interface first; wire up **In-App + Email** immediately, and plug in the **SMS** provider adapter as soon as API keys are added to staging secrets (`S1-01-T10`).
 5. **Starter Reference Lists (`S1-01-T15`):** What initial values should be seeded into the database?
    * **Proposed Answer:**
-     * **Room Types:** `Single Room`, `Double Room`, `Studio`, `Suite`, `1-Bedroom Apartment`, `2-Bedroom Apartment`, `Entire House`.
-     * **Billing Periods:** `Per Night`, `Per Week`, `Per Month`.
+     * **Room Types:** `Single Room`, `Double Room`, `Studio`, `Suite`, `1-Bedroom Apartment`, `2-Bedroom Apartment`, `Entire House` — stored as a configurable `accommodation_type` lookup table per `NFR-46`, so new types (such as student hostels) can be added later without code changes.
+     * **Billing Periods:** `Per Night` is the only billing period switched on for Sprint 1; `Per Month`, `Per Term`, and `Academic Year` are seeded but switched off until Sprints 4–5 (hostel billing). Weekly billing is not part of the plan. *(Aligned with the billing-period rule in `docs/rules/module-boundaries.md`.)*
 6. **Admin Bootstrap (`S1-01-T15` / `S1-16`):** How is the first Admin account created on staging?
    * **Proposed Answer:** Seed one default Admin account via environment variables during initial database setup (`S1-01-T9` / `T15`) so admins can log in immediately without needing public admin sign-up.
 
 ---
-**Next Step:** Team members, please review this list and reply with ✅ (or note any changes) so we can mark **S1-01-T1** complete and begin **S1-01-T14 (Kickoff)**.
+**Status:** Confirmed by the project lead (Bossman) on 2026-11-17 — **S1-01-T1** is done ([issue #18](https://github.com/ObboyeBossman/findstay/issues/18) closed); **S1-01-T14 (Kickoff)** proceeds.
