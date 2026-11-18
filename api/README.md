@@ -10,7 +10,7 @@ The database schema is created **only** by the numbered Flyway scripts in
 [`src/main/resources/db/migration/`](./src/main/resources/db/migration/).
 Never change the database by hand; never edit a script that has already run
 anywhere (add a new one instead). Sprint 1 owns the `V1_01`–`V1_19` range;
-the next free version today is **`V1_15`**.
+the next free version today is **`V1_16`**.
 
 | Script | Module / contents |
 | :--- | :--- |
@@ -27,7 +27,8 @@ the next free version today is **`V1_15`**.
 | `V1_11` | `notification` — inbox, templates, preferences, delivery log |
 | `V1_12` | the `findstay_app` DB role and all grants (grants last) |
 | `V1_13` | the starter reference values (T15): 7 accommodation types, 4 billing periods (only `NIGHTLY` active), 3 platform settings (`privacy.policy_version`, `flag.auth.sms_otp`, `flag.notifications.sms`) |
-| `V1_14` | `identity.auth_identity` — the vendor id boundary (DEC-S1-04/A): `(provider, provider_user_id) -> user_account_id`; `user_account.id` is FindStay's own UUIDv7 from now on |
+| `V1_14` | `identity.auth_identity` — the vendor id boundary (DEC-S1-04/A); added and then reverted — see `V1_15` |
+| `V1_15` | drops `identity.auth_identity` (DEC-S1-04/B — direct integration, no boundary abstraction); `user_account.id` is the Supabase Auth uid again (DEC-S1-01/A) |
 
 ### Option A — let the app do it (recommended)
 
@@ -96,7 +97,7 @@ Every environment starts with exactly these rows (fixed UUIDv7 ids and
   are the R1 method, kickoff decision 1), `flag.notifications.sms` (off —
   In-App + Email first, kickoff decision 4).
 
-Future value changes are **new migrations** (`V1_14+`), never edits to
+Future value changes are **new migrations** (`V1_16+`), never edits to
 `V1_13`. Admins manage the settings table at runtime from S1-16.
 
 ## The public health surface (what CI and the website call)
@@ -159,8 +160,8 @@ class MyRuleIntegrationTest extends AbstractIntegrationTest {
 
 ## Adding a migration (the rules)
 
-1. Next free version in the sprint's range (`V1_14` today), two underscores,
-   snake-case description: `V1_14__your_change.sql`.
+1. Next free version in the sprint's range (`V1_16` today), two underscores,
+   snake-case description: `V1_16__your_change.sql`.
 2. Additive only: new tables, columns, indexes, grants, seed rows. Never
    edit an applied migration; never rename or drop what stories already use.
 3. Cross-module references are **logical uuid columns, not FKs** (ERD §5);
