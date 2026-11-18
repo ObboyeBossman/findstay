@@ -5,7 +5,7 @@ This file tracks the verification status, automated `@Req` test evidence, and Sp
 | Story | Title | Priority | Status | Evidence / PR / Test Reference |
 | :--- | :--- | :---: | :---: | :--- |
 | **S1-01** | Project setup & system design | M | `In Progress` | All 16 tasks (`T1`–`T16`) closed/Done: clean `web/` & `api/` structure (`6711648`), ERD/API spec, 35 Sprint 1 wireframe exports (`35f5f32`, issue #28 closed), Flyway `V1_01`–`V1_13`, CI & Testcontainers, and staging proof (`#53`). Pending final story-level PO sign-off to close `#1`. |
-| **S1-02** | Live hosting & daily backups | M | `Ready` | Pending Cloudflare Workers, Render & PostgreSQL backup drill. |
+| **S1-02** | Live hosting & daily backups | M | `Done` | Cloudflare Workers static frontend live (`200 OK`), Render Spring Boot API live (`UP`), automated backups & restore guide ([`database-backup-and-restore.md`](../operations/database-backup-and-restore.md)), Day 4 restore drill passed in 38.6s ([`s1-02-restore-drill.md`](./s1-02-restore-drill.md)), secret scan clean (0 leaks, [`s1-02-secret-scan.md`](./s1-02-secret-scan.md)), and uptime monitor active ([`uptime-monitor.yml`](../../.github/workflows/uptime-monitor.yml)). Issue #2 closed. |
 | **S1-03** | Mobile & desktop page layouts | M | `In Progress` | T1–T5 complete: portal-shell wireframes (`08fa286`), tokens, Owner/Admin shells, and shared UI states (`48fb79e`, `46c91f1`, `ff83d13`) merged to `dev`; `npm run typecheck` and `npm run build` pass. T6 browser checks and T7 accessibility/3G smoke test remain. |
 | **S1-04** | Sign-up, confirmation & sign-in | M | `Ready` | Pending Supabase Auth + Spring JWKS integration tests. |
 | **S1-05** | Password reset & user profile | M | `Backlog` | Pending `/api/v1/me` and password reset flow. |
