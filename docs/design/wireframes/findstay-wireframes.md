@@ -553,3 +553,4 @@
 | **1** | Something went wrong | Error Block | Connectivity / server error icon with clear message |
 | **2** | Check your connection and try again | Explanatory Text | Plain language explanation |
 | **3** | Retry | Primary Action | Re-attempts the failed network request |
+
