@@ -1,0 +1,230 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2047.6734333333334 1157.0000000000002" width="2047.6734333333334" height="1157.0000000000002" style="--bg:#18181B;--fg:#F4F4F5;--line:#71717A;--muted:#A1A1AA;--surface:#27272A;--border:#3F3F46;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="arrowhead" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+  <marker id="arrowhead-start" markerWidth="8" markerHeight="5" refX="1" refY="2.5" orient="auto-start-reverse">
+    <polygon points="8 0, 0 2.5, 8 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+</defs>
+<g class="subgraph" data-id="Identity" data-label="identity (5 tables)">
+  <rect x="466.4314333333335" y="40" width="336.116" height="266.70000000000005" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="466.4314333333335" y="40" width="336.116" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="478.4314333333335" y="54" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">identity (5 tables)</text>
+</g>
+<g class="subgraph" data-id="Organization" data-label="organization (5 tables)">
+  <rect x="667.7141000000001" y="366.70000000000005" width="409.909" height="266.70000000000005" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="667.7141000000001" y="366.70000000000005" width="409.909" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="679.7141000000001" y="380.70000000000005" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">organization (5 tables)</text>
+</g>
+<g class="subgraph" data-id="Listing" data-label="listing (11 tables)">
+  <rect x="40" y="693.4000000000002" width="892.7871" height="266.70000000000005" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="40" y="693.4000000000002" width="892.7871" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="52" y="707.4000000000002" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">listing (11 tables)</text>
+</g>
+<g class="subgraph" data-id="Availability" data-label="availability (1 table)">
+  <rect x="419.096" y="1020.1000000000003" width="176.20800000000003" height="96.9" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="419.096" y="1020.1000000000003" width="176.20800000000003" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="431.096" y="1034.1000000000004" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">availability (1 table)</text>
+</g>
+<g class="subgraph" data-id="Verification" data-label="verification (4 tables)">
+  <rect x="960.7871" y="693.4000000000001" width="431.92650000000003" height="181.8" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="960.7871" y="693.4000000000001" width="431.92650000000003" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="972.7871" y="707.4000000000001" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">verification (4 tables)</text>
+</g>
+<g class="subgraph" data-id="Media" data-label="media (2 tables)">
+  <rect x="830.5474333333334" y="215.80000000000004" width="274.31600000000003" height="96.9" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="830.5474333333334" y="215.80000000000004" width="274.31600000000003" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="842.5474333333334" y="229.80000000000004" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">media (2 tables)</text>
+</g>
+<g class="subgraph" data-id="Notification" data-label="notification (4 tables)">
+  <rect x="1132.8634333333334" y="457.6000000000001" width="557.674" height="181.8" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="1132.8634333333334" y="457.6000000000001" width="557.674" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="1144.8634333333334" y="471.6000000000001" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">notification (4 tables)</text>
+</g>
+<g class="subgraph" data-id="AuditAdmin" data-label="audit &amp; admin (2 tables)">
+  <rect x="1718.5374333333334" y="40" width="289.13599999999997" height="96.9" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="1718.5374333333334" y="40" width="289.13599999999997" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="1730.5374333333334" y="54" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">audit &amp; admin (2 tables)</text>
+</g>
+<polyline class="edge" data-from="U" data-to="MEM" data-style="dotted" data-arrow-start="false" data-arrow-end="true" points="744.9001000000001,205.8 744.9001000000001,217.8 757.7184333333335,217.8 757.7184333333335,498.6" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="ORG" data-to="PROP" data-style="dotted" data-arrow-start="false" data-arrow-end="true" points="879.4181000000001,447.6 879.4181000000001,675.4000000000002 561.7701000000001,675.4000000000002 561.7701,737.4000000000002" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="ORG" data-to="VC" data-style="dotted" data-arrow-start="false" data-arrow-end="true" points="902.6281000000001,447.6 902.6281000000001,459.6 897.5231000000001,459.6 897.5231000000001,675.4000000000001 1215.1711,675.4000000000001 1215.1711,737.4000000000001" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="UNIT" data-to="AV" data-style="dotted" data-arrow-start="false" data-arrow-end="true" points="385.9594,859.2000000000003 385.9594,871.2000000000003 507.20000000000005,871.2000000000003 507.2000000000001,1064.1000000000004" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="U" data-to="UP" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="703.2527666666667,205.8 703.2527666666667,217.8 690.4344333333335,217.8 690.4344333333335,256.80000000000007" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="R" data-to="RP" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="644.2331000000001,120.9 644.2331000000001,144.9 551.5714333333335,144.9 551.5714333333335,168.9" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="RP" data-to="P" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="551.5714333333335,205.8 551.5714333333335,256.80000000000007" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="R" data-to="U" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="644.2331000000001,120.9 644.2331000000001,144.9 724.0764333333334,144.9 724.0764333333334,168.9" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="ORG" data-to="MEM" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="856.2081000000002,447.6 856.2081000000002,459.6 795.4137666666668,459.6 795.4137666666668,498.6" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="ORG" data-to="INV" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="925.8381000000002,447.6 925.8381000000002,459.6 985.0731000000001,459.6 985.0731000000001,498.6" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="MEM" data-to="MP" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="776.5661000000001,535.5 776.5661000000001,583.5" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="INV" data-to="IP" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="985.0731000000001,535.5 985.0731000000001,583.5" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="PROP" data-to="UNIT" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="561.7701000000001,774.3000000000002 561.7701000000001,798.3000000000002 367.15000000000003,798.3000000000002 367.15000000000003,822.3000000000002" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="UNIT" data-to="RP2" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="360.88020000000006,859.2000000000003 360.88020000000006,883.2000000000003 298.08900000000006,883.2000000000003 298.08900000000006,907.2000000000003" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="PROP" data-to="PHOTO" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="561.7701000000001,774.3000000000002 561.7701000000001,798.3000000000002 849.8701,798.3000000000002 849.8701,822.3000000000002" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="PROP" data-to="PA" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="561.7701000000001,774.3000000000002 561.7701000000001,798.3000000000002 561.7701000000001,798.3000000000002 561.7701000000001,822.3000000000002" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="PA" data-to="AMEN" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="561.7701000000002,859.2000000000003 561.7701000000001,907.2000000000003" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="PROP" data-to="AREA" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="561.7701000000001,774.3000000000002 561.7701000000001,798.3000000000002 272.74700000000007,798.3000000000002 272.74700000000007,822.3000000000002" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="UNIT" data-to="ACCOM" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="348.34060000000005,859.2000000000003 348.34060000000005,871.2000000000003 138.478,871.2000000000003 138.478,907.2000000000003" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="UNIT" data-to="BILL" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="373.41980000000007,859.2000000000003 373.41980000000007,883.2000000000003 436.211,883.2000000000003 436.211,907.2000000000003" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="PROP" data-to="LST" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="561.7701000000001,774.3000000000002 561.7701000000001,798.3000000000002 716.9351000000001,798.3000000000002 716.9351000000001,822.3000000000002" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="LST" data-to="LSH" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="716.9351000000001,859.2000000000003 716.9351000000001,907.2000000000003" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="VC" data-to="VD" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="1215.1711,774.3000000000001 1215.1711,798.3000000000001 1123.5096,798.3000000000001 1123.5096,822.3000000000001" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="VC" data-to="RD" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="1215.1711,774.3000000000001 1215.1711,798.3000000000001 1306.8326000000002,798.3000000000001 1306.8326000000002,822.3000000000001" fill="none" stroke="var(--_line)" stroke-width="1" />
+<polyline class="edge" data-from="NOTIF" data-to="ND" data-style="solid" data-arrow-start="false" data-arrow-end="false" points="1594.2824333333333,535.5 1594.2824333333333,583.5" fill="none" stroke="var(--_line)" stroke-width="1" />
+<g class="node" data-id="U" data-label="user_account" data-shape="rectangle">
+  <rect x="661.6054333333334" y="168.9" width="124.94200000000001" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="724.0764333333334" y="187.35000000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">user_account</text>
+</g>
+<g class="node" data-id="UP" data-label="user_profile" data-shape="rectangle">
+  <rect x="633.1504333333335" y="256.80000000000007" width="114.568" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="690.4344333333335" y="275.25000000000006" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">user_profile</text>
+</g>
+<g class="node" data-id="R" data-label="role" data-shape="rectangle">
+  <rect x="611.4021000000001" y="84" width="65.662" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="644.2331000000001" y="102.45" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">role</text>
+</g>
+<g class="node" data-id="RP" data-label="role_permission" data-shape="rectangle">
+  <rect x="482.4314333333335" y="168.9" width="138.28" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="551.5714333333335" y="187.35000000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">role_permission</text>
+</g>
+<g class="node" data-id="P" data-label="permission" data-shape="rectangle">
+  <rect x="497.99243333333345" y="256.80000000000007" width="107.158" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="551.5714333333334" y="275.25000000000006" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">permission</text>
+</g>
+<g class="node" data-id="ORG" data-label="organization" data-shape="rectangle">
+  <rect x="832.9981000000001" y="410.70000000000005" width="116.05" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="891.0231000000001" y="429.15000000000003" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">organization</text>
+</g>
+<g class="node" data-id="MEM" data-label="membership" data-shape="rectangle">
+  <rect x="720.0231000000001" y="498.6" width="113.086" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="776.5661000000001" y="517.0500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">membership</text>
+</g>
+<g class="node" data-id="INV" data-label="invitation" data-shape="rectangle">
+  <rect x="938.1631000000001" y="498.6" width="93.82" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="985.0731000000001" y="517.0500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">invitation</text>
+</g>
+<g class="node" data-id="MP" data-label="membership_permission" data-shape="rectangle">
+  <rect x="683.7141000000001" y="583.5" width="185.70399999999998" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="776.5661000000001" y="601.95" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">membership_permission</text>
+</g>
+<g class="node" data-id="IP" data-label="invitation_property" data-shape="rectangle">
+  <rect x="908.5231000000001" y="583.5" width="153.10000000000002" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="985.0731000000001" y="601.95" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">invitation_property</text>
+</g>
+<g class="node" data-id="PROP" data-label="property" data-shape="rectangle">
+  <rect x="514.8601000000001" y="737.4000000000002" width="93.82" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="561.7701000000001" y="755.8500000000003" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">property</text>
+</g>
+<g class="node" data-id="UNIT" data-label="unit" data-shape="rectangle">
+  <rect x="335.80100000000004" y="822.3000000000002" width="62.69799999999999" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="367.15000000000003" y="840.7500000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">unit</text>
+</g>
+<g class="node" data-id="RP2" data-label="rate_plan" data-shape="rectangle">
+  <rect x="248.95600000000002" y="907.2000000000003" width="98.266" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="298.089" y="925.6500000000003" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">rate_plan</text>
+</g>
+<g class="node" data-id="PHOTO" data-label="property_photo" data-shape="rectangle">
+  <rect x="782.9531" y="822.3000000000002" width="133.834" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="849.8701" y="840.7500000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">property_photo</text>
+</g>
+<g class="node" data-id="PA" data-label="property_amenity" data-shape="rectangle">
+  <rect x="488.9251000000001" y="822.3000000000002" width="145.69" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="561.7701000000001" y="840.7500000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">property_amenity</text>
+</g>
+<g class="node" data-id="AMEN" data-label="amenity" data-shape="rectangle">
+  <rect x="518.5651" y="907.2000000000003" width="86.41" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="561.7701000000001" y="925.6500000000003" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">amenity</text>
+</g>
+<g class="node" data-id="AREA" data-label="area" data-shape="rectangle">
+  <rect x="237.69300000000004" y="822.3000000000002" width="70.108" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="272.74700000000007" y="840.7500000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">area</text>
+</g>
+<g class="node" data-id="ACCOM" data-label="accommodation_type" data-shape="rectangle">
+  <rect x="56" y="907.2000000000003" width="164.95600000000002" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="138.478" y="925.6500000000003" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">accommodation_type</text>
+</g>
+<g class="node" data-id="BILL" data-label="billing_period" data-shape="rectangle">
+  <rect x="375.22200000000004" y="907.2000000000003" width="121.978" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="436.211" y="925.6500000000003" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">billing_period</text>
+</g>
+<g class="node" data-id="LST" data-label="listing" data-shape="rectangle">
+  <rect x="678.9171000000001" y="822.3000000000002" width="76.036" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="716.9351000000001" y="840.7500000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">listing</text>
+</g>
+<g class="node" data-id="LSH" data-label="listing_status_history" data-shape="rectangle">
+  <rect x="632.9751000000001" y="907.2000000000003" width="167.92" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="716.9351000000001" y="925.6500000000003" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">listing_status_history</text>
+</g>
+<g class="node" data-id="AV" data-label="availability_block" data-shape="rectangle">
+  <rect x="435.096" y="1064.1000000000004" width="144.20800000000003" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="507.20000000000005" y="1082.5500000000004" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">availability_block</text>
+</g>
+<g class="node" data-id="VC" data-label="verification_case" data-shape="rectangle">
+  <rect x="1143.0671" y="737.4000000000001" width="144.208" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1215.1711" y="755.8500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">verification_case</text>
+</g>
+<g class="node" data-id="VD" data-label="verification_document" data-shape="rectangle">
+  <rect x="1038.0676" y="822.3000000000001" width="170.88399999999996" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1123.5096" y="840.7500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">verification_document</text>
+</g>
+<g class="node" data-id="RD" data-label="review_decision" data-shape="rectangle">
+  <rect x="1236.9516" y="822.3000000000001" width="139.762" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1306.8326000000002" y="840.7500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">review_decision</text>
+</g>
+<g class="node" data-id="CR" data-label="consent_record" data-shape="rectangle">
+  <rect x="976.7871" y="737.4000000000001" width="138.28000000000003" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1045.9271" y="755.8500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">consent_record</text>
+</g>
+<g class="node" data-id="DOC" data-label="document" data-shape="rectangle">
+  <rect x="846.5474333333334" y="256.80000000000007" width="98.266" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="895.6804333333334" y="275.25000000000006" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">document</text>
+</g>
+<g class="node" data-id="MA" data-label="media_asset" data-shape="rectangle">
+  <rect x="972.8134333333335" y="256.80000000000007" width="116.05" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1030.8384333333336" y="275.25000000000006" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">media_asset</text>
+</g>
+<g class="node" data-id="NOTIF" data-label="notification" data-shape="rectangle">
+  <rect x="1542.1854333333335" y="498.6" width="104.194" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1594.2824333333335" y="517.0500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">notification</text>
+</g>
+<g class="node" data-id="ND" data-label="notification_delivery" data-shape="rectangle">
+  <rect x="1514.0274333333334" y="583.5" width="160.51" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1594.2824333333333" y="601.95" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">notification_delivery</text>
+</g>
+<g class="node" data-id="NT" data-label="notification_template" data-shape="rectangle">
+  <rect x="1355.1574333333333" y="498.6" width="159.028" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1434.6714333333332" y="517.0500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">notification_template</text>
+</g>
+<g class="node" data-id="NP" data-label="notification_preference" data-shape="rectangle">
+  <rect x="1148.8634333333334" y="498.6" width="178.29399999999998" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1238.0104333333334" y="517.0500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">notification_preference</text>
+</g>
+<g class="node" data-id="AUD" data-label="audit_log" data-shape="rectangle">
+  <rect x="1734.5374333333334" y="84" width="95.30199999999999" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1782.1884333333335" y="102.45" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">audit_log</text>
+</g>
+<g class="node" data-id="SET" data-label="platform_setting" data-shape="rectangle">
+  <rect x="1857.8394333333333" y="84" width="133.834" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1924.7564333333332" y="102.45" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">platform_setting</text>
+</g>
+</svg>

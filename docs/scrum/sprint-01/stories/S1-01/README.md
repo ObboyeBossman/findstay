@@ -20,7 +20,7 @@ Nobody owns this story alone. Its 16 tasks are shared completely across the nine
 | [`S1-01-T1`](./tasks/S1-01-T1.md) | Confirm the Sprint 1 work list — what we build first, agreed by everyone | `requirements` | — | Product & Requirements | @kwesipaa643-sys | Done |
 | [`S1-01-T2`](./tasks/S1-01-T2.md) | Pick FindStay's colors, fonts & spacing (one style file, swappable) | `ui-ux` | [`S1-01-T1`](./tasks/S1-01-T1.md) | UI/UX Design | @maskkuratahiru-wq | Done |
 | [`S1-01-T3`](./tasks/S1-01-T3.md) | Draw the user flow diagrams — every screen-to-screen path | `ui-ux` | [`S1-01-T1`](./tasks/S1-01-T1.md) | UI/UX Design | @dztrb | Done |
-| [`S1-01-T4`](./tasks/S1-01-T4.md) | Sketch every Sprint 1 screen (wireframes, phone-first) | `ui-ux` | [`S1-01-T2`](./tasks/S1-01-T2.md), [`S1-01-T3`](./tasks/S1-01-T3.md) | UI/UX Design | @surnuel | Todo |
+| [`S1-01-T4`](./tasks/S1-01-T4.md) | Sketch every Sprint 1 screen (wireframes, phone-first) | `ui-ux` | [`S1-01-T2`](./tasks/S1-01-T2.md), [`S1-01-T3`](./tasks/S1-01-T3.md) | UI/UX Design | @surnuel | Done |
 | [`S1-01-T5`](./tasks/S1-01-T5.md) | Build the empty starter website — guest, owner & admin areas wired | `frontend` | [`S1-01-T2`](./tasks/S1-01-T2.md), [`S1-01-T10`](./tasks/S1-01-T10.md) | Frontend Development | @maskkuratahiru-wq | Done |
 | [`S1-01-T6`](./tasks/S1-01-T6.md) | Draw the backend map & data-flow diagram, agree the API contracts | `backend` | [`S1-01-T1`](./tasks/S1-01-T1.md) | Backend Development | @ObboyeBossman | Done |
 | [`S1-01-T7`](./tasks/S1-01-T7.md) | Set up the empty server app with the shared pieces ready | `backend` | [`S1-01-T6`](./tasks/S1-01-T6.md), [`S1-01-T10`](./tasks/S1-01-T10.md) | Backend Development | @joseibonsu206-gif | Done |
@@ -32,7 +32,7 @@ Nobody owns this story alone. Its 16 tasks are shared completely across the nine
 | [`S1-01-T13`](./tasks/S1-01-T13.md) | Write the acceptance walkthrough & repeat-test plan | `testing` | [`S1-01-T1`](./tasks/S1-01-T1.md) | QA & Testing | @fummey | Done |
 | [`S1-01-T14`](./tasks/S1-01-T14.md) | Run the kickoff — hand out tasks, set the checkpoints | `lead-scrum` | — | Kickoff Facilitator | @dztrb | Done |
 | [`S1-01-T15`](./tasks/S1-01-T15.md) | Fill the starter reference lists (room types, billing periods, settings) | `database` | [`S1-01-T9`](./tasks/S1-01-T9.md) | Database & Data | @Ankomah959Julius | Done |
-| [`S1-01-T16`](./tasks/S1-01-T16.md) | Prove staging is alive — server healthy, website reaches the server | `testing` | [`S1-01-T5`](./tasks/S1-01-T5.md), [`S1-01-T7`](./tasks/S1-01-T7.md), [`S1-01-T11`](./tasks/S1-01-T11.md), [`S1-01-T15`](./tasks/S1-01-T15.md) | QA & Testing | @badu12-png | Todo |
+| [`S1-01-T16`](./tasks/S1-01-T16.md) | Prove staging is alive — server healthy, website reaches the server | `testing` | [`S1-01-T5`](./tasks/S1-01-T5.md), [`S1-01-T7`](./tasks/S1-01-T7.md), [`S1-01-T11`](./tasks/S1-01-T11.md), [`S1-01-T15`](./tasks/S1-01-T15.md) | QA & Testing | @badu12-png | Done |
 
 ## Who is doing what
 

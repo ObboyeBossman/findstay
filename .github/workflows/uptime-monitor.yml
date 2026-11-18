@@ -1,0 +1,40 @@
+name: Uptime Monitor & Keep-Alive
+
+# Requirement: PD-10 (Backend application-health monitoring), P-10 (Non-sleeping hosting), NFR-43 (Monitoring & Alerting)
+# Task: S1-02-T5
+on:
+  schedule:
+    # Run every 10 minutes to prevent Render free-tier spin down and verify health
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: uptime-monitor
+  cancel-in-progress: false
+
+jobs:
+  health-check:
+    name: Staging API Health Ping
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Ping Staging Actuator Health
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEALTH_URL="https://findstay-api-staging.onrender.com/actuator/health"
+          echo "Pinging staging health endpoint: $HEALTH_URL"
+          
+          # Perform HTTP request and measure latency
+          RESPONSE=$(curl -sSf -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" --max-time 45 "$HEALTH_URL" || true)
+          
+          echo "$RESPONSE"
+          
+          if echo "$RESPONSE" | grep -q '"status":"UP"'; then
+            echo "✅ Staging API is UP and healthy."
+            exit 0
+          else
+            echo "❌ Staging API health check failed or returned non-UP state!"
+            exit 1
+          fi

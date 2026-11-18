@@ -214,7 +214,7 @@ IDs are from the phased plan (Section 6). **Needed by** is the sprint day on whi
 
 - *Done when:* Every filter works alone and combined; date filtering uses the availability read API; the rating filter works as soon as ratings exist.
 - *API:* Filter-provider interface with one provider per filter.
-- *UI:* Filter panel (mobile drawer).
+- *UI:* Filter panel (mobile drawer). Saved Sprint 2 progressive-disclosure chip/sheet UI concept and alignment notes: [filter-ui-concept.md](./filter-ui-concept.md).
 - *Tests:* Filter combination matrix; date filter excludes held and booked units.
 
 **S2-03 Public listing page, verification badge, map and distance** (Pri M, track A, D3 to D5)

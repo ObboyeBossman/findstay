@@ -10,11 +10,11 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| [`S1-01-T4`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T4.md) | Sketch every Sprint 1 screen (wireframes, phone-first) | 1 | Todo | [#28](https://github.com/ObboyeBossman/findstay/issues/28) |
+| [`S1-01-T4`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T4.md) | Sketch every Sprint 1 screen (wireframes, phone-first) | 1 | Done | [`docs/design/wireframes/`](../../../design/wireframes/) · [#28](https://github.com/ObboyeBossman/findstay/issues/28) |
 
 ## Impact & Completed Work
 
-_No completed items recorded yet._
+- **`S1-01-T4`** — Delivered 35 Sprint 1 screen wireframe exports under `docs/design/wireframes/` (`35f5f32`, Issue #28 closed per Product Owner instruction on 2026-11-17).
 
 ## What Is Ahead
 
@@ -28,3 +28,5 @@ _No upcoming items assigned yet._
 **2026-11-16** — Product Owner re-assignment: **S1-01-T8** (database ERD) moved to Solomon Fummey. Emmanuel's remaining Sprint 1 task is **S1-01-T9** (build the real database from the ERD with numbered scripts). All 16 S1-01 task documents were also rewritten so each states exactly what to do and what the assignee will have at the end. Source: Product Owner instruction via Scrum steward.
 
 **2026-11-16** — Product Owner re-assignment: **S1-01-T9** (build the real database from the ERD) moved to Solomon Fummey; Emmanuel now owns **S1-01-T4** (wireframes for every Sprint 1 screen), which is unblocked because T2 (style file) and T3 (user flows) are done. Source: Product Owner instruction via Scrum steward.
+
+- **2026-11-17** — **S1-01-T4** marked Done and issue #28 closed per Product Owner instruction after Sprint 1 screen wireframe exports (`35f5f32`, 35 screens in `docs/design/wireframes/`) were committed to `dev`.
