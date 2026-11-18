@@ -78,14 +78,16 @@ SELECT version, description, type, installed_on, success
 FROM flyway_schema_history 
 ORDER BY installed_rank DESC;
 
--- 2. Verify all Sprint 1 tables exist (34 tables expected)
-SELECT count(*) AS total_tables 
+-- 2. Verify all Sprint 1 domain tables exist across module schemas (36 tables expected)
+SELECT table_schema, count(*) AS table_count 
 FROM information_schema.tables 
-WHERE table_schema = 'public';
+WHERE table_schema IN ('admin', 'audit', 'availability', 'identity', 'listing', 'media', 'notification', 'organization', 'verification', 'public')
+GROUP BY table_schema
+ORDER BY table_schema;
 
--- 3. Verify lookup reference data is populated
-SELECT count(*) AS room_types FROM accommodation_type;
-SELECT count(*) AS billing_periods FROM billing_period;
+-- 3. Verify lookup reference data is populated in listing schema
+SELECT count(*) AS room_types FROM listing.accommodation_type;
+SELECT count(*) AS billing_periods FROM listing.billing_period;
 ```
 
 ### Step 4: Validate Application Connection

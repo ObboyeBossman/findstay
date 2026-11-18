@@ -32,8 +32,8 @@ Verify that a full database snapshot can be successfully restored into an isolat
 ## 3. Data & Schema Integrity Verification
 
 ### 3.1 Tables & Schema
-- **Expected Tables:** 34 Sprint 1 tables (`V1_03`–`V1_12` ERD schema + `event_publication`).
-- **Actual Tables Restored:** 34 tables in `public` schema.
+- **Expected Tables:** 36 tables across module schemas (`admin`, `audit`, `availability`, `identity`, `listing`, `media`, `notification`, `organization`, `verification`, `public`) from `V1_01` to `V1_13`.
+- **Actual Tables Restored:** 36 tables in module schemas, plus `flyway_schema_history` and `event_publication` in `public`.
 - **Foreign Keys & Constraints:** All primary keys, unique constraints, and foreign key relations validated without violations.
 
 ### 3.2 Required Extensions
@@ -43,9 +43,8 @@ Verify that a full database snapshot can be successfully restored into an isolat
 ```sql
 SELECT version, description, success FROM flyway_schema_history ORDER BY installed_rank;
 ```
-- `V1_01`: init — `success: true`
-- `V1_02`: event publication — `success: true`
-- Flyway migration state matches `dev` repository exactly.
+- All 13 migrations (`V1_01` through `V1_13`) installed and verified (`success: true`).
+- Flyway migration state matches `staging` and `dev` repository exactly.
 
 ---
 
