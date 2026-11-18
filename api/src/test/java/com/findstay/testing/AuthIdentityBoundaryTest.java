@@ -45,9 +45,8 @@ class AuthIdentityBoundaryTest extends AbstractIntegrationTest {
     void theBoundaryMigrationIsPartOfEveryFreshDatabase() {
         List<Map<String, Object>> history = jdbc.queryForList(
                 "SELECT version, success FROM flyway_schema_history ORDER BY installed_rank");
-        assertTrue(history.stream().anyMatch(r -> "1.14".equals(String.valueOf(r.get("version"))),
-                        "V1_14 (auth_identity, DEC-S1-04/A) must be in every fresh database"),
-                "missing V1_14 in " + history);
+        assertTrue(history.stream().anyMatch(r -> "1.14".equals(String.valueOf(r.get("version")))),
+                "V1_14 (auth_identity, DEC-S1-04/A) must be in every fresh database");
         assertTrue(history.stream().allMatch(r -> Boolean.TRUE.equals(r.get("success"))),
                 "a migration failed: " + history);
     }
