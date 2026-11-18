@@ -60,7 +60,7 @@ Checked against `dev`: `shared.BackgroundJobs` (Spring `TaskScheduler`, virtual 
 
 ## What this decision changes in the artifacts
 
-- **New:** `V1_14__auth_identity.sql` (this PR), `AuthIdentityBoundaryTest` (proves the DDL, the uniqueness, the FK and the `findstay_app` grants on a real database).
+- **New:** `V1_14__auth_identity.sql` (this PR) and the DEC-S1-04/A proof methods in `ThrowawayDatabaseHarnessTest` (proves the DDL, the uniqueness, the FK, the closed provider set and the `findstay_app` grants on a real database — all database-level proofs live in that one class until F4 below lands).
 - **Updated:** ERD §1 (id rule — exception removed), §3.1 (`auth_identity` in the diagram), §4 (constraints row), §6 (numbering note), table count 34 → 35; `api/README.md` migration table + next free version → `V1_15`; this file added to the decision log index.
 - **Untouched on purpose:** `V1_04` and `dec-s1-01-t6-backend-contracts.md` — applied migrations and recorded decisions are never edited; this entry is the supersession record.
 
@@ -71,3 +71,4 @@ Checked against `dev`: `shared.BackgroundJobs` (Spring `TaskScheduler`, virtual 
 | `DEC-S1-04/A-F1` | Account linking policy (two credentials, one email: link or reject) | S1-04 review, if product wants social sign-in later | A `provider_email` column on `auth_identity` + a linking flow; additive |
 | `DEC-S1-04/A-F2` | Second auth provider (e.g. SMS OTP or Google) | A story that requires it | New `provider` CHECK value + rows; no business-table change — the point of this decision |
 | `DEC-S1-04/A-F3` | Server-side provisioning webhook | Sprint 3–4 hardening (as DEC-S1-01/A-F1 already records) | The webhook handler provisions through the same recipe; the id model is unaffected |
+| `DEC-S1-04/A-F4` | Shared throwaway-DB container across multiple integration test classes | The first story that adds a second integration test class (S1-04) | Start the container once per test run (singleton pattern) so the cached Spring context keeps its pool; keep the skip-without-Docker semantics. Found the hard way: the container lifecycle is per class, the context cache is per run |
