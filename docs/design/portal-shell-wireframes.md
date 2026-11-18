@@ -181,4 +181,4 @@ Every screen in `/owner/*` and `/admin/*` uses these four standardized state com
 
 ### 4D. Loading / Skeleton States (`NFR-03`)
 - **Rule:** Match the final layout geometry (cards on mobile, table rows on desktop) with `aria-busy="true"` and `aria-label="Loading..."`.
-- **Styling:** Warm `Sand/30` (`#DCCB91` at 30% opacity) pulsing blocks on `Ivory` (`#F7F3EA`) canvas—never blank white screens or unlabelled spinners for page loads.
+- **Styling:** Warm `Sand/30` (`#DCCB91` at 30% opacity) pulsing blocks on the white (`#FFFFFF`) page canvas—never a blank screen or unlabelled spinners for page loads.
