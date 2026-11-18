@@ -10,7 +10,7 @@ The database schema is created **only** by the numbered Flyway scripts in
 [`src/main/resources/db/migration/`](./src/main/resources/db/migration/).
 Never change the database by hand; never edit a script that has already run
 anywhere (add a new one instead). Sprint 1 owns the `V1_01`–`V1_19` range;
-the next free version today is **`V1_14`**.
+the next free version today is **`V1_15`**.
 
 | Script | Module / contents |
 | :--- | :--- |
@@ -27,6 +27,7 @@ the next free version today is **`V1_14`**.
 | `V1_11` | `notification` — inbox, templates, preferences, delivery log |
 | `V1_12` | the `findstay_app` DB role and all grants (grants last) |
 | `V1_13` | the starter reference values (T15): 7 accommodation types, 4 billing periods (only `NIGHTLY` active), 3 platform settings (`privacy.policy_version`, `flag.auth.sms_otp`, `flag.notifications.sms`) |
+| `V1_14` | `identity.auth_identity` — the vendor id boundary (DEC-S1-04/A): `(provider, provider_user_id) -> user_account_id`; `user_account.id` is FindStay's own UUIDv7 from now on |
 
 ### Option A — let the app do it (recommended)
 
