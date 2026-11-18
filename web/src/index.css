@@ -8,6 +8,9 @@
  * checked for WCAG AA contrast (>= 4.5:1 normal text, >= 3:1 UI/borders).
  */
 :root {
+  /* Light mode only: FindStay has no dark theme, so stop browsers auto-darkening the white canvas */
+  color-scheme: light;
+
   /* Core brand palette */
   --color-olive: #55624a;          /* primary nav, core actions (5.9:1 on Ivory) */
   --color-olive-hover: #434e3a;    /* darkened hover/active olive */
@@ -43,6 +46,7 @@
 
 @layer base {
   body {
+    /* White page canvas. Cream (Ivory, surface-muted, Sand/30) is for supporting surfaces only. */
     background-color: #ffffff;
     color: var(--color-earth);
   }
