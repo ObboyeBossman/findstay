@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FindStay Sprint 1 Wireframes (S1-01-T4)</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:14px system-ui,sans-serif;background:#e4e4e4;color:#333}
+header{padding:20px 28px;background:#333;color:#eee}header h1{margin:0 0 6px;font-size:20px}header p{margin:2px 0;color:#bbb;font-size:13px}
+nav.toc{padding:12px 28px;background:#d0d0d0;font-size:12px;line-height:1.9}nav.toc a{color:#333;margin-right:10px;text-decoration:none;border-bottom:1px dotted #666}
+section{margin:28px;padding:18px;background:#f4f4f4;border:1px solid #bbb}section h2{margin:0 0 4px;font-size:17px}
+.sub{color:#666;font-size:12px;margin-bottom:14px}.row{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.wrap{overflow-x:auto;max-width:100%}.lbl{font-size:11px;color:#666;margin-bottom:4px}
+.ph{width:360px;border:2px solid #666;background:#fff;display:flex;flex-direction:column;min-height:520px}
+.dt{width:900px;border:2px solid #666;background:#fff;display:flex;flex-direction:column;min-height:420px}
+.bar{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#ccc;border-bottom:1px solid #888;font-weight:600}
+.body{display:flex;flex:1}.side{width:170px;background:#ddd;border-right:1px solid #999;padding:10px}.side div{padding:7px 8px;margin-bottom:4px;background:#eee;border:1px solid #bbb;font-size:12px}
+.main{flex:1;padding:14px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-content:start}.ph .main{display:flex;flex-direction:column}
+.c .main{max-width:440px;margin:30px auto;border:1px solid #999;flex:none;width:100%;display:flex;flex-direction:column;padding:20px}.c.body{background:#eee}
+.e{position:relative;grid-column:span 6}.e.k{grid-column:span 2}.dt .e.i{grid-column:span 3}
+.mk{position:absolute;left:-8px;top:-8px;width:18px;height:18px;border-radius:50%;background:#333;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;z-index:2}
+.h{font-weight:700;font-size:16px;padding:6px 0}.tx i{display:block;height:7px;background:#ccc;margin:6px 0;width:90%}.tx i+i{width:70%}
+.in{height:30px;border:1px solid #888;background:#fff;margin-top:3px}.e.i small,.e.x small{font-size:11px;color:#555}
+.btn{padding:10px;text-align:center;background:#555;color:#fff;font-weight:600}.btn.s{background:#fff;color:#333;border:1px solid #555}
+.card{border:1px solid #999;background:#f0f0f0;padding:8px}.card .m{height:70px;margin-bottom:6px}.m{background:#ddd;border:1px dashed #888;height:110px;display:flex;align-items:center;justify-content:center;color:#888;font-size:11px}
+.tabs,.chips{display:flex;gap:6px;flex-wrap:wrap}.tabs b,.chips b{padding:6px 10px;border:1px solid #888;background:#eee;font-weight:500;font-size:12px}.tabs b:first-child,.chips b:first-child{background:#999;color:#fff}
+.lr{display:flex;align-items:center;gap:8px;padding:9px;border:1px solid #bbb;margin-bottom:-1px;background:#fafafa;font-size:12px}.lr:before{content:"";width:22px;height:22px;background:#ccc;flex:none}
+.ban{padding:10px;border:1px solid #888;background:#e6e6e6;font-size:12px}.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.cal i{aspect-ratio:1;background:#ddd;border:1px solid #aaa}.cal i:nth-child(7n+3){background:repeating-linear-gradient(45deg,#aaa,#aaa 3px,#ddd 3px,#ddd 6px)}
+.otp{display:flex;gap:6px}.otp i{flex:1;height:44px;border:1px solid #666;background:#fff}.xr{display:flex;gap:8px;align-items:center;font-size:12px}.xr:before{content:"";width:16px;height:16px;border:1px solid #666;flex:none}
+.bn{display:flex;border-top:1px solid #888;background:#ccc;margin-top:auto}.bn div{flex:1;text-align:center;padding:8px 2px;font-size:11px;border-right:1px solid #aaa}.bn div:before{content:"";display:block;width:16px;height:16px;background:#888;margin:0 auto 3px}
+.leg{margin:14px 0 0;padding:0;list-style:none;columns:2;font-size:12px;column-gap:30px}.leg li{margin-bottom:5px;break-inside:avoid}.leg b{display:inline-block;width:18px;height:18px;border-radius:50%;background:#333;color:#fff;text-align:center;font-size:10px;line-height:18px;margin-right:6px}
+.out{background:#ddd;margin:28px;padding:14px;font-size:12px}@media print{section{break-inside:avoid}}
+</style></head><body>
+<header><h1>FindStay — Sprint 1 Wireframes (S1-01-T4)</h1>
+<p>Grey lo-fi layouts, phone-first (360px) with desktop variant (≥1024px). Source: SCR-* inventory in docs/design/user-flows.md (S1-01-T3).</p>
+<p>Numbered dots = element; legend under each screen says what it does. Status is never colour-only (icon + label, NFR-07). Prices GH₵ (stored pesewas); times Africa/Accra (stored UTC). Dashed boxes = images.</p></header>
+<nav class="toc" id="toc"></nav><div id="app"></div>
+<div class="out"><b>Out of Sprint 1 (not drawn):</b> SCR-25A Recently Viewed, SCR-26 Booking Details, SCR-27 Confirm Booking, SCR-28 Booking Confirmation. Loading/empty/error/success states follow the Screen-State Matrix (§7) and are not redrawn per screen.</div>
+<script>
+// [type,label,note,repeat]  types: h heading,t text,i input,b button,s secondary button,k card,m image,g tabs,f chips/status,d calendar,o OTP,a banner,l list rows,x checkbox
+const NAV={o:['Home','Listings','Staff','Profile'],a:['Home','Queue','Users','Audit'],p:['Home','Search','Profile']};
+const SIDE={o:['Dashboard','Listings','Organisation','Verification','Profile'],a:['Dashboard','Review queue','Users','Settings','Audit log'],p:[]};
+const S=[
+['01','Sign In','c','',[['h','Sign in to FindStay','Page title'],['i','Email or phone','Sign-in identifier; validated on blur'],['i','Password','Masked; show/hide toggle'],['s','Forgot password?','Opens SCR-04'],['b','Sign in','POST /auth/session; spinner while loading; inline error or lockout notice on failure'],['s','Create account','Opens SCR-02']]],
+['02','Create Account','c','',[['h','Create your account','Page title'],['i','Full name','Required'],['i','Email or phone','Required; duplicate shows inline error'],['i','Password','Live policy checklist underneath'],['x','I accept the Privacy Notice (Act 843)','Required; submit blocked until checked; records consent'],['b','Create account','Registers, then goes to SCR-03A / 03B'],['s','Already registered? Sign in','Opens SCR-01']]],
+['03A','Account Verification (OTP)','c','',[['h','Verify your account','Page title'],['t','Code sent to your email/phone','Tells user where the code went'],['o','6-digit code','Large boxes; auto-advance; paste supported'],['b','Verify','Submits code; inline error if invalid/expired'],['s','Resend code','Disabled during cooldown timer']]],
+['03B','Email Link Landing','c','',[['a','Status card: Verified / Already verified / Link expired','Icon + text per state'],['b','Continue to sign in','Opens SCR-01'],['s','Resend link','Only shown when link expired']]],
+['04','Forgot Password','c','',[['h','Reset your password','Page title'],['i','Registered email','Required'],['b','Send reset link','Requests reset; goes to SCR-05 flow'],['s','Back to sign in','Opens SCR-01']]],
+['05','Reset Password','c','',[['h','Choose a new password','Page title'],['i','New password','Masked'],['i','Confirm password','Must match'],['t','Policy checklist (length, number…)','Ticks live as rules are met'],['b','Update password','Inline error if expired link; success goes to SCR-01']]],
+['06','Profile & Notification Preferences','o','o',[['g','Profile|Notifications','Sections (tabs on phone, sidebar on desktop)'],['i','Name','Editable profile field'],['i','Contact details','Editable; saved via PATCH /me'],['x','Email','Notification toggle'],['x','SMS','Notification toggle'],['x','In-app','Notification toggle'],['s','Switch portal','Opens SCR-06B (multi-role users)'],['b','Save changes','Saves profile + preferences; banner on failure'],['s','Log out','Ends session, goes to SCR-01']]],
+['06B','Role / Portal Picker','c','',[['h','Choose a portal','Page title'],['k','Guest','Goes to Homepage SCR-22'],['k','Owner / Staff','Goes to SCR-07'],['k','Admin','Only shown if user holds Admin role; goes to SCR-18']]],
+['06C','Policy Re-Consent Gate','c','',[['a','Our privacy policy has changed','Blocks entry until accepted'],['t','Summary of changes + link to full policy','Readable before accepting'],['x','I accept policy version X','Required'],['b','Accept and continue','Records consent'],['s','Log out','Only alternative to accepting']]],
+['06D','Session Expired','c','',[['a','Your session has expired','Shown on 401 / refresh failure'],['t','Please sign in again to continue','Plain explanation'],['b','Sign in again','Opens SCR-01, returns user to previous page']]],
+['07','Owner Dashboard','o','o',[['a','Verification status banner','Pending / Approved / Rejected, icon + text; links to SCR-10'],['k','Active listings','Count; opens SCR-07B'],['k','Pending review','Count of submissions waiting'],['k','Alerts','Admin decisions / corrections needed'],['s','+ Add property','Opens SCR-11']]],
+['07B','Owner Listings List','o','o',[['f','All|Draft|Pending|Live|Paused','Filter by status'],['k','Property card: photo, name, status badge','Tap opens SCR-14; Pause / Activate action (FR-13)',3],['b','+ Add property','Opens SCR-11; also the empty-state action']]],
+['08','Organisation & Staff Setup','o','o',[['i','Organisation name','Edit company space'],['l','Staff list|Name · role · properties','Each row opens edit; role and property scope shown'],['b','Invite staff','Opens invite sheet: email, role, property multi-select']]],
+['08B','Staff Invitation Acceptance','c','',[['h','Join [Organisation]','Page title'],['t','Role and assigned properties','Read-only summary'],['i','Set password','New users only; existing users sign in instead'],['x','I accept the Privacy Notice','Required for new users'],['b','Accept invitation','Joins org, goes to SCR-07 scoped to assigned properties']]],
+['09','Owner Verification Upload','o','o',[['k','Ghana Card','Upload card + status; attach file/photo'],['k','Ownership proof','Upload card'],['k','GTA licence','Upload card'],['b','Submit for review','Disabled until all required docs attached; on a rejection only the failed doc is re-uploaded']]],
+['10','Owner Verification Status','o','o',[['f','Overall: Pending','Overall status chip with icon'],['l','Ghana Card · Approved ✓|Ownership proof · Rejected ✗|GTA licence · Pending ⏳','Per-document status with icon + text'],['a','Rejection note from admin','Shows what to fix'],['s','Re-upload document','Opens SCR-09 for the rejected doc only']]],
+['11','Add / Edit Property Form','o','o',[['a','Draft auto-saved','Auto-save indicator'],['g','Details|Location|Amenities|Rules','Accordion steps on phone; two columns on desktop'],['i','Property name','Required'],['i','Address / area','Required'],['x','Amenities checklist','Multi-select'],['b','Next: units','Validates, then SCR-11B'],['s','Pause listing','Pauses/deactivates (existing property)']]],
+['11B','Multi-Unit Editor','o','o',[['l','Unit rows|Unit name · rate · billing period','Tap to edit; delete action'],['i','Unit name','Required'],['i','Rate (GH₵)','Displayed in GHS, stored as pesewas'],['i','Billing period','Select'],['b','Add unit','Bottom sheet on phone, drawer on desktop'],['s','Next: photos','Needs at least 1 valid unit; opens SCR-12']]],
+['11C','Listing Preview','o','',[['m','Guest-view preview of listing','Exactly what guests will see'],['t','Details, units, GH₵ price','Read-only'],['s','Back to edit','Returns to SCR-11'],['b','Submit for review','Sticky bar; goes to SCR-13; 409 error if already under review']]],
+['12','Photo Management','o','o',[['b','+ Upload photo','WebP, max 10 photos'],['k','Photo tile','Cover badge, reorder, replace, delete',4],['t','x of 10 photos used','Cap indicator'],['s','Continue to preview','Opens SCR-11C']]],
+['13','Property Submission Status','o','o',[['f','Draft → Pending review → Approved / Corrections / Rejected','Timeline with icons + labels'],['l','Correction list|Admin fix note','Shown if corrections requested'],['b','Fix and resubmit','Opens SCR-11; Approved goes to SCR-14']]],
+['14','Manage Property & Units','o','o',[['h','Property summary header','Name, status, photo'],['g','Overview|Units|Calendar','Tabs on desktop; action list on phone'],['l','Edit details|Pause / Activate|Units|Availability calendar','Opens SCR-11, 11B, 15']]],
+['15','Unit Availability Calendar','o','o',[['h','Unit name + month switcher','Previous/next month'],['d','Month grid','Available vs Owner-blocked (Booked is Sprint 2+)'],['f','Available ▢|Owner-blocked ▨','Legend uses pattern + label, not colour only'],['b','Block dates','Opens SCR-16']]],
+['16','Block / Unblock Dates','o','o',[['i','Start date','Shown in Ghana time'],['i','End date','Must follow start date'],['t','Dates stored in UTC','Helper text'],['b','Save block','409 error if overlap; invalid range inline'],['s','Remove block / Cancel','Removes existing block']]],
+['17','Admin Sign In','c','',[['h','Admin sign in','Page title'],['i','Email','Required'],['i','Password','Masked'],['b','Sign in','403 if account is not Admin']]],
+['18','Admin Dashboard','a','a',[['k','Pending verifications','Count; opens SCR-19'],['k','Pending listings','Count; opens SCR-19'],['k','Users','Totals'],['k','Recent alerts','Latest events']]],
+['19','Submitted Review Queue','a','a',[['f','All|Verifications|Listings','Filter queue'],['k','Queue item: owner, type, age badge','Tap opens SCR-20',3],['a','All caught up','Empty state when queue is empty']]],
+['20','Property & Verification Review','a','a',[['m','Listing photos','Inspect uploaded photos'],['l','Ghana Card|Ownership proof|GTA licence','Per-document Approve / Reject'],['i','Notes','Required for corrections or rejection'],['b','Approve','Sticky decision bar on phone'],['s','Request corrections','Needs fix list'],['s','Reject','Needs reason']]],
+['21A','User Management','a','a',[['i','Search users','By name or email'],['l','User rows|Name · roles · status','Row opens action sheet'],['s','Suspend / Restore','Confirm dialog; revokes session']]],
+['21B','Platform Settings','a','a',[['l','General|Policy version|Feature flags','Grouped settings'],['i','Selected setting value','Editable'],['b','Save settings','Writes audit entry']]],
+['21C','Audit Log Viewer','a','a',[['i','Filter by actor / action','Filters'],['f','Date range|Action type','Chips'],['l','Event rows|Time (Ghana) · actor · action · target','Read-only; compact cards on phone, table on desktop']]],
+['22','Homepage','p','p',[['i','Search: where to?','Opens SCR-23'],['h','Featured accommodation','Section title'],['k','Featured property card','Photo, name, GH₵ price, Verified badge; opens SCR-25',3]]],
+['23','Search Accommodation','p','p',[['i','Destination','Location'],['i','Dates','Stay dates'],['i','Guests','Number'],['x','Filters (price, facilities)','Full-screen sheet on phone; left sidebar on desktop'],['b','Show results','Opens SCR-24']]],
+['24','Search Results','p','p',[['f','Sort|Filters','Sort and filter controls'],['k','Listing card: photo, GH₵ price, Verified badge','Opens SCR-25',4],['a','No matches – Clear filters','Empty state']]],
+['25','Property Details','p','p',[['m','Photo carousel / gallery','Swipe on phone'],['h','Name, GH₵ price, Verified Owner badge','Badge has icon + text'],['l','Facilities|Location|Rules','Property info'],['s','Save / Share','Sprint 3 stub; disabled'],['b','Make a booking','Sprint 2+; sticky CTA on phone, prompts sign-in']]],
+['29','404 Not Found','p','',[['h','Page not found','Icon + message'],['b','Go home','Opens SCR-22']]],
+['ERR','Offline / Server Error','p','',[['h','Something went wrong','Icon + simple message'],['t','Check your connection and try again','Plain wording'],['b','Retry','Repeats the failed request']]]
+];
+function R(e,n){const[t,l,note,c=1]=e;let h='';const q=l.split('|');
+for(let r=0;r<c;r++){let b='';
+if(t=='h')b=`<div class=h>${l}</div>`;else if(t=='t')b=`<div class=tx><b>${l}</b><i></i><i></i></div>`;
+else if(t=='i')b=`<small>${l}</small><div class=in></div>`;else if(t=='b')b=`<div class=btn>${l}</div>`;else if(t=='s')b=`<div class="btn s">${l}</div>`;
+else if(t=='k')b=`<div class=card><div class=m>image</div><small>${l}</small></div>`;else if(t=='m')b=`<div class=m>✕ ${l}</div>`;
+else if(t=='g'||t=='f')b=`<div class="${t=='g'?'tabs':'chips'}">${q.map(x=>`<b>${x}</b>`).join('')}</div>`;
+else if(t=='d')b=`<div class=cal>${'<i></i>'.repeat(35)}</div>`;else if(t=='o')b=`<small>${l}</small><div class=otp>${'<i></i>'.repeat(6)}</div>`;
+else if(t=='a')b=`<div class=ban>ℹ ${l}</div>`;else if(t=='x')b=`<div class=xr>${l}</div>`;
+else if(t=='l')b=`<div>${q.length>1&&t=='l'&&q.length<=3&&!q[0].includes('·')&&l.includes('·')?'':''}${(q.length==2&&q[1].includes('·')?[q[1],q[1],q[1]]:q).map(x=>`<div class=lr>${x}</div>`).join('')}</div>`;
+h+=`<div class="e ${t}"><span class=mk>${n}</span>${b}</div>`}return h}
+function nav(k){return k?`<div class=bn>${NAV[k].map(x=>`<div>${x}</div>`).join('')}</div>`:''}
+let toc='',out='';
+S.forEach(([id,name,lay,nv,els])=>{const a='SCR-'+id;toc+=`<a href="#${a}">${a}</a>`;
+const m=els.map((e,i)=>R(e,i+1)).join(''),dc=els.map((e,i)=>R(e,i+1)).join('');
+const key=lay=='c'?'':lay;
+out+=`<section id="${a}"><h2>${a} · ${name}</h2><div class=sub>Phone 360px → Desktop ≥1024px</div><div class=row>
+<div><div class=lbl>Phone · 360px</div><div class=ph><div class=bar>${lay=='c'?'FindStay':'☰ '+name}</div><div class=main>${m}</div>${nav(nv)}</div></div>
+<div class=wrap><div class=lbl>Desktop · ≥1024px</div><div class=dt><div class=bar>FindStay ${lay=='p'?' &nbsp;|&nbsp; Search &nbsp;|&nbsp; Sign in':''}</div><div class="body ${lay=='c'?'c':''}">${SIDE[key]&&SIDE[key].length?`<div class=side>${SIDE[key].map(x=>`<div>${x}</div>`).join('')}</div>`:''}<div class=main>${dc}</div></div></div></div></div>
+<ol class=leg style="list-style:none">${els.map((e,i)=>`<li><b>${i+1}</b><strong>${e[1].split('|')[0]}</strong> — ${e[2]}</li>`).join('')}</ol></section>`});
+document.getElementById('toc').innerHTML=toc;document.getElementById('app').innerHTML=out;
+</script></body></html>
