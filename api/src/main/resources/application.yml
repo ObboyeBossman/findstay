@@ -27,6 +27,10 @@ spring:
       add-mappings: false
 
 findstay:
+  auth:
+    issuer: ${SUPABASE_JWT_ISSUER:}
+    supabase-url: ${SUPABASE_URL:}
+    supabase-service-role-key: ${SUPABASE_SERVICE_ROLE_KEY:}
   cors:
     allowed-origins: http://localhost:3000,https://findstay-web-staging.obboyebossman.workers.dev
   r2:

@@ -1,12 +1,20 @@
 package com.findstay.shared.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -38,8 +46,42 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health", "/actuator/health/**", "/actuator/info").permitAll()
                         .requestMatchers("/api/v1/health").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/lookup").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()));
         return http.build();
+    }
+
+    /**
+     * Validates Supabase JWT signatures via JWKS (supporting RS256 and ES256) and
+     * enforces both timestamp validity (exp/nbf) and the expected issuer claim (TA-07, TA-08).
+     */
+    @Bean
+    JwtDecoder jwtDecoder(
+            @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") String jwkSetUri,
+            @Value("${findstay.auth.issuer:}") String configuredIssuer) {
+        NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri)
+                .jwsAlgorithms(algs -> {
+                    algs.add(SignatureAlgorithm.RS256);
+                    algs.add(SignatureAlgorithm.ES256);
+                })
+                .build();
+        String issuer = resolveIssuer(jwkSetUri, configuredIssuer);
+        OAuth2TokenValidator<Jwt> validator = (issuer != null && !issuer.isBlank())
+                ? JwtValidators.createDefaultWithIssuer(issuer)
+                : JwtValidators.createDefault();
+        decoder.setJwtValidator(validator);
+        return decoder;
+    }
+
+    private static String resolveIssuer(String jwkSetUri, String configuredIssuer) {
+        if (configuredIssuer != null && !configuredIssuer.isBlank()) {
+            return configuredIssuer.trim();
+        }
+        String suffix = "/.well-known/jwks.json";
+        if (jwkSetUri != null && jwkSetUri.endsWith(suffix)) {
+            return jwkSetUri.substring(0, jwkSetUri.length() - suffix.length());
+        }
+        return null;
     }
 }
