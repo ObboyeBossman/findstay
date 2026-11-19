@@ -70,20 +70,20 @@ export const PortalShell: React.FC<PortalShellProps> = ({
             isActive
               ? 'bg-olive text-ivory'
               : 'text-earth hover:bg-surface-hover'
-          } ${compact ? 'group relative min-h-[3.75rem] min-w-[3.75rem] justify-center px-2 py-2' : 'gap-3 px-3 py-2'}`
+          } ${compact ? 'group relative min-h-rail min-w-rail justify-center px-2 py-2' : 'gap-3 px-3 py-2'}`
         }
       >
         <Icon className={`${compact ? 'h-7 w-7' : 'h-5 w-5'} shrink-0`} aria-hidden="true" />
         <span className={compact ? 'sr-only' : 'truncate'}>{item.label}</span>
         {typeof item.badgeCount === 'number' && item.badgeCount > 0 ? (
-          <span className="ml-auto rounded-full bg-terracotta-dark px-2 py-0.5 text-[11px] font-bold text-ivory">
+          <span className="ml-auto rounded-full bg-terracotta-dark px-2 py-0.5 text-micro font-bold text-ivory">
             {item.badgeCount}
           </span>
         ) : null}
         {compact ? (
           <span
             role="tooltip"
-            className="pointer-events-none absolute left-full z-50 ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+            className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
           >
             {item.label}
           </span>
@@ -93,15 +93,15 @@ export const PortalShell: React.FC<PortalShellProps> = ({
   };
 
   return (
-    <div className="flex min-h-screen w-full overflow-x-hidden bg-white text-earth">
+    <div className="flex min-h-screen w-full overflow-x-hidden bg-surface-card text-earth">
       {/* Desktop persistent sidebar (240px) */}
       <aside
         aria-label={`${portalName} sidebar`}
-        className="fixed inset-y-0 left-0 z-40 hidden w-24 flex-col border-r border-border-subtle bg-surface-card lg:flex"
+        className="fixed inset-y-0 left-0 z-overlay hidden w-24 flex-col border-r border-border-subtle bg-surface-card lg:flex"
       >
         <div className="flex h-16 flex-col items-center justify-center gap-1">
           <BrandMark compact />
-          <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${badgeClassName}`}>
+          <span className={`rounded-full px-2 py-0.5 text-nano font-bold uppercase tracking-wider ${badgeClassName}`}>
             {portalBadge}
           </span>
         </div>
@@ -122,12 +122,12 @@ export const PortalShell: React.FC<PortalShellProps> = ({
               })
             }
             aria-label="View notifications"
-            className="group relative inline-flex min-h-[3.75rem] min-w-[3.75rem] items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover hover:text-earth"
+            className="group relative inline-flex min-h-rail min-w-rail items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover hover:text-earth"
           >
             <Bell className="h-7 w-7" aria-hidden="true" />
             <span
               role="tooltip"
-              className="pointer-events-none absolute left-full z-50 ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
             >
               Notifications
             </span>
@@ -142,7 +142,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
       {/* Main column */}
       <div className="flex min-w-0 flex-1 flex-col lg:ml-24">
         {/* Top bar (56px mobile, 64px desktop) */}
-        <header className="sticky top-0 z-30 bg-white/95 backdrop-blur">
+        <header className="sticky top-0 z-sticky bg-surface-card/95 backdrop-blur">
           <div className="relative flex min-h-20 items-center justify-center gap-2 px-3 sm:px-6">
             <div className="absolute left-3 flex min-w-0 items-center gap-2 sm:left-6 lg:hidden">
               <button
@@ -154,7 +154,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
                 <Menu className="h-5 w-5" aria-hidden="true" />
               </button>
               <BrandMark className="lg:hidden" />
-              <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider lg:hidden ${badgeClassName}`}>
+              <span className={`rounded-full px-2 py-0.5 text-micro font-bold uppercase tracking-wider lg:hidden ${badgeClassName}`}>
                 {portalBadge}
               </span>
             </div>
@@ -169,7 +169,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
                 })
               }
               aria-label="Search stays, places, or features"
-              className="flex h-12 w-full max-w-2xl items-center justify-between rounded-full border-2 border-earth bg-white px-5 text-left text-body-2 text-earth/70 transition-colors hover:bg-surface-hover focus-visible:outline-offset-4 sm:w-4/5"
+              className="flex h-12 w-full max-w-2xl items-center justify-between rounded-full border-2 border-earth bg-surface-card px-5 text-left text-body-2 text-earth/70 transition-colors hover:bg-surface-hover focus-visible:outline-offset-4 sm:w-4/5"
             >
               <span>Search stays, places, or features</span>
               <Search className="h-7 w-7 shrink-0" aria-hidden="true" />
@@ -180,7 +180,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
         {/* Mobile/tablet slide-over navigation drawer */}
         {drawerOpen ? (
           <div
-            className="fixed inset-0 z-40 flex lg:hidden"
+            className="fixed inset-0 z-overlay flex lg:hidden"
             role="dialog"
             aria-modal="true"
             aria-label={`${portalName} navigation drawer`}
@@ -190,7 +190,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
               onClick={() => setDrawerOpen(false)}
               aria-hidden="true"
             />
-            <div className="relative z-10 flex w-72 max-w-[85vw] flex-col bg-surface-card shadow-xl">
+            <div className="relative z-raised flex w-72 max-w-drawer flex-col bg-surface-card shadow-xl">
               <div className="flex h-topbar items-center justify-between border-b border-border-subtle px-4">
                 <BrandMark />
                 <button
@@ -238,7 +238,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
         {/* Mobile sticky bottom bar (< 768px) with icon + short label */}
         <nav
           aria-label={`${portalName} quick navigation`}
-          className="fixed inset-x-0 bottom-0 z-30 grid h-bottomnav grid-cols-5 border-t border-border-subtle bg-surface-card md:hidden"
+          className="fixed inset-x-0 bottom-0 z-sticky grid h-bottomnav grid-cols-5 border-t border-border-subtle bg-surface-card md:hidden"
         >
           {bottomItems.map((item) => {
             const Icon = item.icon;
@@ -248,7 +248,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `relative flex min-h-touch flex-col items-center justify-center gap-0.5 px-1 text-[11px] font-medium ${
+                  `relative flex min-h-touch flex-col items-center justify-center gap-0.5 px-1 text-micro font-medium ${
                     isActive
                       ? 'text-olive font-bold'
                       : 'text-earth/75 hover:text-earth'
@@ -265,7 +265,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            className="flex min-h-touch flex-col items-center justify-center gap-0.5 px-1 text-[11px] font-medium text-earth/75 hover:text-earth"
+            className="flex min-h-touch flex-col items-center justify-center gap-0.5 px-1 text-micro font-medium text-earth/75 hover:text-earth"
           >
             <MoreHorizontal className="h-5 w-5 shrink-0" aria-hidden="true" />
             <span>More</span>

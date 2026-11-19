@@ -28,8 +28,8 @@ export const AppLayout: React.FC = () => {
     });
 
   return (
-    <div className="flex min-h-screen bg-white text-earth">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-24 flex-col border-r border-border-subtle bg-white py-4 lg:flex">
+    <div className="flex min-h-screen bg-surface-card text-earth">
+      <aside className="fixed inset-y-0 left-0 z-overlay hidden w-24 flex-col border-r border-border-subtle bg-surface-card py-4 lg:flex">
         <div className="flex justify-center">
           <BrandMark compact />
         </div>
@@ -43,7 +43,7 @@ export const AppLayout: React.FC = () => {
                 end={a.to === '/'}
                 aria-label={a.label}
                 className={({ isActive }) =>
-                  `group relative inline-flex min-h-[3.75rem] min-w-[3.75rem] items-center justify-center rounded-2xl transition-colors ${
+                  `group relative inline-flex min-h-rail min-w-rail items-center justify-center rounded-2xl transition-colors ${
                     isActive ? 'bg-surface-muted text-earth' : 'text-earth/70 hover:bg-surface-hover hover:text-earth'
                   }`
                 }
@@ -52,7 +52,7 @@ export const AppLayout: React.FC = () => {
                 <span className="sr-only">{a.label}</span>
                 <span
                   role="tooltip"
-                  className="pointer-events-none absolute left-full z-50 ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                  className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
                 >
                   {a.label}
                 </span>
@@ -69,12 +69,12 @@ export const AppLayout: React.FC = () => {
               })
             }
             aria-label="View notifications"
-            className="group relative inline-flex min-h-[3.75rem] min-w-[3.75rem] items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover hover:text-earth"
+            className="group relative inline-flex min-h-rail min-w-rail items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover hover:text-earth"
           >
             <Bell className="h-7 w-7" aria-hidden="true" />
             <span
               role="tooltip"
-              className="pointer-events-none absolute left-full z-50 ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
             >
               Notifications
             </span>
@@ -83,12 +83,12 @@ export const AppLayout: React.FC = () => {
         <NavLink
           to="/auth/sign-in"
           aria-label="Sign in"
-          className="group relative mx-auto inline-flex min-h-[3.75rem] min-w-[3.75rem] items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover hover:text-earth"
+          className="group relative mx-auto inline-flex min-h-rail min-w-rail items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover hover:text-earth"
         >
           <UserCircle className="h-7 w-7" aria-hidden="true" />
           <span
             role="tooltip"
-            className="pointer-events-none absolute left-full z-50 ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+            className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
           >
             Sign in
           </span>
@@ -96,7 +96,7 @@ export const AppLayout: React.FC = () => {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col lg:ml-24">
-        <header className="sticky top-0 z-30 bg-white/95 backdrop-blur">
+        <header className="sticky top-0 z-sticky bg-surface-card/95 backdrop-blur">
           <div className="relative mx-auto flex min-h-20 w-full max-w-7xl items-center justify-center gap-2 px-3 sm:gap-4 sm:px-6">
             <BrandMark className="lg:hidden" />
 
@@ -104,7 +104,7 @@ export const AppLayout: React.FC = () => {
               type="button"
               onClick={explainSearch}
               aria-label="Search stays, places, or features"
-              className="flex h-12 w-full max-w-2xl items-center justify-between rounded-full border-2 border-earth bg-white px-5 text-left text-body-2 text-earth/70 transition-colors hover:bg-surface-hover focus-visible:outline-offset-4 sm:w-4/5"
+              className="flex h-12 w-full max-w-2xl items-center justify-between rounded-full border-2 border-earth bg-surface-card px-5 text-left text-body-2 text-earth/70 transition-colors hover:bg-surface-hover focus-visible:outline-offset-4 sm:w-4/5"
             >
               <span>Search stays, places, or features</span>
               <Search className="h-7 w-7 shrink-0" aria-hidden="true" />
@@ -129,7 +129,7 @@ export const AppLayout: React.FC = () => {
           {mobileMenuOpen ? (
             <nav
               aria-label="Portal areas"
-              className="absolute inset-x-3 top-full z-40 mt-2 grid gap-1 rounded-2xl border border-border-subtle bg-white p-2 shadow-lg lg:hidden"
+              className="absolute inset-x-3 top-full z-overlay mt-2 grid gap-1 rounded-2xl border border-border-subtle bg-surface-card p-2 shadow-lg lg:hidden"
             >
               {areas.map((a) => (
                 <NavLink
