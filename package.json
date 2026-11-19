@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "npm run dev -w @findstay/web",
     "dev:showcase": "npm run dev -w @findstay/showcase",
-    "build": "npm run build -w @findstay/web",
+    "lint:theme": "node scripts/check-theme.mjs",
+    "build": "npm run lint:theme && npm run build -w @findstay/web",
     "build:showcase": "npm run build -w @findstay/showcase",
     "typecheck": "npm run typecheck -w @findstay/web",
     "sync:project": "node scripts/sync-project.mjs"

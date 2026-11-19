@@ -12,3 +12,8 @@
 - Treat authorization as API-enforced; client checks are for experience, not security.
 - Use `VITE_` variables only for safe browser configuration. Document new variables in `.env.example` with no secrets.
 - Run `npm run typecheck` for TypeScript changes and `npm run build` for a production build. Do not edit `dist/`.
+
+## Design tokens — no hard-coded visual values
+
+All colours, spacing, sizes, radii, shadows, fonts, line heights, z-index and durations live in `src/theme/tokens.css` and are used through the Tailwind classes mapped in `tailwind.config.js`. **Never write a hex/rgb colour, `px`/`rem` length, arbitrary Tailwind value (`p-[13px]`, `text-[11px]`), `text-white`, `bg-white`, default Tailwind palette/size class, numeric `z-*`, or literal duration** in components or CSS. Need something new? Add a token first. Full rule and class vocabulary: `docs/rules/design-system-and-theming.md`. `npm run lint:theme` enforces it (also run by `npm run build`).
+

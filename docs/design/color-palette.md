@@ -1,7 +1,9 @@
 # FindStay Color Palette
 
 The palette is based on the approved calm, earthy reference. It is a design
-specification; no application color tokens are implemented yet.
+specification. It is implemented as design tokens in
+[`web/src/theme/tokens.css`](../../web/src/theme/tokens.css); see
+[`docs/rules/design-system-and-theming.md`](../rules/design-system-and-theming.md).
 
 | Name | Hex | Intended use |
 | :--- | :--- | :--- |
