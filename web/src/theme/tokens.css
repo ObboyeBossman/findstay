@@ -58,7 +58,7 @@
   --palette-sand-900: 55 51 36;
   --palette-sand-950: 22 20 14;
 
-  /* Ivory — page canvas (#F7F3EA) */
+  /* Ivory — soft brand accent (#F7F3EA) */
   --palette-ivory-50: 254 254 253;
   --palette-ivory-100: 253 253 251;
   --palette-ivory-200: 252 250 247;
@@ -89,7 +89,7 @@
   /* ---------- Layer 2: semantic colour roles ---------- */
 
   /* Surfaces */
-  --color-canvas: var(--palette-ivory-500);        /* page background */
+  --color-canvas: var(--palette-white);            /* page background (white, set by Product Owner) */
   --color-surface: var(--palette-white);           /* cards, panels, dialogs */
   --color-surface-muted: 239 234 224;              /* inputs, nav bar, progress track (#EFEAE0) */
   --color-overlay: var(--palette-earth-500);       /* modal scrim (use with opacity: bg-overlay/50) */

@@ -30,7 +30,7 @@ FindStay helps people in Ghana (the board's search placeholder is *"Search Takor
 
 ## 3. Visual language (from the Design System Board)
 
-- **Palette:** Olive (primary, trust), Terracotta (warmth, favourites), Sand (highlight, pending), Ivory (canvas), Earth (text, inverted). Each has a 50–950 scale in `tokens.css`; use the semantic roles in `.rules/06-…` §4.1.
+- **Palette:** Olive (primary, trust), Terracotta (warmth, favourites), Sand (highlight, pending), Ivory (soft accent; the page canvas itself is white), Earth (text, inverted). Each has a 50–950 scale in `tokens.css`; use the semantic roles in `.rules/06-…` §4.1.
 - **Type:** Headlines Roboto Black 900 (`font-headline text-h1`…); body Work Sans Regular 400 (`text-body`); labels Work Sans Medium 500 (`text-label`). Fonts are self-hosted via `@fontsource` — do not add a CDN or another family.
 - **Shape:** pill buttons and chips (`rounded-full`), circular icon buttons, soft-rounded cards and inputs.
 - **Components on the board:** Primary / Reserve / Inverted / Outlined buttons, status chips, search field, bottom navigation, circular and square icon buttons. Build these once as shared components and reuse them; recipes are in `.rules/06-…` §4.4.

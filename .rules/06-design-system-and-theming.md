@@ -39,7 +39,7 @@ The default Tailwind theme is **replaced, not extended**. Off-system utilities (
 
 | Need | Class | Notes |
 |------|-------|-------|
-| Page background | `bg-canvas` | Ivory |
+| Page background | `bg-canvas` | White (same value as `bg-surface`: separate cards from the page with `border-border` or `shadow-sm`) |
 | Cards, panels, dialogs | `bg-surface` | White |
 | Inputs, nav bar, progress track | `bg-surface-muted` | |
 | Hairlines / input outline | `border-border` | |
