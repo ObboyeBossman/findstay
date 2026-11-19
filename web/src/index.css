@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global element defaults. Token-backed utilities only - no raw values here. */
+@layer base {
+  html {
+    @apply bg-canvas font-body text-body text-text;
+    -webkit-text-size-adjust: 100%;
+  }
+
+
+  h1 { @apply font-headline text-h1; }
+  h2 { @apply font-headline text-h2; }
+  h3 { @apply font-headline text-h3; }
+  h4 { @apply font-headline text-h4; }
+
+  :focus-visible {
+    @apply outline-none ring ring-focus ring-offset-canvas;
+  }
+
+  ::placeholder {
+    @apply text-muted;
+  }
+}

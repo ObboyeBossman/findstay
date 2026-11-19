@@ -1,0 +1,241 @@
+/* ==========================================================================
+   FindStay design tokens — THE single source of truth for every visual value.
+
+   Source: "FindStay Design System Board" (palette, type, buttons, chips, nav).
+   Rules:  .rules/06-design-system-and-theming.md  and  .agents/AGENTS.md
+
+   - Colours are stored as space-separated RGB channels ("R G B") so Tailwind can
+     apply opacity:  bg-primary/50  ->  rgb(var(--color-primary) / 0.5)
+   - Layer 1  --palette-*   raw brand scales. Only referenced from THIS file and
+                            from tailwind.config.js. Never used by components.
+   - Layer 2  --color-*     semantic roles. This is what components consume
+                            (via Tailwind classes such as bg-primary, text-muted).
+   - Change a value here and the whole application follows. Do not add values
+     anywhere else.
+   ========================================================================== */
+
+:root {
+  /* ---------- Layer 1: palette (tint/shade scales exactly as on the board) ----------
+     50-400 = base mixed with white (92/80/60/40/20 %), 600-950 = base mixed with
+     black (20/40/60/75/90 %). 500 is the brand colour. */
+
+  /* Olive — primary brand, trust, "Verified" (#55624A) */
+  --palette-olive-50: 241 242 241;
+  --palette-olive-100: 221 224 219;
+  --palette-olive-200: 187 192 183;
+  --palette-olive-300: 153 161 146;
+  --palette-olive-400: 119 129 110;
+  --palette-olive-500: 85 98 74;
+  --palette-olive-600: 68 78 59;
+  --palette-olive-700: 51 59 44;
+  --palette-olive-800: 34 39 30;
+  --palette-olive-900: 21 24 18;
+  --palette-olive-950: 8 10 7;
+
+  /* Terracotta — warmth, favourites, "Rejected" outline (#BC6746) */
+  --palette-terracotta-50: 250 243 240;
+  --palette-terracotta-100: 242 225 218;
+  --palette-terracotta-200: 228 194 181;
+  --palette-terracotta-300: 215 164 144;
+  --palette-terracotta-400: 201 133 107;
+  --palette-terracotta-500: 188 103 70;
+  --palette-terracotta-600: 150 82 56;
+  --palette-terracotta-700: 113 62 42;
+  --palette-terracotta-800: 75 41 28;
+  --palette-terracotta-900: 47 26 18;
+  --palette-terracotta-950: 19 10 7;
+
+  /* Sand — highlight, progress, "Pending" (#DCCB91) */
+  --palette-sand-50: 252 251 246;
+  --palette-sand-100: 248 245 233;
+  --palette-sand-200: 241 234 211;
+  --palette-sand-300: 234 224 189;
+  --palette-sand-400: 227 213 167;
+  --palette-sand-500: 220 203 145;
+  --palette-sand-600: 176 162 116;
+  --palette-sand-700: 132 122 87;
+  --palette-sand-800: 88 81 58;
+  --palette-sand-900: 55 51 36;
+  --palette-sand-950: 22 20 14;
+
+  /* Ivory — page canvas (#F7F3EA) */
+  --palette-ivory-50: 254 254 253;
+  --palette-ivory-100: 253 253 251;
+  --palette-ivory-200: 252 250 247;
+  --palette-ivory-300: 250 248 242;
+  --palette-ivory-400: 249 245 238;
+  --palette-ivory-500: 247 243 234;
+  --palette-ivory-600: 198 194 187;
+  --palette-ivory-700: 148 146 140;
+  --palette-ivory-800: 99 97 94;
+  --palette-ivory-900: 62 61 58;
+  --palette-ivory-950: 25 24 23;
+
+  /* Earth — text, inverted surfaces (#3E2F26) */
+  --palette-earth-50: 240 238 238;
+  --palette-earth-100: 216 213 212;
+  --palette-earth-200: 178 172 168;
+  --palette-earth-300: 139 130 125;
+  --palette-earth-400: 101 89 81;
+  --palette-earth-500: 62 47 38;
+  --palette-earth-600: 50 38 30;
+  --palette-earth-700: 37 28 23;
+  --palette-earth-800: 25 19 15;
+  --palette-earth-900: 16 12 10;
+  --palette-earth-950: 6 5 4;
+
+  --palette-white: 255 255 255;
+
+  /* ---------- Layer 2: semantic colour roles ---------- */
+
+  /* Surfaces */
+  --color-canvas: var(--palette-ivory-500);        /* page background */
+  --color-surface: var(--palette-white);           /* cards, panels, dialogs */
+  --color-surface-muted: 239 234 224;              /* inputs, nav bar, progress track (#EFEAE0) */
+  --color-overlay: var(--palette-earth-500);       /* modal scrim (use with opacity: bg-overlay/50) */
+
+  /* Lines */
+  --color-border: 220 212 197;                     /* hairlines, input outlines (#DCD4C5) */
+  --color-border-strong: var(--palette-earth-500); /* "Outlined" button, emphasis */
+
+  /* Text */
+  --color-text: var(--palette-earth-500);          /* body + headings */
+  --color-text-muted: 139 123 110;                 /* placeholders, captions, helper text (#8B7B6E) */
+  --color-text-inverse: var(--palette-white);      /* text on filled brand surfaces */
+
+  /* Actions */
+  --color-primary: var(--palette-olive-500);       /* "Primary" button, active nav */
+  --color-primary-hover: var(--palette-olive-600);
+  --color-primary-active: var(--palette-olive-700);
+  --color-accent: 150 75 47;                       /* "Reserve" CTA, edit action (#964B2F, AA with white text) */
+  --color-accent-hover: 120 60 38;
+  --color-accent-active: 90 45 28;
+  --color-favourite: var(--palette-terracotta-500);/* heart / saved icon button */
+  --color-inverse: var(--palette-earth-500);       /* "Inverted" button, delete icon button */
+  --color-inverse-hover: var(--palette-earth-600);
+  --color-highlight: var(--palette-sand-500);      /* sand icon button, progress accent */
+  --color-focus: var(--palette-olive-500);         /* keyboard focus ring */
+
+  /* Status chips (Verified / Pending / Rejected) */
+  --color-success: 59 72 50;                       /* text + icon  (#3B4832) */
+  --color-success-subtle: 238 242 234;             /* chip fill    (#EEF2EA) */
+  --color-success-border: var(--palette-olive-500);
+  --color-warning: 107 78 22;                      /* text + icon  (#6B4E16) */
+  --color-warning-subtle: 251 246 228;             /* chip fill    (#FBF6E4) */
+  --color-warning-border: 181 141 53;              /* chip outline (#B58D35) */
+  --color-danger: 140 45 25;                       /* text + icon  (#8C2D19) */
+  --color-danger-subtle: 253 241 239;              /* chip fill    (#FDF1EF) */
+  --color-danger-border: var(--palette-terracotta-500);
+
+  /* ---------- Typography ---------- */
+  --font-headline: 'Roboto', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Work Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-black: 900;
+
+  /* Headline scale (Roboto Black 900): 60 / 48 / 40 / 32 / 24 */
+  --text-display: 3.75rem;
+  --text-h1: 3rem;
+  --text-h2: 2.5rem;
+  --text-h3: 2rem;
+  --text-h4: 1.5rem;
+  /* Body (Work Sans Regular 400): 20 / 16, caption 13. Label: Medium 500, 16 / 140% */
+  --text-body-lg: 1.25rem;
+  --text-body: 1rem;
+  --text-label: 1rem;
+  --text-caption: 0.8125rem;
+
+  --leading-heading: 1.1;   /* ASSUMPTION: not on the board - confirm */
+  --leading-body: 1.5;      /* ASSUMPTION: not on the board - confirm */
+  --leading-label: 1.4;     /* board: 140% */
+  --leading-caption: 1.4;   /* ASSUMPTION: not on the board - confirm */
+
+  /* ---------- Spacing (4px grid) ---------- */
+  --space-0: 0;
+  --space-px: 1px;
+  --space-0-5: 0.125rem;
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Component sizing (44px minimum touch target - NFR-09 / NFR-12) */
+  --size-control-sm: 2.25rem;
+  --size-control-md: 2.75rem;
+  --size-control-lg: 3.25rem;
+  --size-icon-sm: 1rem;
+  --size-icon-md: 1.25rem;
+  --size-icon-lg: 1.5rem;
+
+  /* Layout */
+  --layout-max-width: 80rem;
+  --layout-content-width: 48rem;
+  --layout-form-width: 28rem;
+
+  /* ---------- Shape ---------- */
+  --radius-none: 0;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;       /* pill buttons, chips, circular icon buttons */
+
+  --border-width: 1px;
+  --border-width-strong: 2px;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* ---------- Elevation ---------- */
+  --shadow-sm: 0 1px 2px rgb(var(--color-text) / 0.08);
+  --shadow-md: 0 4px 12px rgb(var(--color-text) / 0.10);
+  --shadow-lg: 0 12px 32px rgb(var(--color-text) / 0.12);
+
+  /* ---------- Layering ---------- */
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-nav: 30;
+  --z-overlay: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+
+  /* ---------- Motion ---------- */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---------- State ---------- */
+  --opacity-disabled: 0.5;
+}
+
+/* Smaller headline steps on phones (NFR-09, NFR-12). ASSUMPTION: the board shows
+   desktop sizes only - confirm these mobile values. */
+@media (max-width: 639.98px) {
+  :root {
+    --text-display: 2.5rem;
+    --text-h1: 2.25rem;
+    --text-h2: 2rem;
+    --text-h3: 1.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-base: 0.01ms;
+    --duration-slow: 0.01ms;
+  }
+}
