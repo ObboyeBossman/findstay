@@ -3,6 +3,7 @@
 | | |
 |---|---|
 | **Weeks** | Weeks 1–2 |
+| **Calendar** | Starts **Sunday 15 Nov 2026 (Day 1)** · Foundation Gate Day 3 (17 Nov) · Feature Freeze Day 8 (22 Nov) · Review & Demo Day 10 (24 Nov). Day N = 15 Nov + N − 1. Detail: [kickoff notes](../../meeting-notes/sprint-01-kickoff.md) |
 | **Release** | Phase 1, Release `R1` (Owner and administrator pilot release) |
 | **Requirement Items** | 108 |
 | **Related Docs** | [Acceptance Criteria Index](./acceptance-criteria/acceptance-criteria.md) · [Settled Decisions](./decisions/settled-decisions.md) · [Scrum Rules](../scrum-rules.md) |
