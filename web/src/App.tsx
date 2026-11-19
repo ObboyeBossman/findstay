@@ -6,12 +6,12 @@ import {
   AuthCallbackPage,
   AuthFlowPage,
   AuthProvider,
+  ForgotPasswordPage,
   VerifyEmailPage,
 } from './features/identity';
 import { AdminLayout } from './layouts/AdminLayout';
 import { OwnerLayout } from './layouts/OwnerLayout';
 import { GuestHomePage } from './pages/GuestHomePage';
-import { AuthScreenPage } from './pages/AuthScreenPage';
 import { OwnerAreaPage } from './pages/OwnerAreaPage';
 import { AdminAreaPage } from './pages/AdminAreaPage';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -29,19 +29,10 @@ export const App: React.FC = () => (
           <Route path="/auth/sign-in" element={<AuthFlowPage defaultIntent="sign-in" />} />
           <Route path="/auth/sign-up" element={<AuthFlowPage defaultIntent="sign-up" />} />
           <Route path="/auth/verify" element={<VerifyEmailPage />} />
+          <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<GuestHomePage />} />
-            <Route
-              path="/auth/forgot-password"
-              element={
-                <AuthScreenPage
-                  title="Reset your password"
-                  story="S1-05 — Password Reset & User Profile"
-                  note="Password reset runs through Supabase Auth, never the business API."
-                />
-              }
-            />
             <Route path="/auth/*" element={<Navigate to="/auth/sign-in" replace />} />
           </Route>
 

@@ -16,13 +16,13 @@
   color-scheme: light;
 
   /* ---------- Colour ---------- */
-  --color-olive-ch: 85 98 74;               /* #55624a — primary nav, core actions (5.9:1 on Ivory) */
-  --color-olive-hover-ch: 67 78 58;         /* #434e3a — darkened hover/active olive */
+  --color-olive-ch: 46 111 64;              /* #2e6f40 — primary nav, core actions (6.0:1 on white/Ivory) */
+  --color-olive-hover-ch: 36 88 50;         /* #245832 — darkened hover/active green */
   --color-terracotta-ch: 188 103 70;        /* #bc6746 — large accents & borders */
   --color-terracotta-dark-ch: 150 75 47;    /* #964b2f — contrast-safe CTA & text (5.4:1 on Ivory/white) */
   --color-sand-ch: 220 203 145;             /* #dccb91 — supporting accents, skeleton base */
   --color-ivory-ch: 247 243 234;            /* #f7f3ea — warm supporting surface (never the page canvas) */
-  --color-earth-ch: 62 47 38;               /* #3e2f26 — primary text & dark surfaces (11.4:1 on Ivory) */
+  --color-earth-ch: 74 44 29;               /* #4a2c1d — richer chocolate primary text & dark surfaces */
 
   --color-canvas-ch: 255 255 255;           /* #ffffff — NEW: page canvas (white). Cream is for supporting surfaces only */
   --color-on-brand-ch: 255 255 255;         /* #ffffff — NEW: text/icons on olive, terracotta, earth fills */

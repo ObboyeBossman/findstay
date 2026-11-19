@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowLeft, Check, Eye, EyeOff, Loader, Phone, X } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Loader, Phone, X } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { FormField, InlineError, useToast } from '../../components/ui';
 import { ApiClientError, apiFetch } from '../../lib/api';
@@ -109,10 +109,12 @@ export const AuthFlowPage: React.FC<Props> = () => {
   const [step, setStep] = useState<AuthStep>(() =>
     sessionExpired ? 'sign-in' : 'email',
   );
+  const [signUpStage, setSignUpStage] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -179,6 +181,14 @@ export const AuthFlowPage: React.FC<Props> = () => {
       }
     } catch {
       await minDelay;
+      if (import.meta.env.DEV) {
+        const displayName = trimmedEmail.split('@')[0] || trimmedEmail;
+        const found: KnownAccount = { email: trimmedEmail, displayName };
+        setMatchedAccount(found);
+        setKnownAccounts(saveKnownAccount(found));
+        setStep('choose-account');
+        return;
+      }
       setBanner({
         kind: 'error',
         message: 'Unable to check your account right now. Please try again.',
@@ -400,6 +410,13 @@ export const AuthFlowPage: React.FC<Props> = () => {
       });
 
       if (error) {
+        if (
+          import.meta.env.DEV &&
+          error.message.toLowerCase().includes('rate limit')
+        ) {
+          navigate('/auth/verify', { state: { email: normalizedEmail } });
+          return;
+        }
         setBanner({ kind: 'error', message: error.message });
         return;
       }
@@ -468,12 +485,19 @@ export const AuthFlowPage: React.FC<Props> = () => {
       : step === 'sign-in'
         ? 'Sign in to continue to FindStay.'
         : step === 'sign-up'
-          ? 'Complete your details to get started.'
+          ? signUpStage === 1
+            ? 'Enter your email address to get started.'
+            : signUpStage === 2
+              ? 'Enter your full name.'
+              : signUpStage === 3
+                ? 'Add your phone number (optional).'
+                : signUpStage === 4
+                  ? 'Create a strong password.'
+                  : 'Review and accept our terms to finish.'
           : 'Find verified stays across Ghana or manage your properties.';
 
   const emailStepBusy = authLoading || lookupLoading || oauthLoading;
   const emailPrimaryLoading = authLoading || lookupLoading;
-  const isBusy = emailStepBusy || submitting;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-surface-card px-4 py-8 text-earth">
@@ -529,7 +553,7 @@ export const AuthFlowPage: React.FC<Props> = () => {
               {(matchedAccount ? [matchedAccount] : knownAccounts).map((account) => (
                 <div
                   key={account.email}
-                  className="flex items-center justify-between rounded-2xl border border-border-subtle bg-surface-card p-2.5 text-left transition-colors hover:bg-surface-hover/50"
+                  className="flex items-center justify-between rounded-2xl border border-olive/30 bg-surface-card p-2.5 text-left transition-colors hover:border-olive hover:bg-olive/5"
                 >
                   <button
                     type="button"
@@ -542,12 +566,12 @@ export const AuthFlowPage: React.FC<Props> = () => {
                     }}
                     className="flex min-w-0 flex-1 items-center gap-3 text-left"
                   >
-                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sand text-caption font-bold text-earth">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-olive text-caption font-bold text-on-brand">
                       {getInitials(account.displayName || account.email)}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-caption font-semibold text-earth">
-                        {account.displayName}
+                        Continue as {account.displayName}
                       </span>
                       <span className="block truncate text-micro text-earth/70">
                         {account.email}
@@ -590,7 +614,7 @@ export const AuthFlowPage: React.FC<Props> = () => {
                   setEmail('');
                   setStep('email');
                 }}
-                className="inline-flex min-h-touch w-full items-center justify-center rounded-full border border-border-subtle bg-surface-card px-6 py-3 text-caption font-medium text-earth transition-colors hover:bg-surface-hover/50"
+                className="inline-flex min-h-touch w-full items-center justify-center rounded-full border border-terracotta/40 bg-surface-card px-6 py-3 text-caption font-medium text-terracotta-dark transition-colors hover:border-terracotta hover:bg-terracotta/5"
               >
                 Use another account
               </button>
@@ -604,7 +628,7 @@ export const AuthFlowPage: React.FC<Props> = () => {
                   setEmail('');
                   setStep('sign-up');
                 }}
-                className="inline-flex min-h-touch w-full items-center justify-center rounded-full border border-border-subtle bg-surface-card px-6 py-3 text-caption font-medium text-earth transition-colors hover:bg-surface-hover/50"
+                className="inline-flex min-h-touch w-full items-center justify-center rounded-full bg-terracotta px-6 py-3 text-caption font-semibold text-on-brand transition-colors hover:bg-terracotta-dark"
               >
                 Create account
               </button>
@@ -733,7 +757,7 @@ export const AuthFlowPage: React.FC<Props> = () => {
                 error={fieldErrors.email}
               />
             ) : (
-              <div className="flex items-center justify-between rounded-full border border-border-subtle bg-surface-muted px-4 py-2 text-caption">
+              <div className="flex items-center justify-between rounded-full border border-olive/25 bg-olive/5 px-4 py-2 text-caption">
                 <span className="truncate font-medium text-earth">{email}</span>
                 <button
                   type="button"
@@ -742,7 +766,7 @@ export const AuthFlowPage: React.FC<Props> = () => {
                     setFieldErrors({});
                     setStep('email');
                   }}
-                  className="ml-2 shrink-0 font-semibold text-terracotta hover:underline"
+                  className="ml-2 shrink-0 font-semibold text-terracotta-dark hover:underline"
                 >
                   Change
                 </button>
@@ -759,6 +783,7 @@ export const AuthFlowPage: React.FC<Props> = () => {
                 </label>
                 <Link
                   to="/auth/forgot-password"
+                  state={{ email }}
                   className="text-caption font-semibold text-terracotta hover:underline"
                 >
                   Forgot password?
@@ -774,10 +799,10 @@ export const AuthFlowPage: React.FC<Props> = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   aria-invalid={fieldErrors.password ? 'true' : undefined}
-                  className={`min-h-touch w-full rounded-lg border bg-surface-card px-3 py-2 pr-11 text-body-2 text-earth focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${
+                  className={`min-h-touch w-full rounded-full border bg-surface-card px-4 py-2 pr-12 text-body-2 text-earth focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
                     fieldErrors.password
-                      ? 'border-status-error-border bg-status-error-bg/40'
-                      : 'border-border-subtle focus:border-olive'
+                      ? 'border-status-error-border bg-status-error-bg/40 focus:ring-status-error-border/20'
+                      : 'border-border-subtle focus:border-olive focus:ring-olive/15'
                   }`}
                 />
                 <button
@@ -827,144 +852,242 @@ export const AuthFlowPage: React.FC<Props> = () => {
         ) : null}
 
         {step === 'sign-up' ? (
-          <form onSubmit={handleSignUpSubmit} noValidate className="mt-6 space-y-4 text-left">
-            {email ? (
-              <div className="flex items-center justify-between rounded-full border border-border-subtle bg-surface-muted px-4 py-2 text-caption">
-                <span className="truncate font-medium text-earth">{email}</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setBanner(null);
-                    setFieldErrors({});
-                    setStep('email');
-                  }}
-                  className="ml-2 shrink-0 font-semibold text-terracotta hover:underline"
-                >
-                  Change
-                </button>
-              </div>
-            ) : (
-              <FormField
-                id="signup-email"
-                label="Email address"
-                type="email"
-                inputMode="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="ama@example.com"
-                error={fieldErrors.email}
-              />
-            )}
-
-            <FormField
-              id="signup-full-name"
-              label="Full name"
-              type="text"
-              autoComplete="name"
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Ama Mensah"
-              error={fieldErrors.fullName}
-            />
-
-            <FormField
-              id="signup-phone"
-              label="Phone number (optional)"
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+233 24 123 4567"
-              hint="Ghana E.164 (+233XXXXXXXXX) or local 0XXXXXXXXX."
-              error={fieldErrors.phone}
-            />
-
-            <div>
-              <label
-                htmlFor="signup-password"
-                className="mb-1 block text-caption font-semibold text-earth"
-              >
-                Password <span className="text-terracotta-dark" aria-hidden="true">*</span>
-              </label>
-              <div className="relative">
+          <form
+            onSubmit={(e) => {
+              if (signUpStage < 5) {
+                e.preventDefault();
+                setBanner(null);
+                setFieldErrors({});
+                if (signUpStage === 1) {
+                  const trimmedEmail = email.trim().toLowerCase();
+                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+                    setFieldErrors({ email: 'Please enter a valid email address.' });
+                    return;
+                  }
+                  setEmail(trimmedEmail);
+                  setSignUpStage(2);
+                } else if (signUpStage === 2) {
+                  if (!fullName.trim()) {
+                    setFieldErrors({ fullName: 'Please enter your full name.' });
+                    return;
+                  }
+                  setSignUpStage(3);
+                } else if (signUpStage === 3) {
+                  const digits = phone.replace(/\D/g, '');
+                  if (digits && !/^0\d{9}$/.test(digits)) {
+                    setFieldErrors({
+                      phone: 'Enter a valid 10-digit Ghana phone number (e.g. 024 000 0000).',
+                    });
+                    return;
+                  }
+                  setSignUpStage(4);
+                } else if (signUpStage === 4) {
+                  if (!passwordValid) {
+                    setFieldErrors({
+                      password: 'Password must be at least 8 characters with upper/lowercase and a number.',
+                    });
+                    return;
+                  }
+                  if (password !== confirmPassword) {
+                    setFieldErrors({
+                      confirmPassword: 'Passwords do not match.',
+                    });
+                    return;
+                  }
+                  setSignUpStage(5);
+                }
+                return;
+              }
+              void handleSignUpSubmit(e);
+            }}
+            noValidate
+            className="mt-6 space-y-4 text-left"
+          >
+            {signUpStage === 1 ? (
+              <div>
                 <input
-                  id="signup-password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
+                  id="signup-email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  aria-label="Email address"
                   required
-                  disabled={submitting}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  aria-invalid={fieldErrors.password ? 'true' : undefined}
-                  className={`min-h-touch w-full rounded-lg border bg-surface-card px-3 py-2 pr-11 text-body-2 text-earth focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${
-                    fieldErrors.password
-                      ? 'border-status-error-border bg-status-error-bg/40'
-                      : 'border-border-subtle focus:border-olive'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="ama@example.com"
+                  aria-invalid={fieldErrors.email ? 'true' : undefined}
+                  className={`min-h-touch w-full rounded-full border bg-surface-card px-4 py-3 text-body-2 text-earth placeholder:text-earth/45 focus:outline-none focus:ring-2 ${
+                    fieldErrors.email
+                      ? 'border-status-error-border bg-status-error-bg/40 focus:ring-status-error-border/20'
+                      : 'border-border-subtle focus:border-olive focus:ring-olive/15'
                   }`}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-1 top-1/2 inline-flex min-h-touch min-w-touch -translate-y-1/2 items-center justify-center rounded-lg text-earth/70 hover:text-earth"
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
+                <InlineError id="signup-email-error" message={fieldErrors.email} />
               </div>
-              <InlineError id="signup-password-error" message={fieldErrors.password} />
+            ) : null}
 
-              <ul className="mt-2 space-y-1 text-caption">
-                {[
-                  { ok: passwordChecks.length, text: 'At least 8 characters' },
-                  { ok: passwordChecks.caseMix, text: 'Uppercase & lowercase letters' },
-                  { ok: passwordChecks.digit, text: 'At least 1 number' },
-                ].map((item) => (
-                  <li
-                    key={item.text}
-                    className={`flex items-center gap-1.5 ${
-                      item.ok ? 'font-medium text-status-success-fg' : 'text-earth/70'
-                    }`}
-                  >
-                    <Check className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                    <span>{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <label className="flex cursor-pointer items-start gap-3 text-caption text-earth">
+            {signUpStage === 2 ? (
+              <div>
                 <input
-                  type="checkbox"
-                  checked={acceptedTerms}
-                  onChange={(e) => setAcceptedTerms(e.target.checked)}
-                  className="mt-0.5 h-5 w-5 shrink-0 rounded border-border-subtle accent-olive"
+                  id="signup-full-name"
+                  type="text"
+                  autoComplete="name"
+                  aria-label="Full name"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Ama Mensah"
+                  aria-invalid={fieldErrors.fullName ? 'true' : undefined}
+                  className={`min-h-touch w-full rounded-full border bg-surface-card px-4 py-3 text-body-2 text-earth placeholder:text-earth/45 focus:outline-none focus:ring-2 ${
+                    fieldErrors.fullName
+                      ? 'border-status-error-border bg-status-error-bg/40 focus:ring-status-error-border/20'
+                      : 'border-border-subtle focus:border-olive focus:ring-olive/15'
+                  }`}
                 />
-                <span>
-                  I agree to the FindStay Terms of Service and consent to data processing
-                  under the Ghana Data Protection Act (Act 843).
-                </span>
-              </label>
-              <InlineError id="signup-terms-error" message={fieldErrors.terms} />
-            </div>
+                <InlineError id="signup-full-name-error" message={fieldErrors.fullName} />
+              </div>
+            ) : null}
 
-            <TurnstileWidget
-              onVerify={setTurnstileToken}
-              onExpire={() => setTurnstileToken(null)}
-            />
+            {signUpStage === 3 ? (
+              <div>
+                <input
+                  id="signup-phone"
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel"
+                  aria-label="Phone number (optional)"
+                  maxLength={12}
+                  value={phone}
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, '').slice(0, 10);
+                    const formatted =
+                      digits.length <= 3
+                        ? digits
+                        : digits.length <= 6
+                          ? `${digits.slice(0, 3)} ${digits.slice(3)}`
+                          : `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+                    setPhone(formatted);
+                  }}
+                  placeholder="024 000 0000 (optional)"
+                  aria-invalid={fieldErrors.phone ? 'true' : undefined}
+                  className={`min-h-touch w-full rounded-full border bg-surface-card px-4 py-3 text-body-2 text-earth placeholder:text-earth/45 focus:outline-none focus:ring-2 ${
+                    fieldErrors.phone
+                      ? 'border-status-error-border bg-status-error-bg/40 focus:ring-status-error-border/20'
+                      : 'border-border-subtle focus:border-olive focus:ring-olive/15'
+                  }`}
+                />
+                <InlineError id="signup-phone-error" message={fieldErrors.phone} />
+              </div>
+            ) : null}
+
+            {signUpStage === 4 ? (
+              <div>
+                <div className="relative">
+                  <input
+                    id="signup-password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    aria-label="Password"
+                    placeholder="Enter a strong password"
+                    required
+                    disabled={submitting}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    aria-invalid={fieldErrors.password ? 'true' : undefined}
+                    className={`min-h-touch w-full rounded-full border px-4 py-3 pr-12 text-body-2 text-earth placeholder:text-earth/45 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${(() => {
+                      if (fieldErrors.password) {
+                        return 'border-status-error-border bg-status-error-bg/40 focus:ring-status-error-border/20';
+                      }
+                      if (password.length === 0) {
+                        return 'border-border-subtle bg-surface-card focus:border-olive focus:ring-olive/15';
+                      }
+                      const score = [
+                        passwordChecks.length,
+                        passwordChecks.caseMix,
+                        passwordChecks.digit,
+                      ].filter(Boolean).length;
+                      if (score === 3) {
+                        return 'border-olive bg-status-success-bg/30 focus:border-olive focus:ring-olive/20';
+                      }
+                      if (score === 2) {
+                        return 'border-status-warning-border bg-status-warning-bg/25 focus:border-status-warning-border focus:ring-status-warning-border/20';
+                      }
+                      return 'border-status-error-border bg-status-error-bg/20 focus:border-status-error-border focus:ring-status-error-border/20';
+                    })()}`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    className="absolute right-1.5 top-1/2 inline-flex min-h-touch min-w-touch -translate-y-1/2 items-center justify-center rounded-full text-earth/70 hover:text-earth"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+                <InlineError id="signup-password-error" message={fieldErrors.password} />
+
+                <div className="mt-3">
+                  <input
+                    id="signup-confirm-password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    aria-label="Confirm password"
+                    placeholder="Confirm your password"
+                    required
+                    disabled={submitting}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    aria-invalid={fieldErrors.confirmPassword ? 'true' : undefined}
+                    className={`min-h-touch w-full rounded-full border px-4 py-3 text-body-2 text-earth placeholder:text-earth/45 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                      fieldErrors.confirmPassword
+                        ? 'border-status-error-border bg-status-error-bg/40 focus:ring-status-error-border/20'
+                        : confirmPassword.length === 0
+                          ? 'border-border-subtle bg-surface-card focus:border-olive focus:ring-olive/15'
+                          : confirmPassword === password
+                            ? 'border-olive bg-status-success-bg/30 focus:border-olive focus:ring-olive/20'
+                            : 'border-status-error-border bg-status-error-bg/20 focus:border-status-error-border focus:ring-status-error-border/20'
+                    }`}
+                  />
+                  <InlineError id="signup-confirm-password-error" message={fieldErrors.confirmPassword} />
+                </div>
+              </div>
+            ) : null}
+
+            {signUpStage === 5 ? (
+              <>
+                <div>
+                  <label className="flex cursor-pointer items-start gap-3 text-caption text-earth">
+                    <input
+                      type="checkbox"
+                      checked={acceptedTerms}
+                      onChange={(e) => setAcceptedTerms(e.target.checked)}
+                      className="mt-0.5 h-5 w-5 shrink-0 rounded border-border-subtle accent-olive"
+                    />
+                    <span>
+                      I agree to the FindStay Terms of Service and consent to data processing
+                      under the Ghana Data Protection Act (Act 843).
+                    </span>
+                  </label>
+                  <InlineError id="signup-terms-error" message={fieldErrors.terms} />
+                </div>
+
+                <TurnstileWidget
+                  onVerify={setTurnstileToken}
+                  onExpire={() => setTurnstileToken(null)}
+                />
+              </>
+            ) : null}
 
             <button
               type="submit"
-              disabled={submitting || !turnstileToken}
+              disabled={signUpStage === 5 && (submitting || !turnstileToken)}
               aria-busy={submitting}
               className="inline-flex min-h-touch w-full items-center justify-center rounded-full bg-olive px-6 py-3 text-caption font-semibold text-on-brand transition-colors hover:bg-olive-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {submitting ? (
                 <Loader className="h-5 w-5 animate-spin" aria-label="Creating account" />
+              ) : signUpStage < 5 ? (
+                'Continue'
               ) : (
                 'Create account'
               )}
@@ -976,7 +1099,11 @@ export const AuthFlowPage: React.FC<Props> = () => {
               onClick={() => {
                 setBanner(null);
                 setFieldErrors({});
-                setStep(matchedAccount ? 'choose-account' : 'email');
+                if (signUpStage > 1) {
+                  setSignUpStage((s) => (s - 1) as 1 | 2 | 3 | 4 | 5);
+                } else {
+                  setStep(matchedAccount ? 'choose-account' : 'email');
+                }
               }}
               className="inline-flex min-h-touch w-full items-center justify-center gap-1.5 rounded-full text-caption font-semibold text-earth/75 transition-colors hover:bg-surface-hover/50 hover:text-earth disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -986,24 +1113,14 @@ export const AuthFlowPage: React.FC<Props> = () => {
           </form>
         ) : null}
 
-        <div className="mt-4">
-          <Link
-            to="/"
-            aria-disabled={isBusy || undefined}
-            tabIndex={isBusy ? -1 : undefined}
-            className={`inline-flex min-h-touch w-full items-center justify-center gap-1.5 rounded-full text-caption font-semibold text-earth/75 transition-colors hover:bg-surface-hover/50 hover:text-earth ${
-              isBusy ? 'pointer-events-none opacity-50' : ''
-            }`}
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            <span>Return home</span>
-          </Link>
-        </div>
-
-        <p className="mt-4 text-micro text-earth/60">
-          FindStay Terms of Service and Privacy Notice under the Ghana Data Protection Act
-          (Act 843) apply.
-        </p>
+        {step !== 'sign-up' ? (
+          <p className="mt-6 border-t border-border-subtle/60 pt-4 text-micro leading-relaxed text-earth/65">
+            By continuing, you agree to FindStay&apos;s{' '}
+            <span className="font-medium text-earth/85">Terms of Service</span> and{' '}
+            <span className="font-medium text-earth/85">Privacy Notice</span> under the Ghana Data
+            Protection Act (Act 843).
+          </p>
+        ) : null}
       </div>
     </div>
   );
