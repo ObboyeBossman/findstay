@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowLeft, Eye, EyeOff, Loader, Phone, X } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Loader, Mail, Phone, X } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { FormField, InlineError, useToast } from '../../components/ui';
 import { ApiClientError, apiFetch } from '../../lib/api';
@@ -110,7 +110,9 @@ export const AuthFlowPage: React.FC<Props> = () => {
     sessionExpired ? 'sign-in' : 'email',
   );
   const [signUpStage, setSignUpStage] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const [entryMethod, setEntryMethod] = useState<'email' | 'phone'>('email');
   const [email, setEmail] = useState('');
+  const [entryPhone, setEntryPhone] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -145,6 +147,25 @@ export const AuthFlowPage: React.FC<Props> = () => {
   const handleContinueEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     setBanner(null);
+
+    if (entryMethod === 'phone') {
+      const digits = entryPhone.replace(/\D/g, '');
+      if (!/^0\d{9}$/.test(digits)) {
+        setFieldErrors({
+          phone: 'Please enter a valid 10-digit Ghana phone number (e.g. 024 000 0000).',
+        });
+        return;
+      }
+      setFieldErrors({});
+      setPhone(entryPhone);
+      showToast({
+        variant: 'info',
+        title: 'SMS OTP launches after sender-ID approval',
+        message: 'Your phone number is saved — continue with your email for R1.',
+      });
+      return;
+    }
+
     const trimmedEmail = email.trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       setFieldErrors({ email: 'Please enter a valid email address.' });
@@ -628,29 +649,65 @@ export const AuthFlowPage: React.FC<Props> = () => {
         {step === 'email' ? (
           <div className="mt-7">
             <form onSubmit={handleContinueEmail} noValidate className="space-y-3.5 text-left">
-              <div>
-                <label htmlFor="auth-email" className="sr-only">
-                  Email address
-                </label>
-                <input
-                  id="auth-email"
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  required
-                  disabled={emailStepBusy}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email address"
-                  aria-invalid={fieldErrors.email ? 'true' : undefined}
-                  className={`min-h-touch w-full rounded-full border bg-surface-card px-5 py-3 text-caption text-earth transition-opacity placeholder:text-earth/50 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${
-                    fieldErrors.email
-                      ? 'border-status-error-border bg-status-error-bg/40'
-                      : 'border-border-subtle focus:border-olive'
-                  }`}
-                />
-                <InlineError id="auth-email-error" message={fieldErrors.email} />
-              </div>
+              {entryMethod === 'email' ? (
+                <div>
+                  <label htmlFor="auth-email" className="sr-only">
+                    Email address
+                  </label>
+                  <input
+                    id="auth-email"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    required
+                    disabled={emailStepBusy}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email address"
+                    aria-invalid={fieldErrors.email ? 'true' : undefined}
+                    className={`min-h-touch w-full rounded-full border bg-surface-card px-5 py-3 text-caption text-earth transition-opacity placeholder:text-earth/50 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${
+                      fieldErrors.email
+                        ? 'border-status-error-border bg-status-error-bg/40'
+                        : 'border-border-subtle focus:border-olive'
+                    }`}
+                  />
+                  <InlineError id="auth-email-error" message={fieldErrors.email} />
+                </div>
+              ) : (
+                <div>
+                  <label htmlFor="auth-phone" className="sr-only">
+                    Phone number
+                  </label>
+                  <input
+                    id="auth-phone"
+                    type="tel"
+                    inputMode="numeric"
+                    autoComplete="tel"
+                    maxLength={12}
+                    required
+                    disabled={emailStepBusy}
+                    value={entryPhone}
+                    onChange={(e) => {
+                      const digits = e.target.value.replace(/\D/g, '').slice(0, 10);
+                      const formatted =
+                        digits.length <= 3
+                          ? digits
+                          : digits.length <= 6
+                            ? `${digits.slice(0, 3)} ${digits.slice(3)}`
+                            : `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+                      setEntryPhone(formatted);
+                    }}
+                    placeholder="024 000 0000"
+                    aria-invalid={fieldErrors.phone ? 'true' : undefined}
+                    className={`min-h-touch w-full rounded-full border bg-surface-card px-5 py-3 text-caption text-earth transition-opacity placeholder:text-earth/50 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${
+                      fieldErrors.phone
+                        ? 'border-status-error-border bg-status-error-bg/40'
+                        : 'border-border-subtle focus:border-olive'
+                    }`}
+                  />
+                  <InlineError id="auth-phone-error" message={fieldErrors.phone} />
+                </div>
+              )}
 
               <button
                 type="submit"
@@ -714,17 +771,26 @@ export const AuthFlowPage: React.FC<Props> = () => {
               <button
                 type="button"
                 disabled={emailStepBusy}
-                onClick={() =>
-                  showToast({
-                    variant: 'info',
-                    title: 'Email sign-up is active for R1',
-                    message: 'Enter your email above; optional Ghana phone number can be added on the next step.',
-                  })
-                }
+                onClick={() => {
+                  setBanner(null);
+                  setFieldErrors({});
+                  setEmail('');
+                  setEntryPhone('');
+                  setEntryMethod((prev) => (prev === 'email' ? 'phone' : 'email'));
+                }}
                 className="inline-flex min-h-touch w-full items-center justify-center gap-2.5 rounded-full border border-border-subtle bg-surface-card px-6 py-3 text-caption font-medium text-earth transition-colors hover:bg-surface-hover/50 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <Phone className="h-4 w-4 text-earth/75" aria-hidden="true" />
-                <span>Continue with phone</span>
+                {entryMethod === 'email' ? (
+                  <>
+                    <Phone className="h-4 w-4 text-earth/75" aria-hidden="true" />
+                    <span>Continue with Phone</span>
+                  </>
+                ) : (
+                  <>
+                    <Mail className="h-4 w-4 text-earth/75" aria-hidden="true" />
+                    <span>Continue with Email</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
