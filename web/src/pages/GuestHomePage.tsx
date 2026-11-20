@@ -245,18 +245,18 @@ export const GuestHomePage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      <section className="flex flex-col gap-4 border-b border-border-subtle pb-6 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+      <section className="flex flex-col gap-6 border-b border-border-subtle py-8 sm:flex-row sm:items-end sm:justify-between sm:py-12">
+        <div className="space-y-3">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-surface-muted px-3 py-1 text-caption font-semibold text-olive">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Ghana Stays Preview · Live booking launches in Sprint 2</span>
           </div>
-          <h1 className="mt-3 font-display text-heading-2 text-earth">
+          <h1 className="font-display text-heading-2 text-earth">
             {sessionContext
               ? `Welcome back, ${sessionContext.profile.fullName}`
               : 'Find verified stays across Ghana'}
           </h1>
-          <p className="mt-1 max-w-2xl text-body-2 text-earth/75">
+          <p className="max-w-2xl text-body-2 leading-relaxed text-earth/75">
             Explore curated homes, apartments, and villas in Accra, Kumasi, Aburi, and
             Cape Coast with Ghana Card verified hosts and Mobile Money payments.
           </p>
