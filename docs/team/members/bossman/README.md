@@ -11,19 +11,27 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| [`S1-01-T6`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T6.md) | Draw the backend map & data-flow diagram, agree the API contracts | 1 | Todo | [#30](https://github.com/ObboyeBossman/findstay/issues/30) |
-| [`S1-01-T10`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T10.md) | Set up the code repo, branch rules, secrets & staging site | 1 | Todo | [#19](https://github.com/ObboyeBossman/findstay/issues/19) |
-| [`S1-01-T11`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T11.md) | Build the automatic checker — tests & publishes every change | 1 | Todo | [#20](https://github.com/ObboyeBossman/findstay/issues/20) |
+| [`S1-01-T6`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T6.md) | Draw the backend map & data-flow diagram, agree the API contracts | 1 | Done | [#30](https://github.com/ObboyeBossman/findstay/issues/30) · PR #39–#41 |
+| [`S1-01-T10`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T10.md) | Set up the code repo, branch rules, secrets & staging site | 1 | Done | [#19](https://github.com/ObboyeBossman/findstay/issues/19) |
+| [`S1-01-T11`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T11.md) | Build the automatic checker — tests & publishes every change | 1 | Done | [#20](https://github.com/ObboyeBossman/findstay/issues/20) · PR #47 |
+| [`S1-04-T3`](../../../scrum/sprint-01/stories/S1-04/tasks/S1-04-T3.md) | Configure Supabase Auth URLs, Resend SMTP & 6-digit OTP templates | 1 | Done | [`supabase-auth-configuration.md`](../../../operations/supabase-auth-configuration.md) |
+| [`S1-04-T4`](../../../scrum/sprint-01/stories/S1-04/tasks/S1-04-T4.md) | Configure Spring Security OAuth2 Resource Server (JWKS) | 1 | Done | [`SecurityJwtValidationTest.java`](../../../../../api/src/test/java/com/findstay/shared/security/SecurityJwtValidationTest.java) |
+| [`S1-04-T5`](../../../scrum/sprint-01/stories/S1-04/tasks/S1-04-T5.md) | Implement GET/PATCH /api/v1/me profile provisioning | 1 | Done | [`IdentityProvisioningIntegrationTest.java`](../../../../../api/src/test/java/com/findstay/identity/IdentityProvisioningIntegrationTest.java) |
+| [`S1-04-T6`](../../../scrum/sprint-01/stories/S1-04/tasks/S1-04-T6.md) | Build React sign-up, OTP verification & sign-in screens with Turnstile | 1 | Done | PR #59 · PR #60 · [#57](https://github.com/ObboyeBossman/findstay/issues/57) · [#58](https://github.com/ObboyeBossman/findstay/issues/58) |
+| [`S1-04-T7`](../../../scrum/sprint-01/stories/S1-04/tasks/S1-04-T7.md) | Verify auth flows, JWT rejection & browser key safety | 1 | Done | [`s1-04-t7-auth-verification.md`](../../../evidence/s1-04-t7-auth-verification.md) · [#4](https://github.com/ObboyeBossman/findstay/issues/4) |
 
 ## Impact & Completed Work
 
-_No completed items recorded yet._
+- **`S1-01-T6`, `T10`, `T11`** — Delivered the backend architecture map, OpenAPI contracts (`api/openapi.yaml`), protected repository and staging setup, and automated CI/CD workflow (PRs #39–#41, #47; Issues #19, #20, #30 closed).
+- **`S1-04` (`T3`–`T7`)** — Configured Supabase Auth with Resend SMTP and 6-digit OTP email templates, verified Spring Security JWKS validation and `/api/v1/me` provisioning (12/12 automated tests passing), shipped the React email/phone toggle, 5-stage sign-up, 6-digit OTP verification, and Turnstile dev badge to staging (PRs #59, #60), and confirmed zero service-role keys in browser bundles (`docs/evidence/s1-04-t7-auth-verification.md`, Issue #4 closed).
 
 ## What Is Ahead
 
 _No upcoming items assigned yet._
 
 ## Activity Log
+
+- **2026-11-20** — Completed and verified **S1-04** (`T3`–`T7`, evidence in `docs/evidence/s1-04-t7-auth-verification.md`), fixed `#57` & `#58` (PR #60), and reconciled completed `S1-01` tasks (`#19`, `#20`, `#30`). Source: verified test runs, PRs #59/#60, and Product Owner confirmation.
 
 - **2026-11-16** — Team role clarified: Bossman is the Team Lead and Scrum Master. Source: direct confirmation from the team member.
 - **2026-11-15** — Assigned story **S1-01 (Project setup & system design)** as their single Sprint 1 starter task, tracked as GitHub issue #1. Source: board assignment by the Scrum steward, approved by the Product Owner (issue created from the approved Sprint 1 plan).
