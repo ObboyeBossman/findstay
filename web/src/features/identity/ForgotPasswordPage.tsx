@@ -59,12 +59,10 @@ export const ForgotPasswordPage: React.FC = () => {
     try {
       if (supabase) {
         const { error } = await supabase.auth.resetPasswordForEmail(trimmed);
-        if (error && !(import.meta.env.DEV && error.message.toLowerCase().includes('rate limit'))) {
+        if (error) {
           setErrors({ email: error.message });
           return;
         }
-      } else if (import.meta.env.DEV) {
-        await new Promise((r) => window.setTimeout(r, 350));
       }
       setCooldown(COOLDOWN_SECONDS);
       setStage(2);
@@ -84,12 +82,10 @@ export const ForgotPasswordPage: React.FC = () => {
           token: otp,
           type: 'recovery',
         });
-        if (error && !import.meta.env.DEV) {
+        if (error) {
           showToast({ variant: 'error', title: 'Invalid code', message: error.message });
           return;
         }
-      } else if (import.meta.env.DEV) {
-        await new Promise((r) => window.setTimeout(r, 350));
       }
       setStage(3);
     } finally {
@@ -114,12 +110,10 @@ export const ForgotPasswordPage: React.FC = () => {
     try {
       if (supabase) {
         const { error } = await supabase.auth.updateUser({ password });
-        if (error && !import.meta.env.DEV) {
+        if (error) {
           setErrors({ password: error.message });
           return;
         }
-      } else if (import.meta.env.DEV) {
-        await new Promise((r) => window.setTimeout(r, 400));
       }
       showToast({ variant: 'success', title: 'Password updated', message: 'You can now sign in.' });
       navigate('/auth/sign-in', { replace: true });

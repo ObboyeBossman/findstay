@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, MailCheck } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, MailCheck } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '../../components/ui';
 import { supabase } from '../../lib/supabase';
@@ -17,6 +17,7 @@ export const VerifyEmailPage: React.FC = () => {
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
   const otp = otpDigits.join('');
   const [verifying, setVerifying] = useState(false);
+  const [viewState, setViewState] = useState<'otp' | 'success' | 'loading'>('otp');
   const [cooldown, setCooldown] = useState(0);
   const [resending, setResending] = useState(false);
 
@@ -35,14 +36,18 @@ export const VerifyEmailPage: React.FC = () => {
           showToast({ variant: 'error', title: 'Invalid code', message: error.message });
           return;
         }
-      } else if (import.meta.env.DEV) {
-        await new Promise((r) => window.setTimeout(r, 400));
       }
-      showToast({ variant: 'success', title: 'Email verified' });
-      navigate('/', { replace: true });
+      setViewState('success');
     } finally {
       setVerifying(false);
     }
+  };
+
+  const handleContinueHome = () => {
+    setViewState('loading');
+    window.setTimeout(() => {
+      navigate('/', { replace: true });
+    }, 1500);
   };
 
   useEffect(() => {
@@ -74,6 +79,46 @@ export const VerifyEmailPage: React.FC = () => {
       setResending(false);
     }
   };
+
+  if (viewState === 'loading') {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-canvas px-4">
+        <div className="flex flex-col items-center gap-3">
+          <div className="inline-flex h-16 w-16 animate-pulse items-center justify-center rounded-full bg-olive text-heading-3 font-bold text-on-brand shadow-md">
+            FS
+          </div>
+          <span className="font-display text-caption font-semibold text-earth/70">
+            FindStay
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (viewState === 'success') {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-canvas px-4 py-10">
+        <div className="w-full max-w-sm text-center">
+          <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-status-success-bg text-olive">
+            <CheckCircle2 className="h-8 w-8" aria-hidden="true" />
+          </div>
+          <h1 className="mt-5 font-display text-heading-2 text-earth">
+            Account verified!
+          </h1>
+          <p className="mt-2 text-caption text-earth/70">
+            Your email has been confirmed. You&apos;re all set to explore FindStay.
+          </p>
+          <button
+            type="button"
+            onClick={handleContinueHome}
+            className="mt-6 min-h-touch w-full rounded-full bg-olive px-6 py-3 text-caption font-semibold text-on-brand transition-colors hover:bg-olive-hover"
+          >
+            Continue to home
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-canvas px-4 py-10">

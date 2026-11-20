@@ -168,9 +168,13 @@ export const AuthFlowPage: React.FC<Props> = () => {
         minDelay,
       ]);
 
-      if (result.exists) {
+      const knownMatch = knownAccounts.find((a) => a.email === trimmedEmail);
+      if (result.exists || knownMatch) {
         const displayName =
-          result.displayName?.trim() || trimmedEmail.split('@')[0] || trimmedEmail;
+          result.displayName?.trim() ||
+          knownMatch?.displayName ||
+          trimmedEmail.split('@')[0] ||
+          trimmedEmail;
         const found: KnownAccount = { email: trimmedEmail, displayName };
         setMatchedAccount(found);
         setKnownAccounts(saveKnownAccount(found));
@@ -181,14 +185,6 @@ export const AuthFlowPage: React.FC<Props> = () => {
       }
     } catch {
       await minDelay;
-      if (import.meta.env.DEV) {
-        const displayName = trimmedEmail.split('@')[0] || trimmedEmail;
-        const found: KnownAccount = { email: trimmedEmail, displayName };
-        setMatchedAccount(found);
-        setKnownAccounts(saveKnownAccount(found));
-        setStep('choose-account');
-        return;
-      }
       setBanner({
         kind: 'error',
         message: 'Unable to check your account right now. Please try again.',
@@ -410,13 +406,6 @@ export const AuthFlowPage: React.FC<Props> = () => {
       });
 
       if (error) {
-        if (
-          import.meta.env.DEV &&
-          error.message.toLowerCase().includes('rate limit')
-        ) {
-          navigate('/auth/verify', { state: { email: normalizedEmail } });
-          return;
-        }
         setBanner({ kind: 'error', message: error.message });
         return;
       }

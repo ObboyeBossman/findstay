@@ -98,9 +98,9 @@ export const TurnstileWidget: React.FC<Props> = ({ onVerify, onExpire }) => {
 
   if (!TURNSTILE_SITE_KEY) {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-border-subtle bg-surface-muted px-3 py-2 text-caption text-earth/75">
+      <div className="flex items-center justify-center gap-2 rounded-full border border-olive/20 bg-olive/5 px-4 py-2 text-micro text-earth/70">
         <ShieldCheck className="h-4 w-4 shrink-0 text-olive" aria-hidden="true" />
-        <span>Bot protection active in staging/production (Turnstile site key not set locally).</span>
+        <span>Protected by Cloudflare Turnstile (dev mode)</span>
       </div>
     );
   }
