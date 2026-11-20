@@ -2,10 +2,16 @@ import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from './components/AppLayout';
 import { ToastProvider } from './components/ui';
+import {
+  AuthCallbackPage,
+  AuthFlowPage,
+  AuthProvider,
+  ForgotPasswordPage,
+  VerifyEmailPage,
+} from './features/identity';
 import { AdminLayout } from './layouts/AdminLayout';
 import { OwnerLayout } from './layouts/OwnerLayout';
 import { GuestHomePage } from './pages/GuestHomePage';
-import { AuthScreenPage } from './pages/AuthScreenPage';
 import { OwnerAreaPage } from './pages/OwnerAreaPage';
 import { AdminAreaPage } from './pages/AdminAreaPage';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -16,43 +22,19 @@ import { NotFoundPage } from './pages/NotFoundPage';
  */
 export const App: React.FC = () => (
   <ToastProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<GuestHomePage />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
           <Route path="/auth" element={<Navigate to="/auth/sign-in" replace />} />
-          <Route
-            path="/auth/sign-in"
-            element={
-              <AuthScreenPage
-                title="Sign in"
-                story="S1-04 — Sign-Up, Confirmation & Sign-In"
-                note="Supabase Auth issues the session; business data stays behind the API."
-              />
-            }
-          />
-          <Route
-            path="/auth/sign-up"
-            element={
-              <AuthScreenPage
-                title="Create your account"
-                story="S1-04 — Sign-Up, Confirmation & Sign-In"
-                note="Registration confirms by email link in R1 (kickoff decision 1)."
-              />
-            }
-          />
-          <Route
-            path="/auth/forgot-password"
-            element={
-              <AuthScreenPage
-                title="Reset your password"
-                story="S1-05 — Password Reset & User Profile"
-                note="Password reset runs through Supabase Auth, never the business API."
-              />
-            }
-          />
-          <Route path="/auth/*" element={<Navigate to="/auth/sign-in" replace />} />
-        </Route>
+          <Route path="/auth/sign-in" element={<AuthFlowPage defaultIntent="sign-in" />} />
+          <Route path="/auth/sign-up" element={<AuthFlowPage defaultIntent="sign-up" />} />
+          <Route path="/auth/verify" element={<VerifyEmailPage />} />
+          <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<GuestHomePage />} />
+            <Route path="/auth/*" element={<Navigate to="/auth/sign-in" replace />} />
+          </Route>
 
         <Route path="/owner" element={<OwnerLayout />}>
           <Route index element={<OwnerAreaPage />} />
@@ -68,7 +50,8 @@ export const App: React.FC = () => (
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   </ToastProvider>
 );
 

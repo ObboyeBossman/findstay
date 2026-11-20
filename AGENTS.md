@@ -29,6 +29,7 @@ This repository is a foundation, not a completed product: `web/src/App.tsx` is i
 - Store money as integer GHS pesewas, keep timestamps in UTC, and format for `Africa/Accra` only at presentation boundaries.
 - Protect sensitive data: no secrets in source; private documents use authorised, short-lived access; audit sensitive actions.
 - Keep database migrations, REST contracts, and domain events backward compatible and additive. Never edit an applied Flyway migration.
+- No hard-coded visual values in UI code: colours, spacing, sizes, radii, shadows, fonts, z-index and durations come from `web/src/theme/tokens.css` via Tailwind classes (`docs/rules/design-system-and-theming.md`; guard: `npm run lint:theme`).
 - Cross-module API code uses `shared`, public `api` packages, or domain events—not another module's `internal` package, entity, or repository.
 
 ## Useful commands
@@ -37,7 +38,8 @@ Run from the repository root unless stated otherwise:
 
 ```bash
 npm run typecheck              # web TypeScript check
-npm run build                  # web production build
+npm run lint:theme             # design-token guard (no hard-coded visual values)
+npm run build                  # web production build (runs the guard first)
 npm run build:showcase         # progress-showcase build
 (cd api && mvn test)           # API tests and Modulith boundary check
 npm run sync:project           # authenticated GitHub board refresh; deliberate, not routine

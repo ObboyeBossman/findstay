@@ -22,11 +22,14 @@
 
 | Milestone | Date | Gate / Purpose |
 | :--- | :---: | :--- |
-| **Day 1 — Sprint 1 Kickoff** | **2026-11-16** | Confirm plan, decisions, task handouts, and checkpoint dates. |
-| **Day 2 — Infrastructure Gate** | **2026-11-17** | Confirm Supabase limits, Render hosting, Cloudflare R2 buckets, and SMS sender-ID status. |
-| **Day 3 — Foundation Gate** | **2026-11-18** | `S1-01` (monorepo, CI, Flyway, staging deploy) live on staging; otherwise feature work pauses. |
-| **Day 8 — Feature Freeze** | **2026-11-23** | No new feature stories start after Day 8; transition to stabilisation & testing. |
-| **Day 10 — Sprint Review & Demo** | **2026-11-25** | Run 7-step demo on staging and review Release `R1` acceptance. |
+| **Day 1 — Sprint 1 starts (planning & task assignment)** | **2026-11-15** | Plan baseline approved; stories split into tasks and assigned to the team. |
+| **Day 2 — Sprint 1 Kickoff meeting (`S1-01-T14`)** | **2026-11-16** | Confirm plan, decisions, task handouts, and checkpoint dates (this meeting). |
+| **Day 2 — Infrastructure Gate** | **2026-11-16** | Confirm Supabase limits, Render hosting, Cloudflare R2 buckets, and SMS sender-ID status. |
+| **Day 3 — Foundation Gate** | **2026-11-17** | `S1-01` (monorepo, CI, Flyway, staging deploy) live on staging; otherwise feature work pauses. |
+| **Day 8 — Feature Freeze** | **2026-11-22** | No new feature stories start after Day 8; transition to stabilisation & testing. |
+| **Day 10 — Sprint Review & Demo** | **2026-11-24** | Run 7-step demo on staging and review Release `R1` acceptance. |
+
+> **Calendar correction (2026-11-19, Product Owner):** Sprint 1 started on **Sunday 15 November 2026**, not 16 November. Days are counted in calendar days from that start (**Day N = 15 Nov + N − 1**), so Day 4 is 18 Nov (as already labelled in the `S1-02` evidence files) and 19 Nov is Day 5. An earlier version of this table counted the kickoff meeting (16 Nov) as Day 1 and listed the gates as 17 Nov (Day 2), 18 Nov (Day 3), 23 Nov (Day 8) and 25 Nov (Day 10). Dates of things that actually happened — this meeting on 16 Nov, task completions, evidence files — are unchanged.
 
 ---
 
@@ -42,7 +45,7 @@
 4. **Task Handouts (`S1-01-T1` – `S1-01-T16`)**:
    - Each assignee confirms their deliverable in one sentence and their target completion day (Days 1–3).
 5. **Day 2 & Day 3 Gate Checkpoints**:
-   - Agree on checkpoint times and escalation rules for `2026-11-17` and `2026-11-18`.
+   - Agree on checkpoint times and escalation rules for `2026-11-16` (Day 2) and `2026-11-17` (Day 3).
 
 ---
 
@@ -105,16 +108,16 @@
 
 ## 5. Gate Checklists (Day 2 & Day 3)
 
-### Day 2 Gate — `2026-11-17`
+### Day 2 Gate — `2026-11-16`
 - [x] Supabase PostgreSQL Session Pooler connected on port 5432 & Auth JWKS verified
 - [x] Render always-on web service live (`findstay-api-staging.onrender.com`)
 - [x] Cloudflare R2 buckets (`findstay-property-images-staging`, `findstay-verification-docs-staging`) created & verified
 - [x] Cloudflare Workers web staging live (`findstay-web-staging.obboyebossman.workers.dev`)
 - [x] Protected repo branch rules (`main`, `staging`) enforced
-- [ ] Ghana SMS sender-ID status checked (if delayed past `2026-11-17`, activate `P-08` email-only OTP fallback)
+- [ ] Ghana SMS sender-ID status checked (if delayed past `2026-11-16`, activate `P-08` email-only OTP fallback)
 - [ ] Design & contract tasks (`T4`, `T6`, `T8`, `T13`) completed & reviewed
 
-### Day 3 Gate — `2026-11-18`
+### Day 3 Gate — `2026-11-17`
 - [ ] `web/` starter shell live on Cloudflare Workers staging (`T5`)
 - [ ] `api/` Spring Boot app + Flyway migrations (`T7`, `T9`, `T15`) live on Render staging
 - [ ] CI/CD pipeline (`T11`) and Testcontainers suite (`T12`) green

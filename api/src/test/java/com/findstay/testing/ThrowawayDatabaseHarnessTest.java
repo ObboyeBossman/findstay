@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -35,16 +34,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * container lifecycle is per test class, while the Spring context (and its
  * connection pool) is cached per run — a second integration class would stop
  * this container and start a new one the cached context cannot see. Until
- * DEC-S1-04/A-F4 lands the shared-container singleton, add database-level
+ * DEC-S1-04/B-F1 lands the shared-container singleton, add database-level
  * proofs as methods here.
  */
 @Req("S1-01-T12")
 class ThrowawayDatabaseHarnessTest extends AbstractIntegrationTest {
-
-    /** The DEC-S1-04/A provision shape: a FindStay id and its Supabase credential. */
-    private static final String ACCOUNT_ID = "018f4e11-0000-7000-8000-000000000001";
-    private static final String ACCOUNT_ID_2 = "018f4e11-0000-7000-8000-000000000002";
-    private static final String SUPABASE_UID = "b61d0e95-4b2b-4b71-b0b7-5f5a9c1d2e3f";
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -159,130 +153,28 @@ class ThrowawayDatabaseHarnessTest extends AbstractIntegrationTest {
                 "exclusion violation expected, got: " + overlap.getCause());
     }
 
-    // -- DEC-S1-04/A: the vendor-id boundary ----------------------------
+    // -- DEC-S1-04/B: direct integration, no boundary table ------------
 
+    /**
+     * The vendor-id boundary landed in V1_14 (DEC-S1-04/A) and was reverted
+     * by V1_15 (DEC-S1-04/B) while the database still held zero accounts:
+     * direct provider integration, no mapping table. Every fresh database
+     * carries both migrations — applied migrations are never edited — and
+     * the boundary table must be gone.
+     */
     @Test
-    @Req("DEC-S1-04/A")
-    void theVendorBoundaryMigrationIsPartOfEveryFreshDatabase() {
+    @Req("DEC-S1-04/B")
+    void theVendorBoundaryWasRevertedAndItsTableIsGone() {
         List<Map<String, Object>> history =
                 jdbc.queryForList("SELECT version FROM flyway_schema_history");
         assertTrue(history.stream().anyMatch(r -> "1.14".equals(String.valueOf(r.get("version")))),
-                "V1_14 (auth_identity, DEC-S1-04/A) must be in every fresh database: " + history);
-    }
-
-    @Test
-    @Req("DEC-S1-04/A")
-    void theProvisionRecipeWorksAndResolvesBackToTheFindStayId() {
-        provisionAccountWithCredential(ACCOUNT_ID, "guest@example.com", SUPABASE_UID);
-
-        // the JWT filter's lookup: provider uid -> the FindStay user id
-        assertEquals(ACCOUNT_ID, jdbc.queryForObject("""
-                SELECT user_account_id FROM identity.auth_identity
-                WHERE provider = 'SUPABASE' AND provider_user_id = '%s'
-                """.formatted(SUPABASE_UID), String.class),
-                "the credential must resolve to FindStay's own id");
-        // the account exists with the copied email — informational, never the login key
-        assertEquals("guest@example.com", jdbc.queryForObject(
-                "SELECT email FROM identity.user_account WHERE id = '%s'".formatted(ACCOUNT_ID),
-                String.class));
-    }
-
-    @Test
-    @Req("DEC-S1-04/A")
-    void aSecondCredentialMayLinkToTheSameAccount() {
-        provisionAccountWithCredential(ACCOUNT_ID, "two-credentials@example.com", "uid-credential-one");
-        jdbc.update(credentialSql(ACCOUNT_ID, "uid-credential-two"));
-        assertEquals(2, jdbc.queryForObject(
-                "SELECT count(*) FROM identity.auth_identity WHERE user_account_id = '%s'"
-                        .formatted(ACCOUNT_ID), Integer.class),
-                "one person, two credentials, one FindStay id (the provider-swap shape)");
-    }
-
-    @Test
-    @Req("DEC-S1-04/A")
-    void duplicateCredentialsAreRejectedByTheDatabase() {
-        provisionAccountWithCredential(ACCOUNT_ID, "dup@example.com", SUPABASE_UID);
-        // a replay of the same credential is never a second account — the
-        // provision flow catches 23505 and answers 200 OK (DEC-S1-04/A)
-        DataAccessException duplicate = assertThrows(DataAccessException.class,
-                () -> jdbc.update(credentialSql(ACCOUNT_ID_2, SUPABASE_UID)));
-        assertTrue(duplicate.getCause() instanceof SQLException sql
-                        && "23505".equals(sql.getSQLState()),
-                "unique violation expected, got: " + duplicate.getCause());
-    }
-
-    @Test
-    @Req("DEC-S1-04/A")
-    void orphanCredentialsAreRejectedByTheDatabase() {
-        DataAccessException orphan = assertThrows(DataAccessException.class,
-                () -> jdbc.update(credentialSql("018f4e11-dead-7000-8000-0000000000ff", "orphan-uid")));
-        assertTrue(orphan.getCause() instanceof SQLException sql
-                        && "23503".equals(sql.getSQLState()),
-                "foreign key violation expected, got: " + orphan.getCause());
-    }
-
-    @Test
-    @Req("DEC-S1-04/A")
-    void unknownProvidersAreRejectedByTheDatabase() {
-        provisionAccountWithCredential(ACCOUNT_ID, "closed-set@example.com", SUPABASE_UID);
-        DataAccessException unknown = assertThrows(DataAccessException.class,
-                () -> jdbc.update("""
-                        INSERT INTO identity.auth_identity
-                            (id, user_account_id, provider, provider_user_id, created_at, updated_at)
-                        VALUES ('018f4e11-0000-7000-8000-0000000000b3',
-                                '%s', 'GOOGLE', 'some-google-uid', now(), now())
-                        """.formatted(ACCOUNT_ID)));
-        assertTrue(unknown.getCause() instanceof SQLException sql
-                        && "23514".equals(sql.getSQLState()),
-                "check violation expected (provider is a closed set), got: " + unknown.getCause());
-    }
-
-    /**
-     * V1_12's ALTER DEFAULT PRIVILEGES extended the CRUD grants to later
-     * identity tables — prove the app role can actually provision through
-     * auth_identity, exactly as S1-04 will. Own connection, own transaction,
-     * rolled back by hand (the SET ROLE pattern above).
-     */
-    @Test
-    @Req("DEC-S1-04/A")
-    void theAppRoleCanProvisionThroughTheBoundaryTable() throws SQLException {
-        try (Connection c = dataSource.getConnection(); Statement st = c.createStatement()) {
-            c.setAutoCommit(false);
-            st.execute("SET ROLE findstay_app");
-            st.executeUpdate("""
-                    INSERT INTO identity.user_account (id, email, created_at, updated_at)
-                    VALUES ('%s', 'app-role@example.com', now(), now())
-                    """.formatted(ACCOUNT_ID));
-            st.executeUpdate("""
-                    INSERT INTO identity.auth_identity
-                        (id, user_account_id, provider, provider_user_id, created_at, updated_at)
-                    VALUES ('018f4e11-0000-7000-8000-0000000000b1', '%s',
-                            'SUPABASE', '%s', now(), now())
-                    """.formatted(ACCOUNT_ID, SUPABASE_UID));
-            ResultSet rs = st.executeQuery("""
-                    SELECT user_account_id FROM identity.auth_identity
-                    WHERE provider = 'SUPABASE' AND provider_user_id = '%s'
-                    """.formatted(SUPABASE_UID));
-            assertTrue(rs.next(), "the credential must resolve as findstay_app");
-            assertEquals(ACCOUNT_ID, rs.getString(1));
-            st.execute("ROLLBACK");
-        }
-    }
-
-    private void provisionAccountWithCredential(String accountId, String email, String providerUserId) {
-        jdbc.update("""
-                INSERT INTO identity.user_account (id, email, created_at, updated_at)
-                VALUES ('%s', '%s', now(), now())
-                """.formatted(accountId, email));
-        jdbc.update(credentialSql(accountId, providerUserId));
-    }
-
-    private static String credentialSql(String accountId, String providerUserId) {
-        return """
-                INSERT INTO identity.auth_identity
-                    (id, user_account_id, provider, provider_user_id, created_at, updated_at)
-                VALUES ('%s', '%s', 'SUPABASE', '%s', now(), now())
-                """.formatted(UUID.randomUUID(), accountId, providerUserId);
+                "V1_14 (auth_identity, DEC-S1-04/A) stays in the history, never edited: " + history);
+        assertTrue(history.stream().anyMatch(r -> "1.15".equals(String.valueOf(r.get("version")))),
+                "V1_15 (the DEC-S1-04/B revert) must be in every fresh database: " + history);
+        Boolean gone = jdbc.queryForObject(
+                "SELECT to_regclass('identity.auth_identity') IS NULL", Boolean.class);
+        assertEquals(Boolean.TRUE, gone,
+                "identity.auth_identity was dropped by V1_15 (DEC-S1-04/B)");
     }
 
     // ------------------------------------------------------------------

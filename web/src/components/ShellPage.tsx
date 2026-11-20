@@ -31,7 +31,7 @@ type PlaceholderProps = {
 
 /** The "this screen arrives with its story" card. */
 export const StoryPlaceholder: React.FC<PlaceholderProps> = ({ story, summary }) => (
-  <div className="mt-6 max-w-2xl rounded-lg border border-dashed border-earth/30 bg-white/60 p-5">
+  <div className="mt-6 max-w-2xl rounded-lg border border-dashed border-earth/30 bg-surface-card/60 p-5">
     <p className="text-label font-bold">Empty on purpose</p>
     <p className="text-body-2 mt-1">
       This screen arrives with <span className="font-bold">{story}</span>. {summary}
@@ -47,7 +47,7 @@ export const AreaCard: React.FC<{ to: string; title: string; children: React.Rea
 }) => (
   <Link
     to={to}
-    className="block rounded-lg border border-earth/15 bg-white/70 p-5 no-underline transition hover:border-olive hover:bg-white"
+    className="block rounded-lg border border-earth/15 bg-surface-card/70 p-5 no-underline transition hover:border-olive hover:bg-surface-card"
   >
     <h2 className="text-heading-5 font-display">{title}</h2>
     <p className="text-body-2 mt-1">{children}</p>

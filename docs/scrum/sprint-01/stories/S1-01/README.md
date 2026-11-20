@@ -67,6 +67,6 @@ Every task ends in a concrete thing you can point at. Open your task file for th
 - **[T11](./tasks/S1-01-T11.md)** — the automatic checker: every change built, tested and published to staging with a green/red mark.
 - **[T12](./tasks/S1-01-T12.md)** — tests that each get a fresh, real throwaway database, all labelled with the requirement they prove.
 - **[T13](./tasks/S1-01-T13.md)** — the acceptance walkthrough checklist and the repeat-test list, agreed with the Product Owner.
-- **[T14](./tasks/S1-01-T14.md)** — the sprint started: tasks handed out, decisions confirmed, Day 2 / Day 3 checkpoints recorded.
+- **[T14](./tasks/S1-01-T14.md)** — the sprint kickoff meeting (Day 2, 16 Nov; the sprint itself started 15 Nov): tasks handed out, decisions confirmed, Day 2 / Day 3 checkpoints recorded.
 - **[T15](./tasks/S1-01-T15.md)** — the starter reference lists (accommodation types, billing periods, platform settings) loaded identically everywhere.
 - **[T16](./tasks/S1-01-T16.md)** — evidence that staging is healthy and the website really talks to the server.
