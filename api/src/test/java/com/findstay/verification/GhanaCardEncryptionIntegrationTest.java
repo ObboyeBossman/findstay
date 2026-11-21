@@ -1,8 +1,7 @@
-package com.findstay.verification;
+package com.findstay.verification.internal;
 
 import com.findstay.testing.AbstractIntegrationTest;
 import com.findstay.testing.Req;
-import com.findstay.verification.internal.GhanaCardCryptoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
