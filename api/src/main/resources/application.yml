@@ -31,6 +31,8 @@ findstay:
     issuer: ${SUPABASE_JWT_ISSUER:}
     supabase-url: ${SUPABASE_URL:}
     supabase-service-role-key: ${SUPABASE_SERVICE_ROLE_KEY:}
+  pii:
+    encryption-key: ${FINDSTAY_PII_ENCRYPTION_KEY:}  # 256-bit AES key, Base64-encoded (NFR-28, TA-09)
   cors:
     allowed-origins: http://localhost:3000,https://findstay-web-staging.obboyebossman.workers.dev
   r2:
