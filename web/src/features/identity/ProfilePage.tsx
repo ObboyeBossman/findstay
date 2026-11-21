@@ -929,7 +929,7 @@ export const ProfilePage: React.FC = () => {
                     Account & Security
                   </h1>
                   <p className="mt-1 text-body-2 text-earth/70">
-                    Manage your credentials, password recovery, and active session.
+                    Manage your credentials and password recovery.
                   </p>
                 </div>
 
@@ -954,24 +954,6 @@ export const ProfilePage: React.FC = () => {
                         : resetSent
                         ? 'Link Sent ✓'
                         : 'Reset Password'}
-                    </button>
-                  </div>
-
-                  <div className="border-t border-border-subtle pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <h3 className="font-display text-body-1 font-semibold text-earth">
-                        Session & Authentication
-                      </h3>
-                      <p className="text-caption text-earth/70">
-                        Signed in via Supabase stateless JWT with automatic 1-hour expiration.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => signOut()}
-                      className="fs-btn-ghost min-h-touch px-4 py-2 text-body-2"
-                    >
-                      Log Out Everywhere
                     </button>
                   </div>
                 </div>
