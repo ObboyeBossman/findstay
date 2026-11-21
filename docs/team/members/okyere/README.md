@@ -10,19 +10,24 @@
 
 | ID | Story / Task | Sprint | Status | Evidence |
 | :--- | :--- | :---: | :---: | :--- |
-| [`S1-01-T15`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T15.md) | Fill the starter reference lists (room types, billing periods, settings) | 1 | Todo | [#24](https://github.com/ObboyeBossman/findstay/issues/24) |
+| [`S1-01-T15`](../../../scrum/sprint-01/stories/S1-01/tasks/S1-01-T15.md) | Fill the starter reference lists (room types, billing periods, settings) | 1 | Done | `V1_03`–`V1_12` seeds |
+| [`S1-05-T1`](../../../scrum/sprint-01/stories/S1-05/tasks/S1-05-T1.md) | Design forgot-password, reset-password & My Profile screens | 1 | Done | Digital ID card spec & mobile layout |
+| [`S1-05-T4`](../../../scrum/sprint-01/stories/S1-05/tasks/S1-05-T4.md) | Build React My Profile page (`SCR-06`, `/profile`) | 1 | Done | [`ProfilePage.tsx`](../../../../../web/src/features/identity/ProfilePage.tsx) |
+| [`S1-05-T5`](../../../scrum/sprint-01/stories/S1-05/tasks/S1-05-T5.md) | Test single-use reset links & cross-user profile protection | 1 | Done | [`UserProfileProtectionIntegrationTest.java`](../../../../../api/src/test/java/com/findstay/identity/UserProfileProtectionIntegrationTest.java) |
+| [`S1-11-T3`](../../../scrum/sprint-01/stories/S1-11/tasks/S1-11-T3.md) | Build consent recording API & enforce DTO personal-data filtering | 1 | In Progress | Task doc |
 
 ## Impact & Completed Work
 
-_No completed items recorded yet._
+- **`S1-01-T15`** — Filled starter reference lists across database tables.
+- **`S1-05-T1` & `S1-05-T4`** — Designed and built the responsive FindStay My Profile page (`/profile`, `SCR-06`) with digital ID card hero badge, native device photo picker, fallback avatar initials, localStorage persistence, and role-aware switcher. Enforced 100% theme-token compliance (`npm run lint:theme`).
+- **`S1-05-T5`** — Created integration test suite (`UserProfileProtectionIntegrationTest.java`) proving cross-user profile isolation (`S1-05-AC2`, `FR-04`), email immutability on `PATCH /api/v1/me`, input validation enforcement, and safe password recovery lookup without metadata leakage.
 
 ## What Is Ahead
 
-_No upcoming items assigned yet._
+- **`S1-11-T3`** — Build consent recording API (`POST /api/v1/consent`) & enforce DTO personal-data filtering.
 
 ## Activity Log
 
-- **2026-11-15** — Assigned story **S1-06 (Role permissions & safe access)** as their single Sprint 1 starter task, tracked as GitHub issue #6. Source: board assignment by the Scrum steward, approved by the Product Owner (issue created from the approved Sprint 1 plan).
-- **2026-11-15** — Assignment basis corrected by the Product Owner: Sprint 1 work is assigned **per task, not per story**. The story-level row recorded earlier today was replaced by the task-level assignments above (`S1-01-T15`) as sub-issues of parent story issue #1; story issue #1 stays on the board as an unassigned tracker. Source: Product Owner instruction via Scrum steward.
-
-**2026-11-16** — No re-assignment: **S1-01-T15** (starter reference lists) confirmed with Okyere. All 16 S1-01 task documents were also rewritten so each states exactly what to do and what the assignee will have at the end. Source: Product Owner instruction via Scrum steward.
+- **2026-11-21** — Shipped `S1-05-T4` (`ProfilePage.tsx` under `/profile`) and verified against design tokens and TypeScript compiler. Completed `S1-05-T5` integration tests verifying cross-user isolation and safe recovery lookup.
+- **2026-11-16** — No re-assignment: **S1-01-T15** (starter reference lists) confirmed with Okyere. All 16 S1-01 task documents were also rewritten so each states exactly what to do and what the assignee will have at the end. Source: Product Owner instruction via Scrum steward.
+- **2026-11-15** — Assignment basis corrected by the Product Owner: Sprint 1 work is assigned **per task, not per story**. The story-level row recorded earlier today was replaced by task-level assignments.

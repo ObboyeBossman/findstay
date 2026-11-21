@@ -22,6 +22,23 @@ export const AppLayout: React.FC = () => {
   const { session, sessionContext, signOut } = useAuth();
   const navigate = useNavigate();
 
+  const [cachedAvatar, setCachedAvatar] = React.useState<string>(() => {
+    return localStorage.getItem('findstay_profile_avatar') || '';
+  });
+
+  React.useEffect(() => {
+    const handleAvatarChange = () => {
+      setCachedAvatar(
+        localStorage.getItem('findstay_profile_avatar') ||
+          sessionContext?.profile.avatarUrl ||
+          '',
+      );
+    };
+    window.addEventListener('findstay-avatar-changed', handleAvatarChange);
+    return () =>
+      window.removeEventListener('findstay-avatar-changed', handleAvatarChange);
+  }, [sessionContext]);
+
   const handleSignOut = async () => {
     await signOut();
     showToast({ variant: 'info', title: 'Signed out' });
@@ -52,8 +69,7 @@ export const AppLayout: React.FC = () => {
                   to={a.to}
                   aria-label={a.label}
                   className={({ isActive }) =>
-                    `group relative inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl transition-colors lg:min-h-rail lg:min-w-rail ${
-                      isActive ? 'bg-surface-muted text-earth' : 'text-earth/70 hover:bg-surface-hover/50 hover:text-earth'
+                    `group relative inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl transition-colors lg:min-h-rail lg:min-w-rail ${isActive ? 'bg-surface-muted text-earth' : 'text-earth/70 hover:bg-surface-hover/50 hover:text-earth'
                     }`
                   }
                 >
@@ -90,20 +106,48 @@ export const AppLayout: React.FC = () => {
           </button>
         </nav>
         {session ? (
-          <button
-            type="button"
-            onClick={handleSignOut}
-            aria-label={`Sign out (${sessionContext?.profile.fullName ?? session.user.email ?? 'Account'})`}
-            className="group relative mx-auto inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover/50 hover:text-earth lg:min-h-rail lg:min-w-rail"
-          >
-            <LogOut className="h-6 w-6 lg:h-7 lg:w-7" aria-hidden="true" />
-            <span
-              role="tooltip"
-              className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+          <div className="flex flex-col items-center gap-2">
+            <NavLink
+              to="/profile"
+              aria-label={`My Profile (${sessionContext?.profile.fullName ?? session.user.email ?? 'Account'})`}
+              className={({ isActive }) =>
+                `group relative mx-auto inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl transition-colors lg:min-h-rail lg:min-w-rail ${
+                  isActive ? 'bg-surface-muted text-earth' : 'text-earth/70 hover:bg-surface-hover/50 hover:text-earth'
+                }`
+              }
             >
-              Sign out
-            </span>
-          </button>
+              {cachedAvatar ? (
+                <img
+                  src={cachedAvatar}
+                  alt="Avatar"
+                  className="h-6 w-6 rounded-full object-cover lg:h-7 lg:w-7"
+                />
+              ) : (
+                <UserCircle className="h-6 w-6 lg:h-7 lg:w-7" aria-hidden="true" />
+              )}
+              <span
+                role="tooltip"
+                className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              >
+                Profile
+              </span>
+            </NavLink>
+
+            <button
+              type="button"
+              onClick={handleSignOut}
+              aria-label={`Sign out (${sessionContext?.profile.fullName ?? session.user.email ?? 'Account'})`}
+              className="group relative mx-auto inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover/50 hover:text-earth lg:min-h-rail lg:min-w-rail"
+            >
+              <LogOut className="h-6 w-6 lg:h-7 lg:w-7" aria-hidden="true" />
+              <span
+                role="tooltip"
+                className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              >
+                Sign out
+              </span>
+            </button>
+          </div>
         ) : (
           <NavLink
             to="/auth/sign-in"
