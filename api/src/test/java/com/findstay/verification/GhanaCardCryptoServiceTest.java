@@ -1,8 +1,7 @@
-package com.findstay.verification;
+package com.findstay.verification.internal;
 
 import com.findstay.shared.error.AppException;
 import com.findstay.testing.Req;
-import com.findstay.verification.internal.GhanaCardCryptoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
