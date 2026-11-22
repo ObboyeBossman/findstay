@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +45,7 @@ class GhanaCardEncryptionIntegrationTest extends AbstractIntegrationTest {
         byte[] ciphertext = cryptoService.encrypt(card);
         UUID caseId = UUID.randomUUID();
         UUID orgId = UUID.randomUUID();
-        Instant now = Instant.now();
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
 
         // Act — persist to the real verification schema
         jdbc.update(
@@ -74,7 +75,7 @@ class GhanaCardEncryptionIntegrationTest extends AbstractIntegrationTest {
         String card = "GHA-123456789-0";
         byte[] ciphertext1 = cryptoService.encrypt(card);
         byte[] ciphertext2 = cryptoService.encrypt(card);
-        Instant now = Instant.now();
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
 
         UUID caseId1 = UUID.randomUUID();
         UUID caseId2 = UUID.randomUUID();
