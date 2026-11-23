@@ -1,0 +1,37 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: findstay-api
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/findstay}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${SUPABASE_JWKS_URI:http://localhost:9999/.well-known/jwks.json}
+
+findstay:
+  r2:
+    endpoint: ${R2_ENDPOINT:}
+    access-key-id: ${R2_ACCESS_KEY_ID:}
+    secret-access-key: ${R2_SECRET_ACCESS_KEY:}
+    public-bucket: ${R2_PUBLIC_BUCKET:findstay-property-images}
+    private-bucket: ${R2_PRIVATE_BUCKET:findstay-verification-docs}
+    public-cdn-url: ${R2_PUBLIC_CDN_URL:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
