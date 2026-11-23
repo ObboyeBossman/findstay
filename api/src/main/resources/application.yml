@@ -29,6 +29,14 @@ findstay:
     public-bucket: ${R2_PUBLIC_BUCKET:findstay-property-images}
     private-bucket: ${R2_PRIVATE_BUCKET:findstay-verification-docs}
     public-cdn-url: ${R2_PUBLIC_CDN_URL:}
+  notification:
+    email:
+      provider: ${NOTIFICATION_EMAIL_PROVIDER:log}
+      from: ${NOTIFICATION_FROM_EMAIL:noreply@findstay.com}
+    sms:
+      enabled: ${NOTIFICATION_SMS_ENABLED:false}
+      provider: ${NOTIFICATION_SMS_PROVIDER:noop}
+      sender-id: ${SMS_SENDER_ID:FindStay}
 
 management:
   endpoints:

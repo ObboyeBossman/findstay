@@ -13,7 +13,7 @@ This file tracks the verification status, automated `@Req` test evidence, and Sp
 | **S1-07** | Owner companies & staff access | M | `Backlog` | Pending cross-organisation `OrgScope` isolation tests. |
 | **S1-08** | Permanent activity log | S | `Backlog` | Pending append-only `audit_log` DB constraint test. |
 | **S1-09** | Photo & document uploads | M | `Backlog` | Pending Cloudflare R2 pre-signed URL & WebP tests. |
-| **S1-10** | Email, SMS & in-app alerts | M | `Backlog` | Pending `NotificationSender` adapter & retry tests. |
+| **S1-10** | Email, SMS & in-app alerts | M | `Done` | `S1-10-T1` (mobile/desktop UI spec), `S1-10-T3` (`NotificationSender` dispatcher + swappable Email/SMS adapters + retry logging), `S1-10-T4` (`V1_17` template seeding + `TemplateRenderer`), and `S1-10-T5` (inbox, mark-as-read & preferences endpoints) completed with passing `@Req` automated tests. |
 | **S1-11** | Privacy notice & user consent | S | `Backlog` | Pending Act 843 `consent_record` verification. |
 | **S1-12** | Owner ID & property verification | M | `Backlog` | Pending AES-256 Ghana Card encryption & review tests. |
 | **S1-13** | Create properties, rooms & prices | M | `Backlog` | Pending catalog validation & `CatalogQuery` seam tests. |
