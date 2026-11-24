@@ -13,7 +13,7 @@
 | Task ID | Task | Tag | Depends On | Role | Assignee | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :---: |
 | [`S1-09-T1`](./tasks/S1-09-T1.md) | Design Photo Uploader & Document Uploader components | `ui-ux` | [`S1-03-T5`](../S1-03/tasks/S1-03-T5.md) | UI/UX Design | `@surnuel` | Done |
-| [`S1-09-T2`](./tasks/S1-09-T2.md) | Provision Cloudflare R2 buckets & path-isolation policies | `devops` | [`S1-02-T4`](../S1-02/tasks/S1-02-T4.md) | Architecture, Cloud & Security |  | Todo |
+| [`S1-09-T2`](./tasks/S1-09-T2.md) | Provision Cloudflare R2 buckets & path-isolation policies | `devops` | [`S1-02-T4`](../S1-02/tasks/S1-02-T4.md) | Architecture, Cloud & Security | `@surnuel` | Done |
 | [`S1-09-T3`](./tasks/S1-09-T3.md) | Create media.media_asset & media.document tables | `database` | [`S1-07-T2`](../S1-07/tasks/S1-07-T2.md) | Database & Data |  | Todo |
 | [`S1-09-T4`](./tasks/S1-09-T4.md) | Build pre-signed R2 upload URL API & WebP public promotion | `backend` | [`S1-09-T2`](./tasks/S1-09-T2.md), [`S1-09-T3`](./tasks/S1-09-T3.md), [`S1-06-T2`](../S1-06/tasks/S1-06-T2.md) | Backend Development |  | Todo |
 | [`S1-09-T5`](./tasks/S1-09-T5.md) | Build temporary expiring signed-URL endpoint for private docs | `backend` | [`S1-09-T2`](./tasks/S1-09-T2.md), [`S1-09-T3`](./tasks/S1-09-T3.md), [`S1-06-T2`](../S1-06/tasks/S1-06-T2.md) | Backend Development |  | Todo |
