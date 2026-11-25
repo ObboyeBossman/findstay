@@ -117,7 +117,7 @@ class AccessGuardInterceptorTest {
     }
 
     @Test
-    void classLevelAnnotationAppliesToEveryMethod() {
+    void classLevelAnnotationAppliesToEveryMethod() throws Exception {
         signIn(USER);
         UserAccount active = mock(UserAccount.class);
         when(active.isSuspended()).thenReturn(false);
