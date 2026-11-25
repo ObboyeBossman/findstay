@@ -1,6 +1,7 @@
 package com.findstay.identity.internal;
 
 import com.findstay.shared.error.AppException;
+import com.findstay.testing.Req;
 import com.findstay.shared.error.ErrorCode;
 import com.findstay.shared.security.RequiresPermission;
 import org.junit.jupiter.api.AfterEach;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.when;
  * S1-06-T2 acceptance: the permission check reads the database, suspended accounts are refused,
  * and unannotated routes are unaffected. Repository and account are mocked, so no database needed.
  */
+@Req("FR-07")
 class AccessGuardInterceptorTest {
 
     private static final UUID USER = UUID.fromString("01a16000-0000-7000-8000-00000000abcd");

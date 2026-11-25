@@ -2,6 +2,7 @@ package com.findstay.shared.security;
 
 import com.findstay.shared.error.AppException;
 import com.findstay.shared.error.ErrorCode;
+import com.findstay.testing.Req;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -11,6 +12,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /** S1-06-T2: object-level ownership checks refuse anyone who is not the owner. */
+@Req("FR-07")
 class ObjectAccessTest {
 
     private static final UUID OWNER = UUID.fromString("01a16000-0000-7000-8000-000000000001");
