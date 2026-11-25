@@ -66,11 +66,17 @@ final class IdentityDtos {
     ) {
     }
 
+    /**
+     * The signed-in user's session context. {@code role} and {@code permissions} were added in
+     * S1-06-T2; the earlier fields are unchanged.
+     */
     record SessionContextResponse(
             ProfileResponse profile,
             List<RoleMembershipResponse> memberships,
             ConsentStateResponse consent,
-            UUID activeOrganizationId
+            UUID activeOrganizationId,
+            String role,
+            List<String> permissions
     ) {
     }
 }
