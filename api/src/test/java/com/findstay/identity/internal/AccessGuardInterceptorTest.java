@@ -122,7 +122,7 @@ class AccessGuardInterceptorTest {
         UserAccount active = mock(UserAccount.class);
         when(active.isSuspended()).thenReturn(false);
         when(accounts.findById(USER)).thenReturn(Optional.of(active));
-        when(accounts.hasPermission(USER, "audit.read")).thenReturn(false);
+        when(accounts.hasPermission(USER, "admin.audit.read")).thenReturn(false);
 
         HandlerMethod handler = new HandlerMethod(new ClassAnnotatedController(), "toString");
         assertThatThrownBy(() -> guard.preHandle(new MockHttpServletRequest(),
@@ -166,7 +166,7 @@ class AccessGuardInterceptorTest {
         }
     }
 
-    @RequiresPermission("audit.read")
+    @RequiresPermission("admin.audit.read")
     static class ClassAnnotatedController {
     }
 }
