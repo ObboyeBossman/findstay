@@ -1,0 +1,9 @@
+# Production profile (S1-06-T3). Activate with SPRING_PROFILES_ACTIVE=prod.
+# Enforces HTTPS-only transport. The platform terminates TLS in front of the app and
+# forwards the original scheme, so the framework must read X-Forwarded-Proto.
+server:
+  forward-headers-strategy: framework
+
+findstay:
+  security:
+    require-https: true
