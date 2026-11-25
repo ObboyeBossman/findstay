@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import com.findstay.shared.validation.SafeHttpUrl;
+import com.findstay.shared.validation.SafeText;
 
 import java.time.Instant;
 import java.util.List;
@@ -28,12 +30,13 @@ final class IdentityDtos {
 
     record ProfileUpdateRequest(
             @Size(min = 1, max = 100, message = "Full name must be between 1 and 100 characters")
-            @Pattern(regexp = "^[^<>]*$", message = "Full name cannot contain < or > characters")
+            @SafeText(message = "Full name cannot contain < or > characters or control characters")
             String fullName,
             @Pattern(regexp = "^\\+233\\d{9}$", message = "Phone must be a Ghana E.164 number (+233XXXXXXXXX)")
             String phone,
             @Pattern(regexp = "^en$", message = "Only 'en' is supported in Release R1")
             String preferredLanguage,
+            @SafeHttpUrl(message = "Avatar must be an http or https URL")
             String avatarUrl
     ) {
     }
