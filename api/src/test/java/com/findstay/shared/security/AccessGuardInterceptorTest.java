@@ -119,7 +119,7 @@ class AccessGuardInterceptorTest {
     }
 
     @Test
-    void classLevelAnnotationAppliesToEveryMethod() {
+    void classLevelAnnotationAppliesToEveryMethod() throws Exception {
         signIn(USER);
         when(lookup.accessFor(USER)).thenReturn(Optional.of(access("OWNER", false, Set.of("listing.read"))));
 
