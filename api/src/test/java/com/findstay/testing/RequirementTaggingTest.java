@@ -100,7 +100,7 @@ class RequirementTaggingTest {
 
     private static Class<?> load(Path root, Path classFile) {
         String name = root.relativize(classFile).toString()
-                .replace('/', '.').replaceAll("\\.class$", "");
+                .replace(java.io.File.separatorChar, '.').replaceAll("\\.class$", "");
         try {
             return Class.forName(name);
         } catch (ClassNotFoundException e) {

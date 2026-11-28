@@ -223,12 +223,15 @@ class IdentityProvisioningService {
         return GHANA_E164.matcher(trimmed).matches() ? trimmed : null;
     }
 
-    private static SessionContextResponse toSessionContext(UserAccount account, UserProfile profile) {
+    private SessionContextResponse toSessionContext(UserAccount account, UserProfile profile) {
+        List<String> permissions = accounts.findPermissionCodes(account.getId()).stream().sorted().toList();
         return new SessionContextResponse(
                 toProfileResponse(account, profile),
                 List.of(),
                 new ConsentStateResponse(DEFAULT_PRIVACY_POLICY_VERSION, DEFAULT_PRIVACY_POLICY_URL, null),
-                null);
+                null,
+                account.getRole().getCode(),
+                permissions);
     }
 
     private static ProfileResponse toProfileResponse(UserAccount account, UserProfile profile) {
