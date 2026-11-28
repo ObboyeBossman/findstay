@@ -12,6 +12,7 @@ import {
   RequireAccess,
   VerifyEmailPage,
 } from './features/identity';
+import { NotificationsPage } from './features/notification';
 import { InviteAcceptancePage, OwnerOrganizationPage } from './features/organization';
 import { AdminLayout } from './layouts/AdminLayout';
 import { OwnerLayout } from './layouts/OwnerLayout';
@@ -49,6 +50,17 @@ export const App: React.FC = () => (
                   areaName="My Profile"
                 >
                   <ProfilePage />
+                </RequireAccess>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <RequireAccess
+                  requiredPermissions={['notification.read']}
+                  areaName="Notifications"
+                >
+                  <NotificationsPage />
                 </RequireAccess>
               }
             />

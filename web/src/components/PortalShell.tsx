@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Bell, LogOut, Search, type LucideIcon } from 'lucide-react';
+import { LogOut, Search, type LucideIcon } from 'lucide-react';
 import { filterNavItems, useAuth, type AccessRequirement } from '../features/identity';
+import { NotificationBell } from '../features/notification';
 import { BrandMark } from './BrandMark';
 import { SystemStatus } from './SystemStatus';
 import { useToast } from './ui';
@@ -41,7 +42,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
   secondaryItems,
 }) => {
   const { showToast } = useToast();
-  const { session, sessionContext, hasPermission, signOut } = useAuth();
+  const { session, sessionContext, signOut } = useAuth();
   const navigate = useNavigate();
 
   const filterByAuthAndPermissions = (items: readonly PortalNavItem[]): PortalNavItem[] =>
@@ -53,7 +54,6 @@ export const PortalShell: React.FC<PortalShellProps> = ({
 
   const visibleNavItems = filterByAuthAndPermissions(navItems);
   const visibleSecondaryItems = filterByAuthAndPermissions(secondaryItems);
-  const canViewNotifications = Boolean(session) && hasPermission('notification.read');
 
   const handleSignOut = async () => {
     await signOut();
@@ -114,28 +114,7 @@ export const PortalShell: React.FC<PortalShellProps> = ({
 
         <nav aria-label={`${portalName} navigation`} className="flex flex-1 flex-col items-center gap-3 overflow-y-auto py-6 lg:gap-6 lg:py-8">
           {visibleNavItems.map((item) => renderNavLink(item))}
-          {canViewNotifications ? (
-            <button
-              type="button"
-              onClick={() =>
-                showToast({
-                  variant: 'info',
-                  title: `${portalName} alerts`,
-                  message: 'Real-time notifications connect in S1-10.',
-                })
-              }
-              aria-label="View notifications"
-              className="group relative inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover hover:text-earth lg:min-h-rail lg:min-w-rail"
-            >
-              <Bell className="h-6 w-6 lg:h-7 lg:w-7" aria-hidden="true" />
-              <span
-                role="tooltip"
-                className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
-              >
-                Notifications
-              </span>
-            </button>
-          ) : null}
+          <NotificationBell />
         </nav>
 
         <div className="flex flex-col items-center gap-2 py-3 lg:gap-3 lg:py-4">

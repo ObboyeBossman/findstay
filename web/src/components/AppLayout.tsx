@@ -1,7 +1,8 @@
 import React from 'react';
-import { Bell, Building2, Home, LogOut, Search, ShieldCheck, UserCircle } from 'lucide-react';
+import { Building2, Home, LogOut, Search, ShieldCheck, UserCircle } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../features/identity';
+import { NotificationBell } from '../features/notification';
 import { BrandMark } from './BrandMark';
 import { SystemStatus } from './SystemStatus';
 import { useToast } from './ui';
@@ -25,7 +26,6 @@ export const AppLayout: React.FC = () => {
     sessionContext,
     canAccessOwnerPortal,
     canAccessAdminPortal,
-    hasPermission,
     signOut,
   } = useAuth();
   const navigate = useNavigate();
@@ -36,7 +36,6 @@ export const AppLayout: React.FC = () => {
     if (a.portal === 'admin') return canAccessAdminPortal;
     return false;
   });
-  const canViewNotifications = Boolean(session) && hasPermission('notification.read');
 
   const [cachedAvatar, setCachedAvatar] = React.useState<string>(() => {
     return localStorage.getItem('findstay_profile_avatar') || '';
@@ -98,28 +97,7 @@ export const AppLayout: React.FC = () => {
                 </NavLink>
               );
             })}
-          {canViewNotifications ? (
-            <button
-              type="button"
-              onClick={() =>
-                showToast({
-                  variant: 'info',
-                  title: 'Notifications',
-                  message: 'Alerts centre connects in S1-10.',
-                })
-              }
-              aria-label="View notifications"
-              className="group relative inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover/50 hover:text-earth lg:min-h-rail lg:min-w-rail"
-            >
-              <Bell className="h-6 w-6 lg:h-7 lg:w-7" aria-hidden="true" />
-              <span
-                role="tooltip"
-                className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
-              >
-                Notifications
-              </span>
-            </button>
-          ) : null}
+          <NotificationBell />
         </nav>
         {session ? (
           <div className="flex flex-col items-center gap-2">
