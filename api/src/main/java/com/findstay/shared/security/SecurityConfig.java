@@ -71,6 +71,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/invitations/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/catalog/reference").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/properties/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/privacy-notice").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()));
         if (requireHttps) {

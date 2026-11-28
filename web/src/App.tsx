@@ -23,7 +23,7 @@ import { OwnerCalendarPage } from './features/availability';
 import { NotificationsPage } from './features/notification';
 import { OwnerListingsPage, PropertyEditorPage } from './features/listing';
 import { InviteAcceptancePage, OwnerOrganizationPage } from './features/organization';
-import { OwnerVerificationPage } from './features/verification';
+import { OwnerVerificationPage, PrivacyNoticePage } from './features/verification';
 import { AdminLayout } from './layouts/AdminLayout';
 import { OwnerLayout } from './layouts/OwnerLayout';
 import { GuestHomePage } from './pages/GuestHomePage';
@@ -52,6 +52,7 @@ export const App: React.FC = () => (
 
           <Route element={<AppLayout />}>
             <Route path="/" element={<GuestHomePage />} />
+            <Route path="/privacy" element={<PrivacyNoticePage />} />
             <Route
               path="/profile"
               element={

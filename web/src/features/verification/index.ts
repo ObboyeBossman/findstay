@@ -1,4 +1,17 @@
 export { OwnerVerificationPage } from './OwnerVerificationPage';
+export { PrivacyNoticePage } from './PrivacyNoticePage';
+export {
+  fetchLatestConsentState,
+  fetchPrivacyNoticeMetadata,
+  formatConsentGhanaTime,
+  isConsentCurrent,
+  recordPrivacyConsent,
+} from './consent';
+export type {
+  ConsentRecordItem,
+  ConsentStateResponse,
+  PrivacyNoticeMetadata,
+} from './consent';
 export {
   fetchOwnerVerificationStatus,
   fetchVerificationDocumentSignedUrl,

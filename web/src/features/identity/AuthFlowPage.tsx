@@ -1120,7 +1120,16 @@ export const AuthFlowPage: React.FC<Props> = () => {
                     />
                     <span>
                       I agree to the FindStay Terms of Service and consent to data processing
-                      under the Ghana Data Protection Act (Act 843).
+                      under the{' '}
+                      <Link
+                        to="/privacy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-semibold text-olive underline"
+                      >
+                        Ghana Data Protection Act (Act 843) Privacy Notice
+                      </Link>
+                      .
                     </span>
                   </label>
                   <InlineError id="signup-terms-error" message={fieldErrors.terms} />
