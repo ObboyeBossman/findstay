@@ -1,14 +1,32 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { apiFetch, setUnauthorizedHandler } from '../../lib/api';
+import { ApiClientError, apiFetch, setUnauthorizedHandler } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
-import type { SessionContext } from './types';
+import {
+  canAccessAdminPortal,
+  canAccessOwnerPortal,
+  getEffectiveRole,
+  hasAllPermissions,
+  hasAnyPermission,
+  hasPermission,
+  hasRole,
+} from './permissions';
+import type { PlatformRole, SessionContext } from './types';
 
 type AuthContextValue = {
   session: Session | null;
   sessionContext: SessionContext | null;
   loading: boolean;
   sessionExpired: boolean;
+  contextError: string | null;
+  role: PlatformRole | null;
+  permissions: readonly string[];
+  hasRole: (allowedRoles: readonly PlatformRole[]) => boolean;
+  hasPermission: (permission: string) => boolean;
+  hasAnyPermission: (permissions: readonly string[]) => boolean;
+  hasAllPermissions: (permissions: readonly string[]) => boolean;
+  canAccessOwnerPortal: boolean;
+  canAccessAdminPortal: boolean;
   clearSessionExpired: () => void;
   provisionAccount: (accessToken: string) => Promise<SessionContext>;
   refreshSessionContext: (accessToken?: string) => Promise<SessionContext | null>;
@@ -22,11 +40,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [sessionContext, setSessionContext] = useState<SessionContext | null>(null);
   const [loading, setLoading] = useState<boolean>(Boolean(supabase));
   const [sessionExpired, setSessionExpired] = useState<boolean>(false);
+  const [contextError, setContextError] = useState<string | null>(null);
 
   const loadMe = useCallback(async (accessToken: string): Promise<SessionContext> => {
-    const ctx = await apiFetch<SessionContext>('/me', { accessToken });
-    setSessionContext(ctx);
-    return ctx;
+    try {
+      const ctx = await apiFetch<SessionContext>('/me', { accessToken });
+      setSessionContext(ctx);
+      setContextError(null);
+      return ctx;
+    } catch (err) {
+      if (err instanceof ApiClientError && err.status === 403) {
+        setSessionContext(null);
+        setContextError(err.message || 'Your account does not have access to FindStay.');
+      } else {
+        setContextError('Unable to verify your permissions right now. Please try again.');
+      }
+      throw err;
+    }
   }, []);
 
   const provisionAccount = useCallback(async (accessToken: string): Promise<SessionContext> => {
@@ -35,6 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       accessToken,
     });
     setSessionContext(ctx);
+    setContextError(null);
     return ctx;
   }, []);
 
@@ -54,6 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSession(null);
     setSessionContext(null);
     setSessionExpired(false);
+    setContextError(null);
   }, []);
 
   const clearSessionExpired = useCallback(() => {
@@ -78,13 +110,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     supabase.auth
       .getSession()
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         if (!mounted) return;
         setSession(data.session);
         if (data.session?.access_token) {
-          loadMe(data.session.access_token).catch(() => {
-            // Handled via unauthorizedHandler or sign-in flow
-          });
+          try {
+            await loadMe(data.session.access_token);
+          } catch {
+            // Handled via unauthorizedHandler or contextError state
+          }
         }
       })
       .finally(() => {
@@ -98,6 +132,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(nextSession);
       if (!nextSession) {
         setSessionContext(null);
+        setContextError(null);
+      } else if (nextSession.access_token) {
+        loadMe(nextSession.access_token).catch(() => {
+          // Handled via unauthorizedHandler or contextError state
+        });
       }
     });
 
@@ -107,6 +146,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, [loadMe]);
 
+  const role = getEffectiveRole(sessionContext);
+  const permissions = sessionContext?.permissions ?? [];
+
+  const checkRole = useCallback(
+    (allowedRoles: readonly PlatformRole[]) => hasRole(sessionContext, allowedRoles),
+    [sessionContext],
+  );
+  const checkPermission = useCallback(
+    (permission: string) => hasPermission(sessionContext, permission),
+    [sessionContext],
+  );
+  const checkAnyPermission = useCallback(
+    (required: readonly string[]) => hasAnyPermission(sessionContext, required),
+    [sessionContext],
+  );
+  const checkAllPermissions = useCallback(
+    (required: readonly string[]) => hasAllPermissions(sessionContext, required),
+    [sessionContext],
+  );
+
   return (
     <AuthContext.Provider
       value={{
@@ -114,6 +173,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sessionContext,
         loading,
         sessionExpired,
+        contextError,
+        role,
+        permissions,
+        hasRole: checkRole,
+        hasPermission: checkPermission,
+        hasAnyPermission: checkAnyPermission,
+        hasAllPermissions: checkAllPermissions,
+        canAccessOwnerPortal: canAccessOwnerPortal(sessionContext),
+        canAccessAdminPortal: canAccessAdminPortal(sessionContext),
         clearSessionExpired,
         provisionAccount,
         refreshSessionContext,
@@ -134,8 +202,7 @@ export function useAuth(): AuthContextValue {
 }
 
 export function resolveHomeRoute(context: SessionContext | null): string {
-  const roles = context?.memberships.map((m) => m.role) ?? [];
-  if (roles.includes('ADMIN')) return '/admin';
-  if (roles.includes('OWNER') || roles.includes('STAFF')) return '/owner';
+  if (canAccessAdminPortal(context)) return '/admin';
+  if (canAccessOwnerPortal(context)) return '/owner';
   return '/';
 }

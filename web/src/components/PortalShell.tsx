@@ -1,17 +1,20 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import { Bell, Search, type LucideIcon } from 'lucide-react';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Bell, LogOut, Search, type LucideIcon } from 'lucide-react';
+import { filterNavItems, useAuth, type AccessRequirement } from '../features/identity';
 import { BrandMark } from './BrandMark';
 import { SystemStatus } from './SystemStatus';
 import { useToast } from './ui';
 
-export interface PortalNavItem {
+export interface PortalNavItem extends AccessRequirement {
   to: string;
   label: string;
   shortLabel?: string;
   icon: LucideIcon;
   end?: boolean;
   badgeCount?: number;
+  /** Optional auth visibility filter: show only when signed in or signed out. */
+  authState?: 'authenticated' | 'anonymous' | 'any';
 }
 
 interface PortalShellProps {
@@ -24,9 +27,10 @@ interface PortalShellProps {
 }
 
 /**
- * Shared responsive portal shell (S1-03-T1, T3, T4):
+ * Shared responsive portal shell (S1-03-T1, T3, T4 + S1-06-T4 role-aware menus):
  * Maintains the same persistent left sidebar on mobile (compact `w-16`) and
- * desktop (`lg:w-24`), with a clean top search header and zero horizontal overflow at 360px.
+ * desktop (`lg:w-24`), filters links against the signed-in user's roles and
+ * permissions, and maintains zero horizontal overflow at 360px.
  */
 export const PortalShell: React.FC<PortalShellProps> = ({
   portalName,
@@ -37,6 +41,25 @@ export const PortalShell: React.FC<PortalShellProps> = ({
   secondaryItems,
 }) => {
   const { showToast } = useToast();
+  const { session, sessionContext, hasPermission, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const filterByAuthAndPermissions = (items: readonly PortalNavItem[]): PortalNavItem[] =>
+    filterNavItems(items, sessionContext).filter((item) => {
+      if (item.authState === 'authenticated') return Boolean(session);
+      if (item.authState === 'anonymous') return !session;
+      return true;
+    });
+
+  const visibleNavItems = filterByAuthAndPermissions(navItems);
+  const visibleSecondaryItems = filterByAuthAndPermissions(secondaryItems);
+  const canViewNotifications = Boolean(session) && hasPermission('notification.read');
+
+  const handleSignOut = async () => {
+    await signOut();
+    showToast({ variant: 'info', title: 'Signed out' });
+    navigate('/auth/sign-in');
+  };
 
   const renderNavLink = (item: PortalNavItem) => {
     const Icon = item.icon;
@@ -90,31 +113,49 @@ export const PortalShell: React.FC<PortalShellProps> = ({
         ) : null}
 
         <nav aria-label={`${portalName} navigation`} className="flex flex-1 flex-col items-center gap-3 overflow-y-auto py-6 lg:gap-6 lg:py-8">
-          {navItems.map((item) => renderNavLink(item))}
-          <button
-            type="button"
-            onClick={() =>
-              showToast({
-                variant: 'info',
-                title: `${portalName} alerts`,
-                message: 'Real-time notifications connect in S1-10.',
-              })
-            }
-            aria-label="View notifications"
-            className="group relative inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover hover:text-earth lg:min-h-rail lg:min-w-rail"
-          >
-            <Bell className="h-6 w-6 lg:h-7 lg:w-7" aria-hidden="true" />
-            <span
-              role="tooltip"
-              className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+          {visibleNavItems.map((item) => renderNavLink(item))}
+          {canViewNotifications ? (
+            <button
+              type="button"
+              onClick={() =>
+                showToast({
+                  variant: 'info',
+                  title: `${portalName} alerts`,
+                  message: 'Real-time notifications connect in S1-10.',
+                })
+              }
+              aria-label="View notifications"
+              className="group relative inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover hover:text-earth lg:min-h-rail lg:min-w-rail"
             >
-              Notifications
-            </span>
-          </button>
+              <Bell className="h-6 w-6 lg:h-7 lg:w-7" aria-hidden="true" />
+              <span
+                role="tooltip"
+                className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              >
+                Notifications
+              </span>
+            </button>
+          ) : null}
         </nav>
 
         <div className="flex flex-col items-center gap-2 py-3 lg:gap-3 lg:py-4">
-          {secondaryItems.map((item) => renderNavLink(item))}
+          {visibleSecondaryItems.map((item) => renderNavLink(item))}
+          {session ? (
+            <button
+              type="button"
+              onClick={handleSignOut}
+              aria-label={`Sign out (${sessionContext?.profile.fullName ?? session.user.email ?? 'Account'})`}
+              className="group relative inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover hover:text-earth lg:min-h-rail lg:min-w-rail"
+            >
+              <LogOut className="h-6 w-6 lg:h-7 lg:w-7" aria-hidden="true" />
+              <span
+                role="tooltip"
+                className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              >
+                Sign out
+              </span>
+            </button>
+          ) : null}
         </div>
       </aside>
 

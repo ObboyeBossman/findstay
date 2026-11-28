@@ -9,14 +9,17 @@ import {
   SkeletonList,
   useToast,
 } from '../components/ui';
+import { useAuth } from '../features/identity';
 
 /**
  * Owner/company area entry. Serves both /owner and any /owner/... subpath,
- * and demonstrates the shared S1-03-T2/T5 state patterns.
+ * and demonstrates the shared S1-03-T2/T5 state patterns + S1-06-T4 action gating.
  */
 export const OwnerAreaPage: React.FC = () => {
   const { pathname } = useLocation();
   const { showToast } = useToast();
+  const { hasPermission } = useAuth();
+  const canCreateListing = hasPermission('listing.write');
   const [previewMode, setPreviewMode] = useState<'empty' | 'loading'>('empty');
   const [samplePrice, setSamplePrice] = useState('');
   const priceError =
@@ -98,13 +101,16 @@ export const OwnerAreaPage: React.FC = () => {
             icon={Building2}
             title="No properties added yet"
             description="Add your first lodge, guesthouse, or apartment to start verification."
-            actionLabel="+ Add Property"
-            onAction={() =>
-              showToast({
-                variant: 'info',
-                title: 'Add Property',
-                message: 'Property creation arrives in S1-13.',
-              })
+            actionLabel={canCreateListing ? '+ Add Property' : undefined}
+            onAction={
+              canCreateListing
+                ? () =>
+                    showToast({
+                      variant: 'info',
+                      title: 'Add Property',
+                      message: 'Property creation arrives in S1-13.',
+                    })
+                : undefined
             }
           />
         )}

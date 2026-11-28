@@ -7,20 +7,36 @@ import { SystemStatus } from './SystemStatus';
 import { useToast } from './ui';
 
 const areas = [
-  { to: '/', label: 'Guest', icon: Home },
-  { to: '/owner', label: 'Owner', icon: Building2 },
-  { to: '/admin', label: 'Admin', icon: ShieldCheck },
+  { to: '/', label: 'Guest', icon: Home, portal: 'guest' as const },
+  { to: '/owner', label: 'Owner', icon: Building2, portal: 'owner' as const },
+  { to: '/admin', label: 'Admin', icon: ShieldCheck, portal: 'admin' as const },
 ];
 
 /**
  * App chrome shared by every area: persistent left sidebar (compact on mobile,
  * wider on desktop), top search header, routed page, and footer carrying the
- * live system status.
+ * live system status. Portal shortcuts are filtered by the signed-in user's
+ * role and permissions (S1-06-T4).
  */
 export const AppLayout: React.FC = () => {
   const { showToast } = useToast();
-  const { session, sessionContext, signOut } = useAuth();
+  const {
+    session,
+    sessionContext,
+    canAccessOwnerPortal,
+    canAccessAdminPortal,
+    hasPermission,
+    signOut,
+  } = useAuth();
   const navigate = useNavigate();
+
+  const visibleAreas = areas.filter((a) => {
+    if (a.portal === 'guest') return false;
+    if (a.portal === 'owner') return canAccessOwnerPortal;
+    if (a.portal === 'admin') return canAccessAdminPortal;
+    return false;
+  });
+  const canViewNotifications = Boolean(session) && hasPermission('notification.read');
 
   const [cachedAvatar, setCachedAvatar] = React.useState<string>(() => {
     return localStorage.getItem('findstay_profile_avatar') || '';
@@ -59,9 +75,7 @@ export const AppLayout: React.FC = () => {
           <BrandMark compact />
         </div>
         <nav aria-label="Portal areas" className="flex flex-1 flex-col items-center justify-center gap-4 lg:gap-6">
-          {areas
-            .filter((a) => a.to !== '/')
-            .map((a) => {
+          {visibleAreas.map((a) => {
               const Icon = a.icon;
               return (
                 <NavLink
@@ -84,26 +98,28 @@ export const AppLayout: React.FC = () => {
                 </NavLink>
               );
             })}
-          <button
-            type="button"
-            onClick={() =>
-              showToast({
-                variant: 'info',
-                title: 'Notifications',
-                message: 'Alerts centre connects in S1-10.',
-              })
-            }
-            aria-label="View notifications"
-            className="group relative inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover/50 hover:text-earth lg:min-h-rail lg:min-w-rail"
-          >
-            <Bell className="h-6 w-6 lg:h-7 lg:w-7" aria-hidden="true" />
-            <span
-              role="tooltip"
-              className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+          {canViewNotifications ? (
+            <button
+              type="button"
+              onClick={() =>
+                showToast({
+                  variant: 'info',
+                  title: 'Notifications',
+                  message: 'Alerts centre connects in S1-10.',
+                })
+              }
+              aria-label="View notifications"
+              className="group relative inline-flex min-h-touch min-w-touch items-center justify-center rounded-2xl text-earth/70 transition-colors hover:bg-surface-hover/50 hover:text-earth lg:min-h-rail lg:min-w-rail"
             >
-              Notifications
-            </span>
-          </button>
+              <Bell className="h-6 w-6 lg:h-7 lg:w-7" aria-hidden="true" />
+              <span
+                role="tooltip"
+                className="pointer-events-none absolute left-full z-top ml-3 whitespace-nowrap rounded-lg bg-earth px-3 py-2 text-caption font-semibold text-on-brand opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              >
+                Notifications
+              </span>
+            </button>
+          ) : null}
         </nav>
         {session ? (
           <div className="flex flex-col items-center gap-2">

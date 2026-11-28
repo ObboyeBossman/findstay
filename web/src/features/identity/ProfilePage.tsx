@@ -49,7 +49,15 @@ const LOCAL_AVATAR_KEY = 'findstay_profile_avatar';
 const LOCAL_PROFILE_KEY = 'findstay_profile_data';
 
 export const ProfilePage: React.FC = () => {
-  const { session, sessionContext, refreshSessionContext, signOut } = useAuth();
+  const {
+    session,
+    sessionContext,
+    role,
+    canAccessOwnerPortal,
+    canAccessAdminPortal,
+    refreshSessionContext,
+    signOut,
+  } = useAuth();
   const { showToast } = useToast();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -103,15 +111,17 @@ export const ProfilePage: React.FC = () => {
 
   const activeEmail =
     sessionContext?.profile.email ?? session?.user.email ?? 'user@findstay.com';
-  const activeRole: PlatformRole =
-    sessionContext?.memberships[0]?.role ?? 'OWNER';
+  const activeRole: PlatformRole = role ?? 'GUEST';
   const orgName =
     sessionContext?.memberships[0]?.organizationName ??
-    (activeRole === 'GUEST'
-      ? 'Personal Guest Account'
-      : 'FindStay Accommodation');
+    (activeRole === 'ADMIN'
+      ? 'Platform Administration'
+      : activeRole === 'GUEST'
+        ? 'Personal Guest Account'
+        : 'FindStay Accommodation');
 
-  const isOwnerOrStaff = activeRole === 'OWNER' || activeRole === 'STAFF';
+  const isOwnerOrStaff = canAccessOwnerPortal;
+  const isAdmin = canAccessAdminPortal;
 
   // Ghana E.164 pattern: +233 followed by 9 digits
   const GHANA_PHONE_REGEX = /^\+233\d{9}$/;
@@ -321,6 +331,17 @@ export const ProfilePage: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2.5">
           <StatusBadge variant="success" label="Active Account" />
 
+          {isAdmin ? (
+            <Link
+              to="/admin"
+              className="inline-flex min-h-touch items-center gap-1.5 rounded-xl border border-earth bg-earth px-3.5 py-1.5 text-caption font-semibold text-on-brand shadow-sm transition-colors hover:bg-earth/90"
+            >
+              <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+              <span>Switch to Admin Portal</span>
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
+          ) : null}
+
           {isOwnerOrStaff ? (
             <Link
               to="/owner"
@@ -330,16 +351,7 @@ export const ProfilePage: React.FC = () => {
               <span>Switch to Owner Portal</span>
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
-          ) : (
-            <Link
-              to="/owner"
-              className="inline-flex min-h-touch items-center gap-1.5 rounded-xl border border-olive bg-olive px-3.5 py-1.5 text-caption font-semibold text-on-brand shadow-sm transition-colors hover:bg-olive/90"
-            >
-              <Building2 className="h-4 w-4" aria-hidden="true" />
-              <span>List Your Property</span>
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
-          )}
+          ) : null}
 
           {session ? (
             <button
@@ -461,24 +473,26 @@ export const ProfilePage: React.FC = () => {
               </button>
             </nav>
 
-            {/* Quick Portal Switcher Banner */}
-            <div className="mt-8 rounded-2xl border border-border-subtle bg-canvas p-4">
-              <p className="text-caption font-semibold text-earth">
-                {isOwnerOrStaff ? 'Owner Operations' : 'Host on FindStay'}
-              </p>
-              <p className="mt-1 text-caption text-earth/70">
-                {isOwnerOrStaff
-                  ? 'Access your listings, unit calendars, and bookings.'
-                  : 'Have an apartment or guest room? Start renting on FindStay.'}
-              </p>
-              <Link
-                to="/owner"
-                className="mt-3 inline-flex min-h-touch w-full items-center justify-center gap-1.5 rounded-xl bg-surface-muted px-3 py-2 text-caption font-semibold text-earth transition-colors hover:bg-surface-hover"
-              >
-                <span>{isOwnerOrStaff ? 'Open Owner Portal' : 'Start Hosting'}</span>
-                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-              </Link>
-            </div>
+            {/* Quick Portal Switcher Banner (shown only for authorised portals) */}
+            {isAdmin || isOwnerOrStaff ? (
+              <div className="mt-8 rounded-2xl border border-border-subtle bg-canvas p-4">
+                <p className="text-caption font-semibold text-earth">
+                  {isAdmin ? 'Admin Governance' : 'Owner Operations'}
+                </p>
+                <p className="mt-1 text-caption text-earth/70">
+                  {isAdmin
+                    ? 'Review verification cases, approve listings, and monitor platform settings.'
+                    : 'Access your listings, unit calendars, and bookings.'}
+                </p>
+                <Link
+                  to={isAdmin ? '/admin' : '/owner'}
+                  className="mt-3 inline-flex min-h-touch w-full items-center justify-center gap-1.5 rounded-xl bg-surface-muted px-3 py-2 text-caption font-semibold text-earth transition-colors hover:bg-surface-hover"
+                >
+                  <span>{isAdmin ? 'Open Admin Portal' : 'Open Owner Portal'}</span>
+                  <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                </Link>
+              </div>
+            ) : null}
           </aside>
 
           {/* =========================================================================
@@ -899,22 +913,31 @@ export const ProfilePage: React.FC = () => {
                         <ExternalLink className="h-4 w-4 text-earth/60" />
                       </Link>
 
-                      <Link
-                        to="/owner"
-                        className="flex items-center justify-between rounded-xl border border-border-subtle bg-canvas p-4 transition-colors hover:bg-surface-hover"
-                      >
-                        <div>
-                          <p className="font-semibold text-earth">
-                            {isOwnerOrStaff ? 'Owner Portal' : 'Start Hosting'}
-                          </p>
-                          <p className="text-caption text-earth/60">
-                            {isOwnerOrStaff
-                              ? 'Manage properties & units'
-                              : 'List your property on FindStay'}
-                          </p>
-                        </div>
-                        <ExternalLink className="h-4 w-4 text-earth/60" />
-                      </Link>
+                      {isOwnerOrStaff ? (
+                        <Link
+                          to="/owner"
+                          className="flex items-center justify-between rounded-xl border border-border-subtle bg-canvas p-4 transition-colors hover:bg-surface-hover"
+                        >
+                          <div>
+                            <p className="font-semibold text-earth">Owner Portal</p>
+                            <p className="text-caption text-earth/60">Manage properties & units</p>
+                          </div>
+                          <ExternalLink className="h-4 w-4 text-earth/60" />
+                        </Link>
+                      ) : null}
+
+                      {isAdmin ? (
+                        <Link
+                          to="/admin"
+                          className="flex items-center justify-between rounded-xl border border-border-subtle bg-canvas p-4 transition-colors hover:bg-surface-hover"
+                        >
+                          <div>
+                            <p className="font-semibold text-earth">Admin Portal</p>
+                            <p className="text-caption text-earth/60">Reviews, users & settings</p>
+                          </div>
+                          <ExternalLink className="h-4 w-4 text-earth/60" />
+                        </Link>
+                      ) : null}
                     </div>
                   </div>
                 </div>
