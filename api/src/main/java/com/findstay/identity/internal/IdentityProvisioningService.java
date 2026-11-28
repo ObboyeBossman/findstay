@@ -5,10 +5,13 @@ import com.findstay.identity.internal.IdentityDtos.AccountLookupResponse;
 import com.findstay.identity.internal.IdentityDtos.ConsentStateResponse;
 import com.findstay.identity.internal.IdentityDtos.ProfileResponse;
 import com.findstay.identity.internal.IdentityDtos.ProfileUpdateRequest;
+import com.findstay.identity.internal.IdentityDtos.RoleMembershipResponse;
 import com.findstay.identity.internal.IdentityDtos.SessionContextResponse;
+import com.findstay.organization.api.OrganizationAccessApi;
 import com.findstay.shared.error.AppException;
 import com.findstay.shared.error.ErrorCode;
 import com.findstay.shared.event.DomainEventPublisher;
+import com.findstay.shared.security.OrgMembership;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -24,12 +27,14 @@ import java.util.regex.Pattern;
 
 /**
  * Provisions and serves local {@code identity.user_account} and {@code identity.user_profile}
- * records for Supabase-authenticated users ({@code DEC-S1-01/A}, {@code DEC-S1-04/B}, {@code S1-04-T5}).
+ * records for Supabase-authenticated users ({@code DEC-S1-01/A}, {@code DEC-S1-04/B}, {@code S1-04-T5},
+ * {@code S1-07-T3}).
  */
 @Service
 class IdentityProvisioningService {
 
     private static final String DEFAULT_ROLE_CODE = "GUEST";
+    private static final String OWNER_ROLE_CODE = "OWNER";
     private static final String DEFAULT_LANGUAGE = "en";
     private static final String DEFAULT_PRIVACY_POLICY_VERSION = "1";
     private static final String DEFAULT_PRIVACY_POLICY_URL = "/privacy";
@@ -40,6 +45,7 @@ class IdentityProvisioningService {
     private final RoleRepository roles;
     private final DomainEventPublisher events;
     private final SupabaseAuthLookupClient supabaseAuthLookup;
+    private final OrganizationAccessApi organizationAccess;
     private final Clock clock;
 
     IdentityProvisioningService(
@@ -48,12 +54,14 @@ class IdentityProvisioningService {
             RoleRepository roles,
             DomainEventPublisher events,
             SupabaseAuthLookupClient supabaseAuthLookup,
+            OrganizationAccessApi organizationAccess,
             Clock clock) {
         this.accounts = accounts;
         this.profiles = profiles;
         this.roles = roles;
         this.events = events;
         this.supabaseAuthLookup = supabaseAuthLookup;
+        this.organizationAccess = organizationAccess;
         this.clock = clock;
     }
 
@@ -81,6 +89,7 @@ class IdentityProvisioningService {
             ensureActive(existing);
             UserProfile profile = profiles.findById(userId)
                     .orElseGet(() -> createDefaultProfile(userId, jwt, existing.getEmail(), clock.instant()));
+            maybeAutoCreateOwnerOrg(existing, profile, jwt);
             return toSessionContext(existing, profile);
         }
 
@@ -129,10 +138,12 @@ class IdentityProvisioningService {
     private SessionContextResponse provisionNewAccount(UUID userId, Jwt jwt) {
         String email = extractEmail(jwt);
         Instant now = clock.instant();
-        Role guestRole = roles.findByCode(DEFAULT_ROLE_CODE)
+        String desiredRoleCode = isOwnerOnboardingRequested(jwt) ? OWNER_ROLE_CODE : DEFAULT_ROLE_CODE;
+        Role accountRole = roles.findByCode(desiredRoleCode)
+                .or(() -> roles.findByCode(DEFAULT_ROLE_CODE))
                 .orElseThrow(() -> new AppException(ErrorCode.INTERNAL_ERROR, "Default GUEST role is not seeded"));
 
-        UserAccount newAccount = new UserAccount(userId, email, guestRole, now);
+        UserAccount newAccount = new UserAccount(userId, email, accountRole, now);
         UserProfile newProfile = new UserProfile(
                 userId,
                 extractFullName(jwt, email),
@@ -149,13 +160,40 @@ class IdentityProvisioningService {
                 ensureActive(raceAccount);
                 UserProfile raceProfile = profiles.findById(userId)
                         .orElseGet(() -> createDefaultProfile(userId, jwt, raceAccount.getEmail(), now));
+                maybeAutoCreateOwnerOrg(raceAccount, raceProfile, jwt);
                 return toSessionContext(raceAccount, raceProfile);
             }
             throw new AppException(ErrorCode.CONFLICT, "An account with this email already exists");
         }
 
         events.publish(new UserRegisteredEvent(events.newMeta(), userId, email));
+        maybeAutoCreateOwnerOrg(newAccount, newProfile, jwt);
         return toSessionContext(newAccount, newProfile);
+    }
+
+    private void maybeAutoCreateOwnerOrg(UserAccount account, UserProfile profile, Jwt jwt) {
+        boolean isOwnerRole = account.getRole() != null && OWNER_ROLE_CODE.equals(account.getRole().getCode());
+        if (isOwnerRole || isOwnerOnboardingRequested(jwt)) {
+            organizationAccess.ensureOwnerOrganization(
+                    account.getId(),
+                    account.getEmail(),
+                    profile.getFullName(),
+                    profile.getPhone());
+        }
+    }
+
+    private static boolean isOwnerOnboardingRequested(Jwt jwt) {
+        Map<String, Object> metadata = jwt.getClaimAsMap("user_metadata");
+        if (metadata == null) {
+            return false;
+        }
+        for (String key : List.of("role", "account_type", "portal")) {
+            Object val = metadata.get(key);
+            if (val instanceof String s && OWNER_ROLE_CODE.equalsIgnoreCase(s.trim())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private UserProfile createDefaultProfile(UUID userId, Jwt jwt, String email, Instant now) {
@@ -225,11 +263,21 @@ class IdentityProvisioningService {
 
     private SessionContextResponse toSessionContext(UserAccount account, UserProfile profile) {
         List<String> permissions = accounts.findPermissionCodes(account.getId()).stream().sorted().toList();
+        List<OrgMembership> orgMemberships = organizationAccess.findMembershipsByUserId(account.getId());
+        List<RoleMembershipResponse> membershipResponses = orgMemberships.stream()
+                .map(m -> new RoleMembershipResponse(
+                        m.role().name(),
+                        m.organizationId(),
+                        m.organizationName(),
+                        List.copyOf(m.propertyIds())))
+                .toList();
+        UUID activeOrgId = orgMemberships.size() == 1 ? orgMemberships.getFirst().organizationId() : null;
+
         return new SessionContextResponse(
                 toProfileResponse(account, profile),
-                List.of(),
+                membershipResponses,
                 new ConsentStateResponse(DEFAULT_PRIVACY_POLICY_VERSION, DEFAULT_PRIVACY_POLICY_URL, null),
-                null,
+                activeOrgId,
                 account.getRole().getCode(),
                 permissions);
     }
