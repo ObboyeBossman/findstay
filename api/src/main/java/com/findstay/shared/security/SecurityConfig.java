@@ -69,6 +69,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/health").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/lookup").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/invitations/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/catalog/reference").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/properties/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()));
         if (requireHttps) {

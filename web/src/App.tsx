@@ -13,6 +13,7 @@ import {
   VerifyEmailPage,
 } from './features/identity';
 import { NotificationsPage } from './features/notification';
+import { OwnerListingsPage, PropertyEditorPage } from './features/listing';
 import { InviteAcceptancePage, OwnerOrganizationPage } from './features/organization';
 import { OwnerVerificationPage } from './features/verification';
 import { AdminLayout } from './layouts/AdminLayout';
@@ -84,15 +85,30 @@ export const App: React.FC = () => (
           >
             <Route index element={<OwnerAreaPage />} />
             <Route
-              path="listings/*"
+              path="listings"
               element={
                 <RequireAccess
                   requiredPermissions={['listing.read']}
                   areaName="Owner Listings"
                 >
-                  <OwnerAreaPage />
+                  <OwnerListingsPage />
                 </RequireAccess>
               }
+            />
+            <Route
+              path="listings/:propertyId/edit"
+              element={
+                <RequireAccess
+                  requiredPermissions={['listing.read']}
+                  areaName="Edit Property & Units"
+                >
+                  <PropertyEditorPage />
+                </RequireAccess>
+              }
+            />
+            <Route
+              path="listings/*"
+              element={<Navigate to="/owner/listings" replace />}
             />
             <Route
               path="verification/*"
