@@ -12,6 +12,7 @@ import {
   RequireAccess,
   VerifyEmailPage,
 } from './features/identity';
+import { AdminReviewsPage } from './features/admin';
 import { AdminAuditLogPage } from './features/audit';
 import { OwnerCalendarPage } from './features/availability';
 import { NotificationsPage } from './features/notification';
@@ -192,9 +193,13 @@ export const App: React.FC = () => (
                   requiredPermissions={['admin.review.read']}
                   areaName="Admin Review Queue"
                 >
-                  <AdminAreaPage />
+                  <AdminReviewsPage />
                 </RequireAccess>
               }
+            />
+            <Route
+              path="approvals/*"
+              element={<Navigate to="/admin/reviews" replace />}
             />
             <Route
               path="users/*"

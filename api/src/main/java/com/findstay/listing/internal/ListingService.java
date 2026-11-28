@@ -769,7 +769,7 @@ class ListingService implements CatalogQuery, ListingModerationApi {
         String cleanReason = reason != null && !reason.isBlank() ? reason.trim() : "Corrections requested";
         recordHistory(property.getId(), PropertyStatus.PENDING_REVIEW, PropertyStatus.CORRECTIONS_REQUESTED,
                 adminUserId, cleanReason, now);
-        notifyOwner(property, "LISTING_CHANGES_REQUESTED", Map.of(
+        notifyOwner(property, "LISTING_CORRECTIONS_REQUESTED", Map.of(
                 "propertyName", property.getName(),
                 "notes", cleanReason
         ));
@@ -817,8 +817,12 @@ class ListingService implements CatalogQuery, ListingModerationApi {
             pub.updateStatus("SUSPENDED", now);
             publicListingRepository.saveAndFlush(pub);
         });
-        recordHistory(property.getId(), previous, PropertyStatus.SUSPENDED, adminUserId,
-                reason != null ? reason.trim() : "Suspended by administrator", now);
+        String cleanReason = reason != null && !reason.isBlank() ? reason.trim() : "Suspended by administrator";
+        recordHistory(property.getId(), previous, PropertyStatus.SUSPENDED, adminUserId, cleanReason, now);
+        notifyOwner(property, "LISTING_SUSPENDED", Map.of(
+                "propertyName", property.getName(),
+                "reason", cleanReason
+        ));
         return toReviewItem(property);
     }
 
@@ -836,8 +840,12 @@ class ListingService implements CatalogQuery, ListingModerationApi {
         propertyRepository.saveAndFlush(property);
 
         upsertPublicProjection(property, "ACTIVE", now);
-        recordHistory(property.getId(), PropertyStatus.SUSPENDED, PropertyStatus.ACTIVE, adminUserId,
-                reason != null ? reason.trim() : "Restored by administrator", now);
+        String cleanReason = reason != null && !reason.isBlank() ? reason.trim() : "Restored by administrator";
+        recordHistory(property.getId(), PropertyStatus.SUSPENDED, PropertyStatus.ACTIVE, adminUserId, cleanReason, now);
+        notifyOwner(property, "LISTING_RESTORED", Map.of(
+                "propertyName", property.getName(),
+                "reason", cleanReason
+        ));
         return toReviewItem(property);
     }
 
