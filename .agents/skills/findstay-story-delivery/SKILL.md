@@ -20,7 +20,7 @@ Use this workflow to turn a named FindStay requirement, story, or feature reques
 - For backend work, preserve `api`/`internal` boundaries, enforce organisation scope, and use additive Flyway/API/event evolution.
 - For frontend work, use the REST API for business data and Supabase only for Auth; keep authorization in the API and support mobile use.
 - Add focused tests for behaviour and failure cases. Keep requirement traceability in the project's established form; do not introduce a pretend test annotation or framework.
-- Do not deploy, mutate the GitHub Project board, or claim staging evidence unless the request explicitly authorises it.
+- Do not deploy, mutate the Trello board, or claim staging evidence unless the request explicitly authorises it.
 
 ## Verify and hand off
 

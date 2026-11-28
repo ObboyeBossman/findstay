@@ -4,10 +4,10 @@ Use this when creating or changing stories, tasks, backlog order, or sprint scop
 
 ## Hierarchy and identifiers
 
-- A story is a parent GitHub issue using the repository identifier and title, for example `S1-01: Project Setup & System Design`.
-- Executable role/work tasks are sub-issues. Follow the established repository identifier form `S1-01-T1`, `S1-01-T2`, and so on; do not introduce a competing `.1` convention.
-- Use deeper sub-issues only when they provide independent ownership or verification. Avoid checklist-sized issue fragmentation.
-- Add both parent and executable sub-issues to the FindStay Delivery Project so the Parent issue and Sub-issues progress fields can drive grouped views.
+- A story is tracked in `docs/scrum/sprint-XX/stories/<STORY-ID>/README.md` and represented as a Trello story card (or label/group) using the repository identifier and title, for example `S1-01: Project Setup & System Design`.
+- Executable role/work tasks are Trello task cards. Follow the established repository identifier form `S1-01-T1`, `S1-01-T2`, and so on; do not introduce a competing `.1` convention.
+- Use deeper sub-tasks (as Trello checklist items or split cards) only when they provide independent ownership or verification. Avoid checklist-sized card fragmentation.
+- Link every task card to its parent story (via story label and/or story card checklist) and attach its GitHub Pull Request URL when implementation starts. Do not create new GitHub Issues for sprint tasks.
 
 ## Story readiness contract
 
@@ -40,7 +40,7 @@ Good acceptance check: “When an inactive user tries to sign in, the page expla
 
 Ambiguous acceptance check: “Authentication errors are handled properly.”
 
-## Task issue body
+## Task card description
 
 Use a compact, testable structure:
 
@@ -74,9 +74,9 @@ In plain language: what observable result this task produces and why it matters.
 - Reviewer/support: proposed/confirmed person
 ```
 
-Do not copy an entire requirements document into the issue. Link to the canonical repository path and quote only what the assignee needs to act correctly.
+Do not copy an entire requirements document into the Trello card. Link to the canonical repository path and quote only what the assignee needs to act correctly.
 
-Before creating or assigning the issue, ask whether a reader can understand its purpose, boundary, owner, dependency, completion test, and evidence without guessing. Refine any issue that fails this check.
+Before creating or assigning the card, ask whether a reader can understand its purpose, boundary, owner, dependency, completion test, and evidence without guessing. Refine any card that fails this check.
 
 ## Change control
 
@@ -85,14 +85,14 @@ When a task needs revision:
 1. Identify the trigger: clarified requirement, decision, dependency, defect, estimate/capacity change, or newly discovered implementation constraint.
 2. Determine affected requirement IDs, acceptance criteria, dependent stories, assignments, sprint goal, and release contract.
 3. Classify the change as clarification, in-sprint replan, backlog change, or accepted-scope change.
-4. Update the canonical document first when the product promise changed; update the issue/Project state second; update member profiles last.
-5. Preserve history in issue comments, decision/activity logs, or Git rather than silently rewriting completed evidence.
+4. Update the canonical document first when the product promise changed; update the Trello card/list state second; update member profiles last.
+5. Preserve history in Trello card comments, decision/activity logs, or Git rather than silently rewriting completed evidence.
 
 Do not weaken acceptance criteria or the Definition of Done to make progress appear complete. Remove Could items first, then whole Should items, when capacity is insufficient.
 
 ## State policy
 
-Expected workflow is `Backlog` → `Ready` → `In Progress` → `Review` → `Done`, with `Blocked` as an explicit exception state. Discover the live field and option names before writing; do not assume they remain unchanged.
+Expected Trello lists are `Backlog` → `Ready` → `In Progress` → `Review` → `Done`, with `Blocked` as an explicit exception list. Discover the live list names on the board before writing; do not assume they remain unchanged.
 
 - Backlog → Ready only after the readiness contract passes.
 - Ready → In Progress only with an owner and available capacity.

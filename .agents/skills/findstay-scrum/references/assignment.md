@@ -6,10 +6,10 @@ Use this for ownership recommendations, assignment changes, capacity, performanc
 
 Discover the current roster rather than assuming a fixed team:
 
-1. `docs/team/team.md` for names, roles, and GitHub handles.
+1. `docs/team/team.md` for names, roles, GitHub handles, and Trello handles.
 2. `docs/team/roles.md` for role responsibilities and task tags.
 3. `docs/team/members/*/README.md` for primary track, assigned work, ahead work, completed impact, and activity history.
-4. Live GitHub Project/issues for current WIP and ownership.
+4. Live Trello board cards/lists for current WIP and ownership.
 5. PRs, reviews, tests, designs, decisions, or other linked evidence for demonstrated experience.
 6. A sprint capacity record, when present. If availability is absent or stale, mark it **Unknown** and ask for it before committing sprint capacity.
 
@@ -35,7 +35,7 @@ Avoid assigning a single person both implementation and sole acceptance/review. 
 ## Capacity and WIP
 
 - Use person-days or another team-approved capacity measure for the active sprint; subtract classes, leave, standing duties, integration/review reserve, and defect reserve.
-- Count active GitHub tasks, blocked work that still needs attention, and review duties.
+- Count active Trello cards, blocked work that still needs attention, and PR review duties.
 - Prefer finishing active work before starting more. Do not “balance” work by reassigning a nearly complete task without a clear handoff benefit.
 - If capacity data is missing, produce a provisional recommendation and list the exact availability question needed.
 
@@ -43,12 +43,12 @@ Avoid assigning a single person both implementation and sole acceptance/review. 
 
 After an authorised board assignment or status change, update the matching member profile only with verified facts:
 
-- **Assigned Stories & Backlog:** active/queued issue ID, concise task, sprint, live status, and evidence/issue link.
+- **Assigned Stories & Backlog:** active/queued task ID, concise task, sprint, live status, and evidence/Trello card link.
 - **What Is Ahead:** confirmed upcoming work, not speculative backlog possibilities.
 - **Impact & Completed Work:** accepted outcomes with evidence, not activity alone.
 - **Activity Log:** dated assignment, handoff, completion, or material scope/status change with its source.
 
-Preserve existing history. When ownership changes, record the handoff and reason in both the issue and affected profiles. Never erase a former assignment to make the current table look clean.
+Preserve existing history. When ownership changes, record the handoff and reason in both the Trello card and affected profiles. Never erase a former assignment to make the current table look clean.
 
 Profile entries must describe the result or responsibility, not merely “worked on X.” Expand technical shorthand sufficiently for another team member or stakeholder to understand the contribution.
 

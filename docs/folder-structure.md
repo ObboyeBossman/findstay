@@ -87,8 +87,8 @@ findstay/
 │   ├── AGENTS.md                      # Documentation governance rules
 │   └── overview.md                    # Product vision, problem definition & delivery roadmap
 ├── scripts/
-│   ├── issue-completion-rollup.mjs    # Synchronizes GitHub issues into sprint markdown logs
-│   └── sync-project.mjs               # GitHub Project board automated cache syncer
+│   ├── issue-completion-rollup.mjs    # Legacy (retired) GitHub issue rollup script
+│   └── sync-project.mjs               # Trello delivery board automated cache syncer
 ├── showcase/
 │   ├── assets/ & public/              # Presentation assets and interactive HTML showcase
 │   ├── index.html                     # Showcase homepage entry point
@@ -163,7 +163,7 @@ findstay/
 - A dedicated, lightweight Vite site used to compile and demonstrate sprint deliverables, interactive wireframe mockups, and stakeholder presentations independently from the production web application.
 
 ### 3.5 Automation & Skills (`scripts/` & `.agents/`)
-- **`scripts/`:** Node.js utilities that read the live GitHub Project board (`sync-project.mjs`) and roll up issue progress into markdown evidence files.
+- **`scripts/`:** Node.js utilities that read the live Trello delivery board (`sync-project.mjs`) and refresh cached evidence files (`docs/evidence/project/`).
 - **`.agents/skills/`:** Reusable agent skill instructions supporting standardized task delivery, agile metrics, git checkpoints, and sprint retrospectives.
 
 ---

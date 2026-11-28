@@ -11,7 +11,7 @@ The repository will grow. Do not use a fixed file inventory as the project model
 3. Read `docs/overview.md`, then use `rg` to locate the requested requirement (`FR-*`, `NFR-*`, `TA-*`, `PD-*`, `BR-*`, `BRL-*`), decision (`J-*`, `P-*`), story (`S*-*`), task (`S*-*-T*`), module, stakeholder, or member.
 4. Inspect the relevant requirement category, settled decisions, sprint/story acceptance criteria, and architecture rule only as needed.
 5. Inspect live code/tests and evidence before describing implementation progress. Placeholder directories and planned documents are not delivered features.
-6. For mutable delivery state, inspect the live GitHub Project and issues using `references/github-cli.md`; cached files under `docs/evidence/` are evidence snapshots, not the live board.
+6. For mutable delivery state, inspect the live Trello board using `references/trello-ops.md` and GitHub PRs/CI using `references/github-cli.md`; cached files under `docs/evidence/project/` are evidence snapshots, not the live board.
 
 Useful discovery commands:
 
@@ -31,17 +31,17 @@ Replace the example identifiers with the request's identifiers. Prefer direct li
 | --- | --- | --- |
 | What should the product do? | `docs/requirements/` | story acceptance criteria |
 | What has been decided? | decision records under `docs/scrum/` | architecture/rules docs |
-| What is planned for a sprint? | sprint and story documents | live Project backlog |
-| What is being worked on now? | live GitHub Project/issues | PRs and branches |
+| What is planned for a sprint? | sprint and story documents | live Trello backlog |
+| What is being worked on now? | live Trello board cards/lists | GitHub PRs and branches |
 | What is actually implemented? | code, tests, merged PRs | verified evidence |
-| Who is suited to a task? | roster, role guide, member profile | current assignments and contribution evidence |
-| What is complete? | acceptance evidence and Definition of Done | Done board status and closed issue |
+| Who is suited to a task? | roster, role guide, member profile | current Trello assignments and contribution evidence |
+| What is complete? | acceptance evidence and Definition of Done | Trello Done list and merged PR |
 
 ## Reconciliation
 
 Classify drift before changing anything:
 
-- **Board stale:** repository/evidence proves a newer state; update the issue/Project when authorised.
+- **Board stale:** repository/evidence proves a newer state; update the Trello card when authorised.
 - **Docs stale:** accepted scope or ownership changed; update the owning document, preserving history.
 - **Implementation gap:** planned or Done-labelled work lacks code/tests/evidence; reopen or block instead of manufacturing evidence.
 - **Unresolved conflict:** sources disagree about scope or a stakeholder decision; create a decision/refinement action and stop dependent commitment.

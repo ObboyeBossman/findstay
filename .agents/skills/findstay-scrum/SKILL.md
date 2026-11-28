@@ -1,7 +1,7 @@
 ---
 name: findstay-scrum
 description: >
-  Manage FindStay requirements-to-delivery work: discover project state, refine and change backlog items, assess criticality, recommend or apply team assignments, run Scrum ceremonies, reconcile documentation with GitHub issues/Project 5, and maintain member delivery profiles. Use for FindStay Scrum, sprint, backlog, task, status, ownership, capacity, blocker, change-control, or GitHub Project requests; not for implementing product code.
+  Manage FindStay requirements-to-delivery work: discover project state, refine and change backlog items, assess criticality, recommend or apply team assignments, run Scrum ceremonies, reconcile documentation with the Trello delivery board (and GitHub PRs/CI), and maintain member delivery profiles. Use for FindStay Scrum, sprint, backlog, task, status, ownership, capacity, blocker, change-control, or Trello board requests; not for implementing product code.
 ---
 
 # FindStay Scrum steward
@@ -21,7 +21,8 @@ FindStay's approved requirements, settled decisions, Scrum rules, and existing w
 - For project status, gaps, next work, or readiness, read [project discovery](references/project-discovery.md).
 - For creating, splitting, refining, reprioritising, or changing work, also read [work-item contract](references/work-items.md).
 - For assigning, rebalancing, workload, capacity, or member-profile work, also read [assignment and profiles](references/assignment.md).
-- For any GitHub issue or Project read/write, read [GitHub CLI operations](references/github-cli.md).
+- For any Trello board/card read/write, read [Trello board operations](references/trello-ops.md).
+- For GitHub pull requests, branches, or CI verification (GitHub Issues & Project 5 are retired), read [GitHub CLI operations](references/github-cli.md).
 
 Read only the referenced project documents needed to resolve the request. Search by requirement, decision, story, task, module, or member identifier instead of bulk-loading `docs/`.
 
@@ -31,7 +32,7 @@ Separate facts, conflicts, unknowns, and recommendations. Use this precedence fo
 
 1. The user's current decision or explicit instruction.
 2. Approved requirements and settled stakeholder/architecture decisions for scope and behaviour.
-3. Live GitHub issues, Project fields, pull requests, and CI for execution status.
+3. Live Trello board cards/lists (execution status) and GitHub pull requests/CI (code & merge status).
 4. Repository code, tests, and verified evidence for implementation status.
 5. Sprint plans and member profiles for intended work and ownership history.
 6. Inference, clearly labelled and never written back as fact.
@@ -41,11 +42,11 @@ Do not silently choose between conflicting sources. Report the conflict, identif
 ## Operating modes and authority
 
 - Requests such as “review,” “assess,” “plan,” “recommend,” or “what should we do” are read-only. Return a proposed change set.
-- Requests such as “create,” “assign,” “update,” “sync,” “apply,” or “move” authorize the named local-document and GitHub mutations within scope. Show a concise mutation plan, execute it, then verify the resulting state.
-- Preview and obtain explicit confirmation before more than 10 GitHub mutations, closing or deleting work, replacing an active assignee, changing accepted scope, or altering Project fields/views.
-- Never delete issues, Project items, fields, evidence, requirements, or member history as routine cleanup.
+- Requests such as “create,” “assign,” “update,” “sync,” “apply,” or “move” authorize the named local-document and Trello mutations within scope. Show a concise mutation plan, execute it, then verify the resulting state.
+- Preview and obtain explicit confirmation before more than 10 Trello mutations, archiving or deleting work, replacing an active assignee, changing accepted scope, or altering Trello lists/labels/board structure.
+- Never delete Trello cards, lists, evidence, requirements, or member history as routine cleanup.
 
-GitHub is the live execution board; repository documentation is the durable product and delivery record. Keep them linked and reconcile drift, but do not copy every transient board field into Markdown.
+Trello is the live execution board; GitHub hosts code, pull requests, and CI; repository documentation is the durable product and delivery record. Keep them linked and reconcile drift, but do not copy every transient board field into Markdown.
 
 ## Plain-language contract
 
@@ -79,7 +80,7 @@ Keep criticality separate from effort and priority. A small security fix can be 
 
 ### Completion
 
-A task is Done only with its acceptance checks and evidence. A parent story reaches Done only when required sub-issues are Done, story acceptance criteria pass, the applicable Definition of Done is satisfied, and Product Owner acceptance is recorded where required. Sub-issue completion alone is not sufficient.
+A task is Done only with its acceptance checks and evidence (including merged PR / passing CI on `dev` where applicable). A parent story reaches Done only when required tasks are Done, story acceptance criteria pass, the applicable Definition of Done is satisfied, and Product Owner acceptance is recorded where required. Checklist or task-card completion alone is not sufficient.
 
 ## Response and handoff
 
@@ -90,6 +91,6 @@ For substantive management work, report:
 - missing or conflicting information;
 - proposed or completed backlog/assignment changes with reasons;
 - risks, blockers, dependencies, and the next decision;
-- GitHub/document mutations performed and post-write verification.
+- Trello/document mutations performed and post-write verification.
 
 Do not claim a person is available, a task is complete, or a requirement is delivered without current evidence.

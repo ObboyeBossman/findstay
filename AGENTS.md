@@ -12,7 +12,7 @@ This repository is a foundation, not a completed product: `web/src/App.tsx` is i
 - `api/` — Java 21 / Spring Boot 3 modular monolith with Spring Modulith and Flyway/PostgreSQL.
 - `docs/` — approved requirements, architecture contracts, sprint material, and evidence; it is the product source of truth.
 - `showcase/` — separate Vite site for sprint-progress presentation, not the product UI.
-- `scripts/` — maintenance utilities; `sync-project.mjs` reads the GitHub Project board and refreshes cached evidence.
+- `scripts/` — maintenance utilities; `sync-project.mjs` reads the Trello delivery board and refreshes cached evidence.
 
 ## Context before changing code
 
@@ -20,7 +20,7 @@ This repository is a foundation, not a completed product: `web/src/App.tsx` is i
 2. Start with `docs/overview.md`; follow only the requirement, story, or rule documents relevant to the request. Do not bulk-read `docs/`.
 3. For application or schema work, read `docs/rules/architecture-and-security.md`, `docs/rules/module-boundaries.md`, and `docs/rules/no-conflict-contract.md`.
 4. For a story-sized change, use the repo skill `$findstay-story-delivery`.
-5. For project discovery, backlog, sprint, team-assignment, or GitHub Project work, use `$findstay-scrum`.
+5. For project discovery, backlog, sprint, team-assignment, or Trello board work, use `$findstay-scrum`.
 
 ## Non-negotiable platform rules
 
@@ -42,7 +42,7 @@ npm run lint:theme             # design-token guard (no hard-coded visual values
 npm run build                  # web production build (runs the guard first)
 npm run build:showcase         # progress-showcase build
 (cd api && mvn test)           # API tests and Modulith boundary check
-npm run sync:project           # authenticated GitHub board refresh; deliberate, not routine
+npm run sync:project           # authenticated Trello board refresh; deliberate, not routine
 ```
 
 Do not edit generated `dist/` output or commit secrets. When configuration changes, update the appropriate checked-in `.env.example` without values. Keep a change focused; update requirements, decision, or evidence documents only when the behaviour or delivery record changes.

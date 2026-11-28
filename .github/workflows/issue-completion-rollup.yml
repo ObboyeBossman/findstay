@@ -1,14 +1,12 @@
-name: Issue Completion Guard & Story Roll-up
+name: Issue Completion Guard & Story Roll-up (Retired — Manual Only)
 
+# Retired on 2026-11-28 after migrating FindStay's live board from GitHub Issues / Project 5 to Trello.
+# Kept manual-only (workflow_dispatch) for historical reference; do not re-enable automatic issue triggers.
 on:
-  issues:
-    types: [closed, reopened]
-  issue_comment:
-    types: [created, edited]
   workflow_dispatch:
     inputs:
       story_number:
-        description: Parent story issue number to build/refresh the achievement roll-up summary (e.g. 1)
+        description: Legacy parent story issue number to inspect (e.g. 1)
         required: true
         default: '1'
         type: string
