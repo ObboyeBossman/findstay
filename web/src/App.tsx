@@ -7,6 +7,7 @@ import {
   AuthFlowPage,
   AuthProvider,
   ForgotPasswordPage,
+  ProfilePage,
   VerifyEmailPage,
 } from './features/identity';
 import { AdminLayout } from './layouts/AdminLayout';
@@ -33,6 +34,7 @@ export const App: React.FC = () => (
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<GuestHomePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/auth/*" element={<Navigate to="/auth/sign-in" replace />} />
           </Route>
 
