@@ -1,5 +1,6 @@
 package com.findstay.organization.internal;
 
+import com.findstay.shared.validation.SafeText;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -25,8 +26,10 @@ final class OrganizationDtos {
 
     record OrganizationUpdateRequest(
             @Size(min = 1, max = 120, message = "Company name must be between 1 and 120 characters")
+            @SafeText(message = "Company name cannot contain < or > characters or control characters")
             String name,
             @Size(min = 1, max = 80, message = "Display name must be between 1 and 80 characters")
+            @SafeText(message = "Display name cannot contain < or > characters or control characters")
             String displayName,
             @Email(message = "Please enter a valid contact email address")
             String contactEmail,

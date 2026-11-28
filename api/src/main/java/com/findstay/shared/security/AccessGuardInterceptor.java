@@ -32,6 +32,7 @@ import java.util.UUID;
  */
 class AccessGuardInterceptor implements HandlerInterceptor {
 
+    static final String ADMIN_ROOT_PATH = "/api/v1/admin";
     static final String ADMIN_PATH_PREFIX = "/api/v1/admin/";
     static final String SUSPENDED_MESSAGE = "This account has been suspended";
     static final String DENIED_MESSAGE = "You do not have permission to do this";
@@ -48,7 +49,8 @@ class AccessGuardInterceptor implements HandlerInterceptor {
             return true;
         }
         Optional<String> required = requiredPermission(method);
-        boolean adminRoute = request.getRequestURI().startsWith(ADMIN_PATH_PREFIX);
+        String uri = request.getRequestURI();
+        boolean adminRoute = ADMIN_ROOT_PATH.equals(uri) || uri.startsWith(ADMIN_PATH_PREFIX);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof JwtAuthenticationToken)) {
