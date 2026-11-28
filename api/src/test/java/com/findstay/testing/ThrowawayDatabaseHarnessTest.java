@@ -63,7 +63,18 @@ class ThrowawayDatabaseHarnessTest extends AbstractIntegrationTest {
     @Test
     @Req("DEC-S1-01/L")
     void theStarterReferenceListsArePresentWithTheAgreedValues() {
-        assertEquals(7, count("listing.accommodation_type"), "the seven kickoff accommodation types");
+        assertEquals(
+                List.of(
+                        "DOUBLE_ROOM",
+                        "ENTIRE_HOUSE",
+                        "ONE_BEDROOM_APARTMENT",
+                        "SINGLE_ROOM",
+                        "STUDIO",
+                        "SUITE",
+                        "TWO_BEDROOM_APARTMENT"),
+                codesWhereActive("listing.accommodation_type"),
+                "the seven kickoff R1 accommodation types are the only active types");
+        assertTrue(count("listing.accommodation_type") >= 7, "at least the seven kickoff accommodation types");
         assertEquals(List.of("NIGHTLY"), codesWhereActive("listing.billing_period"),
                 "Per Night is the only active billing period (no weekly, ever)");
         assertEquals(4, count("listing.billing_period"), "4 billing periods seeded, 3 inactive");
