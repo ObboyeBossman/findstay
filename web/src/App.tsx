@@ -12,6 +12,7 @@ import {
   RequireAccess,
   VerifyEmailPage,
 } from './features/identity';
+import { OwnerCalendarPage } from './features/availability';
 import { NotificationsPage } from './features/notification';
 import { OwnerListingsPage, PropertyEditorPage } from './features/listing';
 import { InviteAcceptancePage, OwnerOrganizationPage } from './features/organization';
@@ -107,6 +108,17 @@ export const App: React.FC = () => (
               }
             />
             <Route
+              path="listings/:propertyId/calendar"
+              element={
+                <RequireAccess
+                  requiredPermissions={['availability.read']}
+                  areaName="Availability Calendar"
+                >
+                  <OwnerCalendarPage />
+                </RequireAccess>
+              }
+            />
+            <Route
               path="listings/*"
               element={<Navigate to="/owner/listings" replace />}
             />
@@ -129,7 +141,7 @@ export const App: React.FC = () => (
                   requiredPermissions={['availability.read']}
                   areaName="Availability Calendar"
                 >
-                  <OwnerAreaPage />
+                  <OwnerCalendarPage />
                 </RequireAccess>
               }
             />

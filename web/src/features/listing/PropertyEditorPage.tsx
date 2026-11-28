@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
   BedDouble,
+  Calendar,
   Check,
   CheckCircle2,
   Circle,
@@ -502,6 +503,14 @@ export const PropertyEditorPage: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          <Link
+            to={`/owner/listings/${property.id}/calendar`}
+            className="inline-flex min-h-touch items-center gap-2 rounded-xl border border-border-subtle bg-surface-card px-4 py-2 text-body-2 font-semibold text-earth hover:bg-surface-hover"
+          >
+            <Calendar className="h-4 w-4 text-olive" aria-hidden="true" />
+            Availability Calendar
+          </Link>
+
           <button
             type="button"
             onClick={() => setShowPreview((prev) => !prev)}
