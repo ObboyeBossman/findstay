@@ -12,6 +12,7 @@ import {
   RequireAccess,
   VerifyEmailPage,
 } from './features/identity';
+import { AdminAuditLogPage } from './features/audit';
 import { OwnerCalendarPage } from './features/availability';
 import { NotificationsPage } from './features/notification';
 import { OwnerListingsPage, PropertyEditorPage } from './features/listing';
@@ -224,7 +225,7 @@ export const App: React.FC = () => (
                   requiredPermissions={['admin.audit.read']}
                   areaName="Audit Log"
                 >
-                  <AdminAreaPage />
+                  <AdminAuditLogPage />
                 </RequireAccess>
               }
             />
