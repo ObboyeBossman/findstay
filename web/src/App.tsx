@@ -12,6 +12,7 @@ import {
   RequireAccess,
   VerifyEmailPage,
 } from './features/identity';
+import { InviteAcceptancePage, OwnerOrganizationPage } from './features/organization';
 import { AdminLayout } from './layouts/AdminLayout';
 import { OwnerLayout } from './layouts/OwnerLayout';
 import { GuestHomePage } from './pages/GuestHomePage';
@@ -35,6 +36,8 @@ export const App: React.FC = () => (
           <Route path="/auth/verify" element={<VerifyEmailPage />} />
           <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
+          <Route path="/owner/invitations" element={<InviteAcceptancePage />} />
+          <Route path="/owner/invitations/:token" element={<InviteAcceptancePage />} />
 
           <Route element={<AppLayout />}>
             <Route path="/" element={<GuestHomePage />} />
@@ -109,7 +112,7 @@ export const App: React.FC = () => (
                   areaName="Team & Organisation Management"
                   deniedReason="Only property owners with staff management permissions can manage organisation settings and team invitations."
                 >
-                  <OwnerAreaPage />
+                  <OwnerOrganizationPage />
                 </RequireAccess>
               }
             />
