@@ -98,6 +98,10 @@ class Organization {
         return verificationStatus;
     }
 
+    void setVerificationStatus(String verificationStatus) {
+        this.verificationStatus = verificationStatus;
+    }
+
     Instant getCreatedAt() {
         return createdAt;
     }

@@ -3,6 +3,7 @@ package com.findstay.organization.api;
 import com.findstay.shared.security.OrgMembership;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -23,4 +24,13 @@ public interface OrganizationAccessApi {
      * Returns all active organisation memberships and granted property IDs for the given user.
      */
     List<OrgMembership> findMembershipsByUserId(UUID userId);
+
+    /** Looks up an organisation summary by its ID. */
+    Optional<OrganizationSummary> findOrganizationById(UUID organizationId);
+
+    /** Updates the denormalised {@code organization.verification_status} after submission or admin review. */
+    void updateVerificationStatus(UUID organizationId, String verificationStatus);
+
+    /** Returns the primary OWNER user ID of an organisation for lifecycle notifications. */
+    Optional<UUID> findPrimaryOwnerUserId(UUID organizationId);
 }

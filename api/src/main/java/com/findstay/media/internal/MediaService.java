@@ -214,8 +214,10 @@ class MediaService implements MediaServiceApi {
                 .orElseThrow(() -> AppException.notFound("MediaAsset", assetId));
 
         if (!hasPrivateReadPermission) {
-            // Throws 403 if caller has no org membership, or 404 if caller belongs to a different org
-            orgScope.requireOrganization(callerUserId, asset.getOrganizationId());
+            // Throws 403 if caller has no org membership, or 404 if caller belongs to a different org.
+            // Staff members are also blocked (403) from opening private owner verification documents.
+            var membership = orgScope.requireOrganization(callerUserId, asset.getOrganizationId());
+            membership.requireOwner();
         }
 
         if (asset.getStatus() == MediaAssetStatus.DELETED) {

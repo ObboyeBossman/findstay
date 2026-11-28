@@ -14,6 +14,7 @@ import {
 } from './features/identity';
 import { NotificationsPage } from './features/notification';
 import { InviteAcceptancePage, OwnerOrganizationPage } from './features/organization';
+import { OwnerVerificationPage } from './features/verification';
 import { AdminLayout } from './layouts/AdminLayout';
 import { OwnerLayout } from './layouts/OwnerLayout';
 import { GuestHomePage } from './pages/GuestHomePage';
@@ -101,7 +102,7 @@ export const App: React.FC = () => (
                   areaName="Owner Verification"
                   deniedReason="Only property owners can view or submit identity and property verification documents."
                 >
-                  <OwnerAreaPage />
+                  <OwnerVerificationPage />
                 </RequireAccess>
               }
             />

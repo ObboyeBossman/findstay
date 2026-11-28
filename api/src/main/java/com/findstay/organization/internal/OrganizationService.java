@@ -23,6 +23,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -218,6 +219,31 @@ class OrganizationService implements OrganizationAccessApi, OrgMembershipResolve
                     propIds));
         }
         return List.copyOf(result);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<OrganizationSummary> findOrganizationById(UUID organizationId) {
+        return organizations.findById(organizationId).map(OrganizationService::toSummary);
+    }
+
+    @Override
+    @Transactional
+    public void updateVerificationStatus(UUID organizationId, String verificationStatus) {
+        Organization org = organizations.findById(organizationId)
+                .orElseThrow(() -> AppException.notFound("Organization", organizationId));
+        org.setVerificationStatus(verificationStatus);
+        org.setUpdatedAt(clock.instant());
+        organizations.save(org);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<UUID> findPrimaryOwnerUserId(UUID organizationId) {
+        return memberships.findByOrganizationIdOrderByJoinedAtAsc(organizationId).stream()
+                .filter(m -> "OWNER".equals(m.getRole()))
+                .map(Membership::getUserId)
+                .findFirst();
     }
 
     private static String resolveDefaultOrgName(String fullName, String email) {
