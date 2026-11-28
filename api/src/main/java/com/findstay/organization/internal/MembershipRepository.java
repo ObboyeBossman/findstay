@@ -10,5 +10,7 @@ interface MembershipRepository extends JpaRepository<Membership, UUID> {
 
     List<Membership> findByUserIdOrderByJoinedAtAsc(UUID userId);
 
+    List<Membership> findByOrganizationIdOrderByJoinedAtAsc(UUID organizationId);
+
     Optional<Membership> findByOrganizationIdAndUserId(UUID organizationId, UUID userId);
 }

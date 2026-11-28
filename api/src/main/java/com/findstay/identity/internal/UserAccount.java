@@ -86,4 +86,9 @@ class UserAccount {
     Instant getUpdatedAt() {
         return updatedAt;
     }
+
+    void promoteRole(Role newRole, Instant now) {
+        this.role = newRole;
+        this.updatedAt = now;
+    }
 }
