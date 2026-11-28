@@ -29,6 +29,37 @@ export function validateModerationReason(reason: string): string | null {
   return null;
 }
 
+/** Validates mandatory user suspension reason (minimum 10 characters per `S1-16-T1` spec). */
+export function validateSuspensionReason(reason: string): string | null {
+  const clean = reason.trim();
+  if (clean.length < 10) {
+    return 'Enter a suspension reason (at least 10 characters).';
+  }
+  if (clean.length > 500) {
+    return 'Suspension reason must be 500 characters or fewer.';
+  }
+  return null;
+}
+
+/** Validates platform setting input before calling `PUT/PATCH /api/v1/admin/settings`. */
+export function validatePlatformSettingValue(
+  key: string,
+  value: string,
+  isFeatureFlag: boolean,
+): string | null {
+  const clean = value.trim();
+  if (!clean) {
+    return 'Setting value cannot be empty.';
+  }
+  if (isFeatureFlag && clean !== 'true' && clean !== 'false') {
+    return 'Feature flag values must be true or false.';
+  }
+  if (key === 'privacy.policy_version' && !/^[1-9]\d*$/.test(clean)) {
+    return 'Privacy policy version must be a positive whole number.';
+  }
+  return null;
+}
+
 /** Splits newline-separated admin fix instructions into clean items. */
 export function parseCorrectionLines(raw: string): string[] {
   return raw

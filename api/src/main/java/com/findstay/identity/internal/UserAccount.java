@@ -79,6 +79,28 @@ class UserAccount {
         return STATUS_SUSPENDED.equals(status);
     }
 
+    Instant getSuspendedAt() {
+        return suspendedAt;
+    }
+
+    String getSuspensionReason() {
+        return suspensionReason;
+    }
+
+    void suspend(String reason, Instant now) {
+        this.status = STATUS_SUSPENDED;
+        this.suspendedAt = now;
+        this.suspensionReason = reason;
+        this.updatedAt = now;
+    }
+
+    void restore(Instant now) {
+        this.status = STATUS_ACTIVE;
+        this.suspendedAt = null;
+        this.suspensionReason = null;
+        this.updatedAt = now;
+    }
+
     Instant getCreatedAt() {
         return createdAt;
     }

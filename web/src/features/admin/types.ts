@@ -1,5 +1,6 @@
 import type { VerificationCaseView, VerificationDocumentType } from '../verification';
 import type { MediaAssetSummary } from '../media';
+import type { AuditLogEntry } from '../audit';
 
 export type ReviewEntityKind = 'VERIFICATION' | 'LISTING';
 export type ReviewDecisionType = 'APPROVE' | 'REQUEST_CORRECTIONS' | 'REJECT';
@@ -75,4 +76,50 @@ export interface ReviewDecisionPayload {
   reason: string;
   corrections?: string[];
   rejectedDocumentTypes?: VerificationDocumentType[];
+}
+
+export interface AdminDashboardResponse {
+  pendingVerificationsCount: number;
+  pendingListingsCount: number;
+  publishedListingsCount: number;
+  suspendedListingsCount: number;
+  totalUsersCount: number;
+  activeUsersCount: number;
+  suspendedUsersCount: number;
+  recentActivity: AuditLogEntry[];
+}
+
+export interface AdminUserItem {
+  id: string;
+  email: string;
+  displayName: string;
+  phone: string | null;
+  roleCode: string;
+  status: 'ACTIVE' | 'SUSPENDED' | string;
+  suspendedAt: string | null;
+  suspensionReason: string | null;
+  createdAt: string;
+}
+
+export interface AdminUserPageResponse {
+  items: AdminUserItem[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface CreateAdminUserPayload {
+  email: string;
+  displayName: string;
+  phone?: string;
+  role: 'GUEST' | 'OWNER' | 'ADMIN';
+}
+
+export interface PlatformSettingItem {
+  key: string;
+  value: string;
+  description: string | null;
+  isFeatureFlag: boolean;
+  updatedByUserId: string | null;
+  updatedAt: string;
 }

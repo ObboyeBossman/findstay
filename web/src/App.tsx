@@ -12,7 +12,12 @@ import {
   RequireAccess,
   VerifyEmailPage,
 } from './features/identity';
-import { AdminReviewsPage } from './features/admin';
+import {
+  AdminDashboardPage,
+  AdminReviewsPage,
+  AdminSettingsPage,
+  AdminUsersPage,
+} from './features/admin';
 import { AdminAuditLogPage } from './features/audit';
 import { OwnerCalendarPage } from './features/availability';
 import { NotificationsPage } from './features/notification';
@@ -182,7 +187,7 @@ export const App: React.FC = () => (
                   requiredPermissions={['admin.dashboard.read']}
                   areaName="Admin Dashboard"
                 >
-                  <AdminAreaPage />
+                  <AdminDashboardPage />
                 </RequireAccess>
               }
             />
@@ -208,7 +213,7 @@ export const App: React.FC = () => (
                   requiredPermissions={['admin.user.read']}
                   areaName="User Management"
                 >
-                  <AdminAreaPage />
+                  <AdminUsersPage />
                 </RequireAccess>
               }
             />
@@ -219,7 +224,7 @@ export const App: React.FC = () => (
                   requiredPermissions={['admin.setting.read']}
                   areaName="Platform Settings"
                 >
-                  <AdminAreaPage />
+                  <AdminSettingsPage />
                 </RequireAccess>
               }
             />
