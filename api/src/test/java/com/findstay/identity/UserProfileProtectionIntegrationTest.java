@@ -94,10 +94,10 @@ class UserProfileProtectionIntegrationTest extends AbstractIntegrationTest {
 
         // 4. Verify User B's profile in the database is completely untouched
         String userBName = jdbc.queryForObject(
-                "SELECT full_name FROM identity.user_profile WHERE id = ?",
+                "SELECT full_name FROM identity.user_profile WHERE user_id = ?",
                 String.class, userBId);
         String userBPhone = jdbc.queryForObject(
-                "SELECT phone FROM identity.user_profile WHERE id = ?",
+                "SELECT phone FROM identity.user_profile WHERE user_id = ?",
                 String.class, userBId);
 
         assertThat(userBName).isEqualTo("User B Target");
